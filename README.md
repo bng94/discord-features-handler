@@ -53,11 +53,9 @@ You can now create the commands folder,if you define it in ` commandDir: "comman
 
 In the folder, must contain sub-folders and the sub-folders should be named as categories of the commands file you will put in them.
 
-commands  //commandDir name
-  |_ _ _ category1 // subfolder + category
-          |_ _ _ ping.js
-  |_ _ _ category2  
-          |_ _ _ help.js
+parent folder ==> sub folder ==> command file
+commands ==> category_name ==> pings.js
+
 
 ping.js command file example:
 ```js
