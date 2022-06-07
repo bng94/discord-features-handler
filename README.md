@@ -47,82 +47,117 @@ DiscordFeaturesHandler(client, {
 
 ```
 
-### Options
+#### Setting up DiscordFeaturesHandler function
+```js
+DiscordFeaturesHandler(client, object);
+```
+
+### Argument: `client`
+This is the Client object from discord.js 
+```js
+const { Client, Intents } = require("discord.js"); 
+const client = new Client({
+  intents: [...],
+  partials: [...],
+});
+```
+
+### Argument: `object`
+This object consists of multiple key/values that are required for discord-features-handler to manage and handle commands, events files for you and pass in the arugments requested from pre-define parameters for each commands or discord events.
+
 #### config
-Type: `String`
+The key consist of a value for the file path to your configuration file
 
-Required: `true`
+| Key | config |
+| --- | --- |
+| Type | `String` |
+| Required | `true` |
 
-The file path to your configuration file
+___
 
 #### mainDirectory
-Type: `String` 
-
-Required: `true`
-
 The file path to your main file, index.js file
 
+| Key | mainDirectory |
+| --- | --- |
+| Value | `__dirname` 
+| Required | `true` |
+
 #### commandDir 
-Type: `String` 
-
-Required: `true`
-
 Folder name of your sub-folders that contains your command files, these sub folders are folders you name to categories the commands.
 
+| Key | commandDir |
+| --- | --- |
+| Type | `String` |
+| Required | `true` |
+
+
 #### eventDir
-Type: `String` 
-
-Required: `true`
-
 Folder name to contain your discord events file
 
+| Key | eventDir |
+| --- | --- |
+| Type | `String` |
+| Required | `true` |
+
 #### modulesDir
-Type: `String` 
-
-Required: `true`
-
 Folder name to contain your modules.export files. 
 These files should be functions to can used throughout your bot.
 
+| Key | modulesDir |
+| --- | --- |
+| Type | `String` |
+| Required | `true` |
+
 #### BOT_TOKEN
-Type: `String` 
-
-Required: `true`
-
 Discord-features-handler will handle the client.login so you will need to setup enter Discord Bot Token
 
+| Key | BOT_TOKEN |
+| --- | --- |
+| Type | `String` |
+| Required | `true` 
+
+
 #### disableAllDefaults
-Type: `Boolean`
-
-Default: `false`
-
 Disable all default command and events file provided by discord-features-handler
 
+| Key | disableAllDefaults |
+| --- | --- |
+| Type | `Boolean` |
+| Default | `false` |
+
+
 #### disableDefaultHelpCmd
-Type: `Boolean`
-
-Default: `false`
-
 Disable all default Help command provided by discord-features-handler
 
+| Key | disableDefaultHelpCmd |
+| --- | --- |
+| Type | `Boolean` |
+| Default | `false` |
+
+
 #### disableDefaultReloadCmd
-Type: `Boolean`
-
-Default: `false`
-
 Disable all default Reload command provided by discord-features-handler. This command reload your command files.
 
+| Key | disableDefaultReloadCmd |
+| --- | --- |
+| Type | `Boolean` |
+| Default | `false` |
+
 #### disableDefaultMessageCreate
-Type: `Boolean`
-
-Default: `false`
-
 Disable all default Message Create Event file provided by discord-features-handler. This event manages and setup your commands files.
 
-#### filesToExcludeInHandlers 
-Type: `Array of Strings`
+| Key | disableDefaultMessageCreate |
+| --- | --- |
+| Type | `Boolean` |
+| Default | `false` |
 
+#### filesToExcludeInHandlers 
 In this Array of Strings are file names + extensions of file you don't want the discord-features-handler to run.
+
+| Key | filesToExcludeInHandlers |
+| --- | --- |
+| Type | `Array` |
 
 ### Setting up Commands
 
