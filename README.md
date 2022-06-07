@@ -110,7 +110,7 @@ These files should be functions to can used throughout your bot.
 | Required | `true` |
 
 #### BOT_TOKEN
-Discord-features-handler will handle the client.login so you will need to setup enter Discord Bot Token
+Discord-features-handler will handle the client.login on function setup, so you will need to enter Discord Bot Token
 
 | Key | BOT_TOKEN |
 | --- | --- |
