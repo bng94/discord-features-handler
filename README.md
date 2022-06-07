@@ -29,16 +29,13 @@ Here is a basic example of how to setup discord-features-handler.
 A simple example with only the essentials to get a bot up and running:
 
 ```js
-const { Client, Collection, Intents } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 import DiscordFeaturesHandler = from("discord-features-handler");
 const client = new Client({
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGES,
-  ],
-  partials: ["MESSAGE", "CHANNEL"],
+  intents: [...],
+  partials: [...],
 });
+
 DiscordFeaturesHandler(client, {
   config: "./config.js",
   mainDirectory: __dirname,
@@ -49,7 +46,87 @@ DiscordFeaturesHandler(client, {
 });
 
 ```
-You can now create the commands folder,if you define it in ` commandDir: "commands"`, it should be called "commands",
+
+### Options
+#### config
+Type: `String`
+
+Required: `true`
+
+The file path to your configuration file
+
+#### mainDirectory
+Type: `String` 
+
+Required: `true`
+
+The file path to your main file, index.js file
+
+#### commandDir 
+Type: `String` 
+
+Required: `true`
+
+Folder name of your sub-folders that contains your command files, these sub folders are folders you name to categories the commands.
+
+#### eventDir
+Type: `String` 
+
+Required: `true`
+
+Folder name to contain your discord events file
+
+#### modulesDir
+Type: `String` 
+
+Required: `true`
+
+Folder name to contain your modules.export files. 
+These files should be functions to can used throughout your bot.
+
+#### BOT_TOKEN
+Type: `String` 
+
+Required: `true`
+
+Discord-features-handler will handle the client.login so you will need to setup enter Discord Bot Token
+
+#### disableAllDefaults
+Type: `Boolean`
+
+Default: `false`
+
+Disable all default command and events file provided by discord-features-handler
+
+#### disableDefaultHelpCmd
+Type: `Boolean`
+
+Default: `false`
+
+Disable all default Help command provided by discord-features-handler
+
+#### disableDefaultReloadCmd
+Type: `Boolean`
+
+Default: `false`
+
+Disable all default Reload command provided by discord-features-handler. This command reload your command files.
+
+#### disableDefaultMessageCreate
+Type: `Boolean`
+
+Default: `false`
+
+Disable all default Message Create Event file provided by discord-features-handler. This event manages and setup your commands files.
+
+#### filesToExcludeInHandlers 
+Type: `Array of Strings`
+
+In this Array of Strings are file names + extensions of file you don't want the discord-features-handler to run.
+
+### Setting up Commands
+
+You can now create the commands folder, if you define it in ` commandDir: "commands"`, it should be called "commands",
 
 In the folder, must contain sub-folders and the sub-folders should be named as categories of the commands file you will put in them.
 
