@@ -2,6 +2,7 @@ const config = {
   ownerID: process.env.ownerID,
   admins: process.env.ownerID,
   support: process.env.ownerID,
+  serverID: 'YOUR_SERVER_ID',
   prefix: "!",
   hideDeniedBotAdminCommandsUsage: false,
 
