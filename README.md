@@ -53,11 +53,10 @@ You can now create the commands folder,if you define it in ` commandDir: "comman
 
 In the folder, must contain sub-folders and the sub-folders should be named as categories of the commands file you will put in them.
 
-parent folder ==> sub folder ==> command file
-commands ==> category_name ==> pings.js
+* parent folder ==> sub folder ==> command file
+* commands ==> category_name ==> pings.js
 
-
-ping.js command file example:
+#### ping.js command file example:
 ```js
 module.exports = {
 	name: 'ping',  //name of command when using <prefix>ping
@@ -72,8 +71,7 @@ module.exports = {
 	},
 };
 ```
-
-ping.js as slash command example:
+#### ping.js as slash command example:
 ```js
 module.exports = {
 	name: 'ping',
@@ -94,7 +92,7 @@ module.exports = {
 	}
 };
 ```
-> If the slash command requires you to mention someone then set this option
+ ##### Slash command to requires user to mention someone then set this option
 ```javascript
 slash: true,
 slashOptions: [{ 
@@ -111,15 +109,16 @@ async interactionReply(interaction) {
 	});
 }
 ```
-You can learn more by reading the [Discord Dev Docs](https://discord.com/developers/docs/interactions/slash-commands) about Slash Commands.
+#### You can learn more by reading the [Discord Dev Docs](https://discord.com/developers/docs/interactions/slash-commands) about Slash Commands.
 
-You can now create the discord events folder,if you define it in `eventDir: "events"`, it should be called "events",
+### Setting Up Discord Events
+You can now create the discord events folder, if you define it in `eventDir: "events"`, it should be called "events",
 
-In this folder, you can just simply create JavaScript files and the name should reflect what the file contains or what event it is.
+In this folder, you can just simply create JavaScript files and the name files so forth to reflect what the file contains or what event it is.
 
 For example creating a ready event file:
 
-ready.js: 
+#### ready.js: 
 ```js
 module.exports = {
   name: "ready",
@@ -134,4 +133,8 @@ module.exports = {
 };
 ```
 ## Modules Folder Setup Usage
+### coming soon...
+
+## Config.js sample file
+
 ### coming soon...
