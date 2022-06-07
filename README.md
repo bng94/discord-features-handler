@@ -47,12 +47,17 @@ DiscordFeaturesHandler(client, {
 
 ```
 
-#### Setting up DiscordFeaturesHandler function
+### Setting up DiscordFeaturesHandler function 
+
+---
 ```js
 DiscordFeaturesHandler(client, object);
 ```
 
-### Argument: `client`
+#### Argument: `client`
+
+---
+
 This is the Client object from discord.js 
 ```js
 const { Client, Intents } = require("discord.js"); 
@@ -63,6 +68,9 @@ const client = new Client({
 ```
 
 ### Argument: `object`
+
+---
+
 This object consists of multiple key/values that are required for discord-features-handler to manage and handle commands, events files for you and pass in the arugments requested from pre-define parameters for each commands or discord events.
 
 #### config
@@ -72,8 +80,6 @@ The key consist of a value for the file path to your configuration file
 | --- | --- |
 | Type | `String` |
 | Required | `true` |
-
-___
 
 #### mainDirectory
 The file path to your main file, index.js file
@@ -165,8 +171,15 @@ You can now create the commands folder, if you define it in ` commandDir: "comma
 
 In the folder, must contain sub-folders and the sub-folders should be named as categories of the commands file you will put in them.
 
-* parent folder ==> sub folder ==> command file
-* commands ==> category_name ==> pings.js
+* ❌ Parent folder should never contain script files(.js files)
+
+* ✅ Parent folder must always contain sub folders
+
+| Folder Structure | Command Directory |
+| --- | --- |
+| Parent Folder | commands |
+| sub folder | `category_name` |
+| commands file in sub folder | `pings.js`, `help.js` |
 
 #### ping.js command file example:
 ```js
