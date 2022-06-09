@@ -279,6 +279,14 @@ module.exports = {
 
 ### [TBA](https://github.com/bng94/discord-features-handler)
 
+## Bug and Issues
+If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
+
+## Contributing
+When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
+
+For bugs and feedbacks 
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
