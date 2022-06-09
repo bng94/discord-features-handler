@@ -1,8 +1,7 @@
 # discord-features-handler
-An discord regular and slash commands, events and modules handler with folder structure
+Discord-feature-handler is a handler for discord commands, slash commands and discord events that allows you to easily start creating command and events files to interact with discord.js and connect to discord api to easily create your own discord.js bot without the worrying of how to setup and run the commmds and events. Using discord-feature-handler you can straight up create the command and event files settings a key/value with the respective command name or event name (event name assosiated with the event, such as ready, messageCreate, messageUpdate and so forth listed from the discord.js documentation.
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-
 
 ## Installation
 
@@ -263,3 +262,25 @@ module.exports = {
 ## Config.js sample file
 
 ### coming soon...
+
+
+## Roadmap
+
+##### I am currently working a full-time job, M-F, I will try to finish the documentations, please expect Saturday and Sunday for updates and releases.
+
+- [ ] Events Setup Documentation / new md file
+- [ ] Redo Command and Slash Command Setup Documentation / new md file
+- [ ] Modules Setup Documentation 
+- [ ] config.js file Documentation
+- [ ] More usage examples
+
+
+## Documentation
+
+### [TBA](https://github.com/bng94/discord-features-handler)
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
