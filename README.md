@@ -245,9 +245,9 @@ For example creating a ready event file:
 #### ready.js: 
 ```js
 module.exports = {
-  name: "ready",
-  once: true,
-  async execute(client) {
+  name: "ready", //name of discord event
+  once: true,  // if the event should execute once only
+  async execute(client) {  // functionality of the event
     //prints out total number of users bot can interact with from all guilds/servers it is currently in
     console.log(`Serving ${client.guilds.cache.reduce((acc, curr) => (acc += curr.memberCount), 0 )} users`,"Ready!");
     //prints out total number of guilds/servers it is currently in
