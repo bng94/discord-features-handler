@@ -71,7 +71,7 @@ When contributing to this repository, please first discuss the change you wish t
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Notes
-This is a pre-release version. Official version 1.0.0 will be released soon with full documentation and changes.
+This is a pre-release version mainly for my personal usage and testing. Official version 1.0.0 will be released soon with full documentation.
 
 Using discord-feature-handler you can straight up create the command and event files settings a key/value with the respective command name or event name (event name assosiated with the event, such as ready, messageCreate, messageUpdate and so forth listed from the discord.js documentation.
 
