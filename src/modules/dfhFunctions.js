@@ -16,6 +16,11 @@ module.exports = (client) => {
     return permLvl;
   };
 
+  /**
+   * 
+   * @param {command properties} command // refer to command properties documentation
+   * @returns string if an error exists
+   */
   const checkCommandErrors = (command) => {
     let error = "";
     if (typeof command.permissions === "undefined") {
@@ -40,9 +45,18 @@ module.exports = (client) => {
     return error;
   };
 
-  client.loadCommand = (file, folder, reloaded = false) => {
+  /**
+   * 
+   * @param {string} file name of the file
+   * @param {string} folder name of the folder that contains the file
+   * @param {boolean} loadingMsg if we should display loading msg or not
+   * @param {boolean} handler  if this is invoked in the handler
+   * @param {boolean} defaultCommands  if the filename is a built-in command
+   * @returns false is commands are loaded, otherwise log error msg
+   */
+  client.loadCommand = (file, folder, loadingMsg = false, handler = false, defaultCommands = false) => {
     try {
-      const command = reloaded
+      const command = !defaultCommands
         ? require(`${client.dfhSettings.mainDirectory}\\${client.dfhSettings.commandDir}\\${folder}\\${file}`)
         : require(`../commands/${folder}/${file}`);;
       const error = checkCommandErrors(command);
@@ -65,7 +79,13 @@ module.exports = (client) => {
         });
       }
 
-      if (reloaded) console.log(`Loading Command: ${file}. 👌`, "CMD");
+      if (loadingMsg && !defaultCommands) {
+        if(handler) {
+          console.log(`Loaded Command: ${file}`);
+        } else {
+          console.log(`Loading Command: ${file}. 👌`, "CMD");
+        }
+      }
       return false;
     } catch (e) {
       return `Unable to load command ${file}: ${e}`;
