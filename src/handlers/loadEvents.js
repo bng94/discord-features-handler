@@ -47,4 +47,13 @@ module.exports = (
   for (const dirs of directory) {
     loadEvents(dirs);
   }
+
+  
+  const loadingEvents = directory.map(async (dirs) => {
+    await loadEvents(dirs);
+  });
+
+  Promise.all(loadingEvents).then(() => {
+    console.log("Events loaded");
+  });
 };

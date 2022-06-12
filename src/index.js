@@ -51,6 +51,10 @@ const DiscordFeaturesHandler = async (
   ) {
     throw new TypeError(`Disable properties must be a type of Boolean`);
   }
+
+  console.log(`DiscordFeaturesHandler is starting...
+  `);
+
   functions(client);
   await client.wait(10000);
   client.config = config.endsWith("./defaultConfig.js")
@@ -104,6 +108,7 @@ const DiscordFeaturesHandler = async (
     filesToExcludeInHandlers.modules,
     mainDirectory
   );
-};
+
+  };
 
 module.exports = DiscordFeaturesHandler;
