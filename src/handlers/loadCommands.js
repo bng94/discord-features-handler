@@ -22,15 +22,21 @@ module.exports = (
         );
       }
       commandFiles.forEach((file) => {
-        if (filesToExclude.includes(file)){
-          console.log(`Command File Excluded: ${file}`)
+        if (filesToExclude.includes(file)) {
+          console.log(`Command File Excluded: ${file}`);
           return;
         }
-        result = client.loadCommand(file, folder, dirname === mainDirectory);
+        result = client.loadCommand(
+          file,
+          folder,
+          true,
+          true,
+          dirname !== mainDirectory
+        );
         if (result) console.log(result);
       });
     }
-  }
+  };
   for (const dirs of directory) {
     loadCommands(dirs);
   }
