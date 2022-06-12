@@ -35,6 +35,9 @@ module.exports = (
         } catch (e) {
           console.log(`Unable to load event ${file}: ${e}`);
         }
+      } else if(filesToExclude.includes(file)) {
+        console.log(`Event File Excluded on load: ${file}`)
+        return;
       }
     }
     if (dir.includes("../events")) return;

@@ -18,6 +18,9 @@ module.exports = (client, directory =["../modules"], filesToExclude = [], mainDi
         } catch (e) {
           console.error(`Failed to Load ${file}: ${e}`);
         }
+      } else if(filesToExclude.includes(file)) {
+        console.log(`Modules File Excluded on load: ${file}`)
+        return;
       }
     }
   };

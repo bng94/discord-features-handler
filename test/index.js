@@ -1,5 +1,6 @@
 const { Client, Collection, Intents } = require("discord.js");
 const DiscordFeaturesHandler = require("../src");
+
 const client = new Client({
   intents: [
     Intents.FLAGS.GUILDS,
@@ -15,7 +16,10 @@ const client = new Client({
 });
 
 DiscordFeaturesHandler(client, {
-  config: "./config.js",
+  // file path to your script file
   mainDirectory: __dirname,
+  // file path and filename of your configuration file
+  config: "./config.js",
+  // bot token that can be found in your discord dev portal
   BOT_TOKEN: "YOUR_BOT_TOKEN",
 });
