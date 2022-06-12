@@ -29,7 +29,7 @@ A simple example with only the essentials to get a bot up and running:
 
 ```js
 const { Client, Intents } = require("discord.js");
-import DiscordFeaturesHandler = from("discord-features-handler");
+const DiscordFeaturesHandler = require("discord-features-handler");
 const client = new Client({
   intents: [...],
   partials: [...],
@@ -37,11 +37,8 @@ const client = new Client({
 
 
 const options = {
-  config: "./config.js",
   mainDirectory: __dirname,
-  commandDir: "commands", // commands folder name ; add path to commands folder if it is a subfolder of another folder.
-  eventDir: "events", // events folder name 
-  modulesDir: "modules", // modules folder name
+  config: "./config.js",
   BOT_TOKEN: "YOUR_BOT_TOKEN",
 };
 
@@ -72,5 +69,3 @@ For bugs and feedbacks
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
-

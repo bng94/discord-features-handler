@@ -13,6 +13,7 @@ module.exports = (client, directory =["../modules"], filesToExclude = [], mainDi
         loadModules(path.join(dir, file));
       } else if (filesToExclude.includes(file) === false) {
         const feature = require(path.join(dirname, dir, file));
+        console.log(`Loading module file: ${file}`);
         try {
           feature(client);
         } catch (e) {
