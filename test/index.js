@@ -13,11 +13,9 @@ const client = new Client({
   ],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
+
 DiscordFeaturesHandler(client, {
   config: "./config.js",
   mainDirectory: __dirname,
-  commandDir: "commands",
-  eventDir: "events",
-  modulesDir: "modules",
   BOT_TOKEN: "YOUR_BOT_TOKEN",
 });

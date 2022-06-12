@@ -10,9 +10,9 @@ const DiscordFeaturesHandler = async (
   {
     config = "./defaultConfig.js",
     mainDirectory = "",
-    commandDir = "",
-    eventDir = "",
-    modulesDir = "",
+    commandDir = "commands",
+    eventDir = "events",
+    modulesDir = "modules",
     disableAllDefaults = false,
     disableDefaultHelpCmd = false,
     disableDefaultReloadCmd = false,
