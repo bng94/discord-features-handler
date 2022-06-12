@@ -8,7 +8,8 @@ module.exports = (
   mainPath
 ) => {
   const loadEvents = (dir) => {
-    const dirname = dir.includes("../events") ? __dirname : mainPath;
+    const builtInDirectory = dir.includes("../events")
+    const dirname = builtInDirectory ? __dirname : mainPath;
     const files = fs.readdirSync(path.join(dirname, dir));
     let counter = 0;
     for (const file of files) {
@@ -40,20 +41,13 @@ module.exports = (
         return;
       }
     }
-    if (dir.includes("../events")) return;
+    if (builtInDirectory) return;
     console.log(`Successfully loaded ${counter} events.`, "Event");
   };
-
-  for (const dirs of directory) {
-    loadEvents(dirs);
-  }
-
   
-  const loadingEvents = directory.map(async (dirs) => {
-    await loadEvents(dirs);
+  const loadingEvents = directory.map((dirs) => {
+    loadEvents(dirs);
   });
 
-  Promise.all(loadingEvents).then(() => {
-    console.log("Events loaded");
-  });
+  Promise.all(loadingEvents);
 };

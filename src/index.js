@@ -101,7 +101,6 @@ const DiscordFeaturesHandler = async (
   }
 
   client.login(BOT_TOKEN);
-  await client.wait(10000);
   loadModules(
     client,
     ["../modules", modulesDir],

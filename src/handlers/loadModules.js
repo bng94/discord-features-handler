@@ -8,7 +8,7 @@ module.exports = (
   mainDirectory
 ) => {
   const loadModules = async (dir) => {
-    const builtInDirectory = dir.includes("../modules")
+    const builtInDirectory = dir.includes("../modules");
     const dirname = builtInDirectory ? __dirname : mainDirectory;
     const files = fs.readdirSync(path.join(dirname, dir));
 
@@ -19,10 +19,8 @@ module.exports = (
       );
     }
 
-    
     const mapping = files.map(async (file) => {
       const stat = fs.lstatSync(path.join(dirname, dir, file));
-      console.log(file);
       if (stat.isDirectory()) {
         loadModules(path.join(dir, file));
       } else if (filesToExclude.includes(file) === false) {
@@ -39,12 +37,11 @@ module.exports = (
         console.log(`Modules File Excluded on load: ${file}`);
         return;
       }
-    })
+    });
 
-    Promise.all(mapping).then(()=> {
-      if (!builtInDirectory) console.log(`Modules Files Loaded`)
-    })
-
+    Promise.all(mapping).then(() => {
+      if (!builtInDirectory) console.log(`Modules Files Loaded`);
+    });
   };
 
   const loadingModules = directory.map(async (dirs) => {

@@ -3,19 +3,20 @@ const path = require("path");
 
 module.exports = (
   client,
-  directory = ["../commands"],
+  directory = ["../commands/"],
   filesToExclude = [""],
   mainDirectory
 ) => {
   const loadCommands = (dir) => {
-    const dirname = dir.includes("../commands/") ? __dirname : mainDirectory;
+    const builtInDirectory = dir.includes("../commands/");
+    const dirname = builtInDirectory ? __dirname : mainDirectory;
     const commandFolders = fs.readdirSync(path.join(dirname, dir));
     for (const folder of commandFolders) {
       const commandFiles = fs
         .readdirSync(path.join(dirname, dir, folder))
         .filter((file) => file.endsWith(".js"));
 
-      if (!dir.includes("../commands")) {
+      if (!builtInDirectory) {
         console.log(
           "[CMD]",
           ` Loading a total of ${commandFiles.length} commands from ${folder} folder.`
@@ -37,7 +38,9 @@ module.exports = (
       });
     }
   };
-  for (const dirs of directory) {
+  const loadingCommands = directory.map((dirs) => {
     loadCommands(dirs);
-  }
+  });
+
+  Promise.all(loadingCommands);
 };
