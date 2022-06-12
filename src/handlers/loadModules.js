@@ -20,7 +20,7 @@ module.exports = (
     }
 
     
-    const mapping = files.map((file) => {
+    const mapping = files.map(async (file) => {
       const stat = fs.lstatSync(path.join(dirname, dir, file));
       console.log(file);
       if (stat.isDirectory()) {
