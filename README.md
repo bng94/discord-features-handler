@@ -48,20 +48,18 @@ const options = {
 DiscordFeaturesHandler(client, options);
 
 ```
-## Roadmap
+## Documentation
 
-##### I am currently working a full-time job, M-F, I will try to finish the documentations, please expect Saturday and Sunday for updates and releases.
+The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
+
+## Roadmap
+##### Currently, updates are made on weekends only, will maintain and update documentation when as possible. Please feel free to PR to fix an issue or submit an issue.
 
 - [ ] Events Setup Documentation / new md file
 - [ ] Redo Command and Slash Command Setup Documentation / new md file
 - [ ] Modules Setup Documentation 
 - [ ] config.js file Documentation
 - [ ] More usage examples
-
-
-## Documentation
-
-The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
 
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
