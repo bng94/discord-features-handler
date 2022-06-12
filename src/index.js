@@ -17,7 +17,11 @@ const DiscordFeaturesHandler = async (
     disableDefaultHelpCmd = false,
     disableDefaultReloadCmd = false,
     disableDefaultMessageCreate = false,
-    filesToExcludeInHandlers = [""],
+    filesToExcludeInHandlers = {
+      commands: [""],
+      events: [""],
+      modules: [""],
+    },
     BOT_TOKEN,
   }
 ) => {
@@ -63,10 +67,10 @@ const DiscordFeaturesHandler = async (
     disableAllDefaults || disableDefaultMessageCreate;
 
   if (disableDefaultHelpCmd && !disableDefaultCommands) {
-    filesToExcludeInHandlers.push("dfhHelp.js");
+    filesToExcludeInHandlers.commands.push("dfhHelp.js");
   }
   if (disableDefaultReloadCmd && !disableDefaultCommands) {
-    filesToExcludeInHandlers.push("dfhReload.js");
+    filesToExcludeInHandlers.events.push("dfhReload.js");
   }
   if (disableDefaultMessageCreate && !disableDefaultEvents) {
     filesToExcludeInHandlers.push("dfhMessageCreate.js");
@@ -81,10 +85,10 @@ const DiscordFeaturesHandler = async (
   loadCommands(
     client,
     commandDirectories,
-    filesToExcludeInHandlers,
+    filesToExcludeInHandlers.commands,
     mainDirectory
   );
-  loadEvents(client, eventDirectories, filesToExcludeInHandlers, mainDirectory);
+  loadEvents(client, eventDirectories, filesToExcludeInHandlers.events, mainDirectory);
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permissions.length; i++) {
@@ -97,7 +101,7 @@ const DiscordFeaturesHandler = async (
   loadModules(
     client,
     ["../modules", modulesDir],
-    filesToExcludeInHandlers,
+    filesToExcludeInHandlers.modules,
     mainDirectory
   );
 };
