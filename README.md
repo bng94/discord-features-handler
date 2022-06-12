@@ -61,7 +61,7 @@ DiscordFeaturesHandler(client, options);
 
 ## Documentation
 
-### [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
+The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
 
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
