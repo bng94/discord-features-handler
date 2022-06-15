@@ -51,7 +51,6 @@ const DiscordFeaturesHandler = async (
   ) {
     throw new TypeError(`Disable properties must be a type of Boolean`);
   }
-
   console.log(`DiscordFeaturesHandler is starting...
   `);
 
@@ -74,10 +73,10 @@ const DiscordFeaturesHandler = async (
     filesToExcludeInHandlers.commands.push("dfhHelp.js");
   }
   if (disableDefaultReloadCmd && !disableDefaultCommands) {
-    filesToExcludeInHandlers.events.push("dfhReload.js");
+    filesToExcludeInHandlers.commands.push("dfhReload.js");
   }
   if (disableDefaultMessageCreate && !disableDefaultEvents) {
-    filesToExcludeInHandlers.push("dfhMessageCreate.js");
+    filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
   }
   const commandDirectories = disableDefaultCommands
     ? [commandDir]
@@ -92,7 +91,12 @@ const DiscordFeaturesHandler = async (
     filesToExcludeInHandlers.commands,
     mainDirectory
   );
-  loadEvents(client, eventDirectories, filesToExcludeInHandlers.events, mainDirectory);
+  loadEvents(
+    client,
+    eventDirectories,
+    filesToExcludeInHandlers.events,
+    mainDirectory
+  );
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permissions.length; i++) {
@@ -108,7 +112,6 @@ const DiscordFeaturesHandler = async (
     filesToExcludeInHandlers.modules,
     mainDirectory
   );
-
-  };
+};
 
 module.exports = DiscordFeaturesHandler;

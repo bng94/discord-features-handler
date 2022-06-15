@@ -115,7 +115,7 @@ module.exports = (client) => {
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
 
-  // <String>.toPropercase() returns a proper-cased string such as:
+  // <String>.toProperCase() returns a proper-cased string such as:
   // "A quick brown fox jumps the lazy dog".toProperCase()
   // returns "A Quick Brown Fox Jumps The Lazy Dog"
   String.prototype.toProperCase = function () {
