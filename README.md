@@ -1,16 +1,7 @@
 # discord-features-handler
-Discord-feature-handler is a handler for discord commands, slash commands and discord events that allows you to easily start creating command and events files to interact with discord.js and connect to discord api to easily create your own discord.js bot without the worrying of how to setup and run the commands and events files.
+Discord-features-handler is a handler for discord commands, slash commands and discord events that allows you to easily start creating command and events files to interact with discord.js and connect to discord api to easily create your own discord.js bot without the worrying of how to setup and run the commands and events files.
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-
-## Installation
-
-Install my-project with npm
-
-```js
-  npm install discord-features-handler
-```
-    
 ## Features
 
 * Command Handler
@@ -20,7 +11,15 @@ Install my-project with npm
 * Pre-Made Reload Command
 * Pre-made Help Command
 * Unhandled Rejection Handler
-* String.prototype.toPropercase()
+* String.prototype.toProperCase()
+
+## Installation
+
+Installing DiscordFeaturesHandler
+
+```js
+  npm install discord-features-handler
+```
 
 ## Usage
 
@@ -49,32 +48,21 @@ DiscordFeaturesHandler(client, options);
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
 
-## Roadmap
-##### Currently, updates are made on weekends only, will maintain and update documentation when as possible. Please feel free to PR to fix an issue or submit an issue.
-
-- [ ] Documentation
-  - [ ] Event Setup  
-  - [ ] Built-in features explained
-  - [ ] ChangeLog.md on github repo
-- [ ] testing mongoDB modules files
-  - [ ] Remove bot token if mongoDb modules files test failed  
-- [ ] Official version 1.0.0 Release 
-
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Contributing
 When contributing to this repository, please first discuss the change you wish to make via issue before making a change or PR.
 
+
+## Notes
+discord-features-handler allows you to create the command and event files settings by setting the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client).
+
+This is my first npm package that I created due to having three bots that I have created for different purposes and using the same formats. Feel free to check this package out, contribute, PR and send any issues that you come across! 
+
+## Privacy Concerns
+We do not save or maintain any information of your bot token. Discord-Features-Handler requires your bot token, to allow async/await tasks inside the modules folder, which can enables databases connection such as for MongoDB. For MongoDB to work and allowing it to post and update channels. We need all our discord event, ready event and bot to be logged in to be able to connect to the servers which uses the databases and display the information when bot starts up.
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
-## Notes
-This is a pre-release version. Official version 1.0.0 will be released soon with full documentation.
-
-Using discord-feature-handler you can straight up create the command and event files settings a key/value with the respective command name or event name (event name assosiated with the event, such as ready, messageCreate, messageUpdate and so forth listed from the discord.js documentation.
-
-This is my first npm package that I created due to the usage for my three bots that I have created for different purposes. Feel free to check this package out, contribute, PR and send any issues that you come across! 
-
-This package will be updated for future version of discord.js as I will be using for all my discord.js bots.
