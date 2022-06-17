@@ -51,7 +51,7 @@ The official documentation can be found here: [DiscordFeaturesHandler Documentat
 
 ## Whats New
 
-### 0.13.8 - 2022-06-17
+### 0.13.9 - 2022-06-17
 * New object for DiscordFeaturesHandler options Property to disable Built-in Features:
   * `disableBuiltIn` is an object that contains boolean properties to disable built-in features. The object is created to be more readable object to use for disabling events and commands.
 * Deprecation warnings for `disableAllDefaults`, `disableDefaultHelpCmd`, `disableDefaultReloadCmd`, and `disableDefaultMessageCreate`. 
