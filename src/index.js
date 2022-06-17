@@ -5,6 +5,19 @@ const loadEvents = require("./handlers/loadEvents.js");
 const loadModules = require("./handlers/loadModules.js");
 const functions = require("./modules/dfhFunctions.js");
 
+const disablesObject = {
+  allBuiltIn: false,
+  commands: {
+    help: false,
+    reload: false,
+  },
+  events: {
+    messageCreate: false,
+    interactionCreate: false,
+    loadSlashCommandsReady: false,
+  },
+}
+
 const DiscordFeaturesHandler = async (
   client,
   {
@@ -60,6 +73,14 @@ const DiscordFeaturesHandler = async (
     BOT_TOKEN,
   }
 ) => {
+  const commandsExcluded = filesToExcludeInHandlers.commands ? filesToExcludeInHandlers.commands : [""];
+  const eventsExcluded = filesToExcludeInHandlers.events ? filesToExcludeInHandlers.events : [""];
+  const modulesExcluded = filesToExcludeInHandlers.modules ? filesToExcludeInHandlers.modules : [""];
+
+  const disableProperties = {
+    ...disablesObject,
+    ...disableBuiltIn
+  }
   if (!client) {
     throw new Error("No Discord JS Client provided as first argument!");
   } else if (client instanceof Client === false) {
@@ -88,12 +109,12 @@ const DiscordFeaturesHandler = async (
   }
 
   if (
-    typeof disableBuiltIn.allBuiltIn !== "boolean" &&
-    typeof disableBuiltIn.commands.help !== "boolean" &&
-    typeof disableBuiltIn.commands.reload !== "boolean" &&
-    typeof disableBuiltIn.events.interactionCreate !== "boolean" &&
-    typeof disableBuiltIn.events.messageCreate !== "boolean" &&
-    typeof disableBuiltIn.events.loadSlashCommandsReady !== "boolean"
+    typeof disableProperties.allBuiltIn !== "boolean" &&
+    typeof disableProperties.commands.help !== "boolean" &&
+    typeof disableProperties.commands.reload !== "boolean" &&
+    typeof disableProperties.events.interactionCreate !== "boolean" &&
+    typeof disableProperties.events.messageCreate !== "boolean" &&
+    typeof disableProperties.events.loadSlashCommandsReady !== "boolean"
   ) {
     throw new TypeError(
       `disableBuiltIn Object properties must be an Boolean Value`
@@ -117,40 +138,40 @@ const DiscordFeaturesHandler = async (
   };
 
   //disable all built in commands and events
-  if (disableBuiltIn.allBuiltIn) {
-    filesToExcludeInHandlers.commands.push("dfhHelp.js");
-    filesToExcludeInHandlers.commands.push("dfhReload.js");
-    filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
-    filesToExcludeInHandlers.events.push("dfhInteractionCreate.js");
-    filesToExcludeInHandlers.events.push("dfhSlashCommands.js");
+  if (disableProperties.allBuiltIn) {
+    commandsExcluded.push("dfhHelp.js");
+    commandsExcluded.push("dfhReload.js");
+    eventsExcluded.push("dfhMessageCreate.js");
+    eventsExcluded.push("dfhInteractionCreate.js");
+    eventsExcluded.push("dfhSlashCommands.js");
   } else {
-    if (disableBuiltIn.commands.help) {
-      filesToExcludeInHandlers.commands.push("dfhHelp.js");
+    if (disableProperties.commands.help) {
+      commandsExcluded.push("dfhHelp.js");
     }
-    if (disableBuiltIn.commands.reload) {
-      filesToExcludeInHandlers.commands.push("dfhReload.js");
+    if (disableProperties.commands.reload) {
+      commandsExcluded.push("dfhReload.js");
     }
-    if (disableBuiltIn.events.messageCreate) {
-      filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
+    if (disableProperties.events.messageCreate) {
+      eventsExcluded.push("dfhMessageCreate.js");
     }
-    if (disableBuiltIn.events.interactionCreate) {
-      filesToExcludeInHandlers.events.push("dfhInteractionCreate.js");
+    if (disableProperties.events.interactionCreate) {
+      eventsExcluded.push("dfhInteractionCreate.js");
     }
-    if (disableBuiltIn.events.loadSlashCommandsReady) {
-      filesToExcludeInHandlers.events.push("dfhSlashCommands.js");
+    if (disableProperties.events.loadSlashCommandsReady) {
+      eventsExcluded.push("dfhSlashCommands.js");
     }
   }
 
   const disableDefaultCommands =
-    disableBuiltIn.allBuiltIn ||
-    (disableBuiltIn.commands.help && disableBuiltIn.commands.reload) ||
+    disableProperties.allBuiltIn ||
+    (disableProperties.commands.help && disableProperties.commands.reload) ||
     disableAllDefaults ||
     (disableDefaultHelpCmd && disableDefaultReloadCmd);
   const disableDefaultEvents =
-    disableBuiltIn.allBuiltIn ||
-    (disableBuiltIn.events.interactionCreate &&
-      disableBuiltIn.events.messageCreate &&
-      disableBuiltIn.events.loadSlashCommandsReady) ||
+    disableProperties.allBuiltIn ||
+    (disableProperties.events.interactionCreate &&
+      disableProperties.events.messageCreate &&
+      disableProperties.events.loadSlashCommandsReady) ||
     disableAllDefaults ||
     disableDefaultMessageCreate;
 
@@ -160,19 +181,19 @@ const DiscordFeaturesHandler = async (
   if (disableDefaultHelpCmd && !disableDefaultCommands) {
     console.log(`DEPRECATION WARNING: disableDefaultHelpCmd deprecated in next update
      Use disableBuiltIn.commands.help instead`);
-    filesToExcludeInHandlers.commands.push("dfhHelp.js");
+    commandsExcluded.push("dfhHelp.js");
   }
   if (disableDefaultReloadCmd && !disableDefaultCommands) {
     console.log(`DEPRECATION WARNING: disableDefaultReloadCmd deprecated in next update
     Use disableBuiltIn.commands.reload instead`
     );
-    filesToExcludeInHandlers.commands.push("dfhReload.js");
+    commandsExcluded.push("dfhReload.js");
   }
   if (disableDefaultMessageCreate && !disableDefaultEvents) {
     console.log(`DEPRECATION WARNING: disableDefaultMessageCreate deprecated in next update
     Use disableBuiltIn.events.messageCreate instead`
     );
-    filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
+    eventsExcluded.push("dfhMessageCreate.js");
   }
   const commandDirectories = disableDefaultCommands
     ? [commandDir]
@@ -184,13 +205,13 @@ const DiscordFeaturesHandler = async (
   loadCommands(
     client,
     commandDirectories,
-    filesToExcludeInHandlers.commands,
+    commandsExcluded,
     mainDirectory
   );
   loadEvents(
     client,
     eventDirectories,
-    filesToExcludeInHandlers.events,
+    eventsExcluded,
     mainDirectory
   );
 
@@ -205,7 +226,7 @@ const DiscordFeaturesHandler = async (
   loadModules(
     client,
     ["../modules", modulesDir],
-    filesToExcludeInHandlers.modules,
+    modulesExcluded,
     mainDirectory
   );
 };
