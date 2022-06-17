@@ -1,6 +1,6 @@
 {
   "name": "discord-features-handler",
-  "version": "0.13.7",
+  "version": "0.13.8",
   "description": "An simple discord regular and slash commands, events and modules handler with folder structure",
   "main": "src/index.js",
   "scripts": {
@@ -12,16 +12,16 @@
     "url": "git+https://github.com/bng94/discord-features-handler.git"
   },
   "keywords": [
+    "discord",
     "discord.js",
     "commands",
     "slash",
-    "commands",
     "command",
-    "handler",
+    "event",
     "events",
-    "events",
-    "handler",
+    "modules",
     "features",
+    "feature",
     "handler",
     "discord features handler"
   ],

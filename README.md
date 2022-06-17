@@ -44,9 +44,20 @@ const options = {
 DiscordFeaturesHandler(client, options);
 
 ```
+>The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents). You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
 ## Documentation
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
+
+## Whats New
+
+### 0.13.8 - 2022-06-17
+* New object for DiscordFeaturesHandler options Property to disable Built-in Features:
+  * `disableBuiltIn` is an object that contains boolean properties to disable built-in features. The object is created to be more readable object to use for disabling events and commands.
+* Deprecation warnings for `disableAllDefaults`, `disableDefaultHelpCmd`, `disableDefaultReloadCmd`, and `disableDefaultMessageCreate`. 
+
+You can read all the version and changes history here: [ChangeLog](https://bng94.gitbook.io/discord-features-handler-docs/project-development/changelog)
+
 
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
@@ -61,7 +72,7 @@ discord-features-handler allows you to create the command and event files settin
 This is my first npm package that I created due to having three bots that I have created for different purposes and using the same formats. Feel free to check this package out, contribute, PR and send any issues that you come across! 
 
 ## Privacy Concerns
-We do not save or maintain any information of your bot token. Discord-Features-Handler requires your bot token, to allow async/await tasks inside the modules folder, which can enables databases connection such as for MongoDB. For MongoDB to work and allowing it to post and update channels. We need all our discord event, ready event and bot to be logged in to be able to connect to the servers which uses the databases and display the information when bot starts up.
+We do not save or maintain any information of your bot token. Discord-Features-Handler requires your bot token, to allow async/await tasks inside the modules folder, which can enables databases connection such as for MongoDB. For MongoDB to work and allowing it to post and update channels. We need all our discord events, ready event and bot to be logged in to be able to connect to the servers which uses the databases and display the information when bot starts up.
 
 ## License
 
