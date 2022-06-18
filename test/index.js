@@ -22,6 +22,9 @@ DiscordFeaturesHandler(client, {
   config: "./config.js",
   // bot token that can be found in your discord dev portal
   BOT_TOKEN: "YOUR_BOT_TOKEN",
+  loadCommandsLoggerOff: true,
+  loadEventsLoggerOff: true,
+  loadModulesLoggerOff: true,
   // optional: 
   // files we want to excludes when handler is invoked
   // files must be in their respective folders to work

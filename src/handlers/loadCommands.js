@@ -5,7 +5,8 @@ module.exports = (
   client,
   directory = ["../commands/"],
   filesToExclude = [""],
-  mainDirectory
+  mainDirectory,
+  loggerOff
 ) => {
   const loadCommands = (dir) => {
     const builtInDirectory = dir.includes("../commands/");
@@ -18,6 +19,7 @@ module.exports = (
 
       if (!builtInDirectory) {
         console.log(
+          "[log]",
           "[CMD]",
           ` Loading a total of ${commandFiles.length} commands from ${folder} folder.`
         );
@@ -30,7 +32,7 @@ module.exports = (
         result = client.loadCommand(
           file,
           folder,
-          true,
+          !loggerOff,
           true,
           dirname !== mainDirectory
         );

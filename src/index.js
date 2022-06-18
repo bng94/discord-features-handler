@@ -56,6 +56,9 @@ const DiscordFeaturesHandler = async (
         loadSlashCommandsReady: false,
       },
     },
+    loadCommandsLoggerOff = false,
+    loadEventsLoggerOff = false,
+    loadModulesLoggerOff = false,
 
     // DEPRECATION WARNING: Use disableBuiltIn.allBuiltIn instead
     disableAllDefaults = false,
@@ -206,13 +209,15 @@ const DiscordFeaturesHandler = async (
     client,
     commandDirectories,
     commandsExcluded,
-    mainDirectory
+    mainDirectory,
+    loadCommandsLoggerOff
   );
   loadEvents(
     client,
     eventDirectories,
     eventsExcluded,
-    mainDirectory
+    mainDirectory,
+    loadEventsLoggerOff
   );
 
   client.levelCache = {};
@@ -227,7 +232,8 @@ const DiscordFeaturesHandler = async (
     client,
     ["../modules", modulesDir],
     modulesExcluded,
-    mainDirectory
+    mainDirectory,
+    loadModulesLoggerOff
   );
 };
 

@@ -5,11 +5,12 @@ module.exports = (
   client,
   directory = ["../events"],
   filesToExclude = [],
-  mainPath
+  mainDirectory,
+  loggerOff
 ) => {
   const loadEvents = (dir) => {
-    const builtInDirectory = dir.includes("../events")
-    const dirname = builtInDirectory ? __dirname : mainPath;
+    const builtInDirectory = dir.includes("../events");
+    const dirname = builtInDirectory ? __dirname : mainDirectory;
     const files = fs.readdirSync(path.join(dirname, dir));
     let counter = 0;
     for (const file of files) {
@@ -32,19 +33,22 @@ module.exports = (
               async (...args) => await event.execute(...args, client)
             );
           }
+          if (!loggerOff) {
+            console.log(`[log]`, `[Event]`, `Loaded Event File: ${file}`);
+          }
           counter++;
         } catch (e) {
           console.log(`Unable to load event ${file}: ${e}`);
         }
-      } else if(filesToExclude.includes(file)) {
-        console.log(`Event File Excluded on load: ${file}`)
+      } else if (filesToExclude.includes(file)) {
+        console.log(`Event File Excluded on load: ${file}`);
         return;
       }
     }
     if (builtInDirectory) return;
-    console.log(`Successfully loaded ${counter} events.`, "Event");
+    console.log(`[log]`, `[Event]`, `Successfully loaded ${counter} events.`, "Event");
   };
-  
+
   const loadingEvents = directory.map((dirs) => {
     loadEvents(dirs);
   });

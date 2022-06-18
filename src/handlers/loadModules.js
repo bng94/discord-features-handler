@@ -5,7 +5,8 @@ module.exports = (
   client,
   directory = ["../modules"],
   filesToExclude = [],
-  mainDirectory
+  mainDirectory,
+  loggerOff
 ) => {
   const loadModules = async (dir) => {
     const builtInDirectory = dir.includes("../modules");
@@ -14,7 +15,8 @@ module.exports = (
 
     if (!builtInDirectory) {
       console.log(
-        "[CMD]",
+        "[log]",
+        "[Modules]",
         ` Loading a total of ${files.length} modules in folder.`
       );
     }
@@ -25,7 +27,7 @@ module.exports = (
         loadModules(path.join(dir, file));
       } else if (filesToExclude.includes(file) === false) {
         const feature = require(path.join(dirname, dir, file));
-        if (!builtInDirectory) {
+        if (!builtInDirectory && !loggerOff) {
           console.log(`Loading module file: ${file}`);
         }
         try {
