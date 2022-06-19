@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const { Client, Collection } = require("discord.js");
 const loadCommands = require("./handlers/loadCommands.js");
 const loadEvents = require("./handlers/loadEvents.js");
@@ -131,7 +132,7 @@ const DiscordFeaturesHandler = async (
   await client.wait(10000);
   client.config = config.endsWith("./defaultConfig.js")
     ? require(config)
-    : require(`${mainDirectory}\\${config.replaceAll("/", "\\")}`);
+    : require(path.join(mainDirectory, config));
   client.commands = new Collection();
   client.aliases = new Collection();
 
