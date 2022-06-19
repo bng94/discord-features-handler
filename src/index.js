@@ -111,11 +111,30 @@ const DiscordFeaturesHandler = async (
     typeof disableProperties.events.loadSlashCommandsReady !== "boolean"
   ) {
     throw new TypeError(
-      `disableBuiltIn Object properties must be an Boolean Value`
+      `disableBuiltIn Object properties must be an boolean Value`
     );
   }
 
-  console.log(`DiscordFeaturesHandler is starting...
+  if (typeof loadCommandsLoggerOff !== "boolean") {
+    throw new TypeError(
+      `loadCommandsLoggerOff must be a boolean value`
+    );
+  }
+
+  if (typeof loadEventsLoggerOff !== "boolean") {
+    throw new TypeError(
+      `loadEventsLoggerOff must be a boolean value`
+    );
+  }
+  
+  if (typeof loadModulesLoggerOff !== "boolean") {
+    throw new TypeError(
+      `loadModulesLoggerOff must be a boolean value`
+    );
+  }
+
+  console.log(`Thank you for installing DiscordFeaturesHandler!`);
+  console.log(`Loading your files now...
   `);
 
   functions(client);
@@ -132,38 +151,38 @@ const DiscordFeaturesHandler = async (
   };
 
   //disable all built in commands and events
-  if (disableBuiltIn.allBuiltIn) {
+  if (disableProperties.allBuiltIn) {
     commandsExcluded.push("dfhHelp.js");
     commandsExcluded.push("dfhReload.js");
     eventsExcluded.push("dfhMessageCreate.js");
     eventsExcluded.push("dfhInteractionCreate.js");
     eventsExcluded.push("dfhSlashCommands.js");
   } else {
-    if (disableBuiltIn.commands.help) {
+    if (disableProperties.commands.help) {
       commandsExcluded.push("dfhHelp.js");
     }
-    if (disableBuiltIn.commands.reload) {
+    if (disableProperties.commands.reload) {
       commandsExcluded.push("dfhReload.js");
     }
-    if (disableBuiltIn.events.messageCreate) {
+    if (disableProperties.events.messageCreate) {
       eventsExcluded.push("dfhMessageCreate.js");
     }
-    if (disableBuiltIn.events.interactionCreate) {
+    if (disableProperties.events.interactionCreate) {
       eventsExcluded.push("dfhInteractionCreate.js");
     }
-    if (disableBuiltIn.events.loadSlashCommandsReady) {
+    if (disableProperties.events.loadSlashCommandsReady) {
       eventsExcluded.push("dfhSlashCommands.js");
     }
   }
 
   const disableDefaultCommands =
-    disableBuiltIn.allBuiltIn ||
-    (disableBuiltIn.commands.help && disableBuiltIn.commands.reload);
+    disableProperties.allBuiltIn ||
+    (disableProperties.commands.help && disableProperties.commands.reload);
   const disableDefaultEvents =
-    disableBuiltIn.allBuiltIn ||
-    (disableBuiltIn.events.interactionCreate &&
-      disableBuiltIn.events.messageCreate &&
-      disableBuiltIn.events.loadSlashCommandsReady);
+    disableProperties.allBuiltIn ||
+    (disableProperties.events.interactionCreate &&
+      disableProperties.events.messageCreate &&
+      disableProperties.events.loadSlashCommandsReady);
 
   const commandDirectories = disableDefaultCommands
     ? [commandDir]
