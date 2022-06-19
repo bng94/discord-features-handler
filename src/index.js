@@ -61,8 +61,6 @@ const DiscordFeaturesHandler = async (
     loadCommandsLoggerOff = false,
     loadEventsLoggerOff = false,
     loadModulesLoggerOff = false,
-    disableUnhandledRejection = false,
-    disableProperCase = false,
     filesToExcludeInHandlers = {
       commands: [""],
       events: [""],
@@ -130,9 +128,7 @@ const DiscordFeaturesHandler = async (
 
   client.dfhSettings = {
     mainDirectory,
-    commandDir,
-    disableUnhandledRejection,
-    disableProperCase,
+    commandDir
   };
 
   //disable all built in commands and events
