@@ -1,6 +1,6 @@
 {
   "name": "discord-features-handler",
-  "version": "0.13.9",
+  "version": "0.13.10",
   "description": "An simple discord regular and slash commands, events and modules handler with folder structure",
   "main": "src/index.js",
   "scripts": {
