@@ -194,7 +194,10 @@ const DiscordFeaturesHandler = async (
     client.levelCache[thisLevel.name.toString()] = thisLevel.level;
   }
 
-  client.login(BOT_TOKEN);
+  client.login(BOT_TOKEN).catch(e => {
+    console.warn(e);
+    throw new Error(`Please check if your discord bot token is valid!`);
+  });
   await client.wait(10000);
   loadModules(
     client,
