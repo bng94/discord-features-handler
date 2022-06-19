@@ -27,6 +27,7 @@ const DiscordFeaturesHandler = async (
      */
     config = "./defaultConfig.js",
     /**
+     * mainDirectory value should always be: __dirname
      * parent folder of your start script file
      */
     mainDirectory = "",
@@ -36,7 +37,6 @@ const DiscordFeaturesHandler = async (
     commandDir = "commands",
     /**
      * The folder name that contains your discord bot event files
-   
      */
     eventDir = "events",
     /**
@@ -61,6 +61,8 @@ const DiscordFeaturesHandler = async (
     loadCommandsLoggerOff = false,
     loadEventsLoggerOff = false,
     loadModulesLoggerOff = false,
+    disableUnhandledRejection = false,
+    disableProperCase = false,
     filesToExcludeInHandlers = {
       commands: [""],
       events: [""],
@@ -83,6 +85,7 @@ const DiscordFeaturesHandler = async (
     ...disablesObject,
     ...disableBuiltIn,
   };
+
   if (!client) {
     throw new Error("No Discord JS Client provided as first argument!");
   } else if (client instanceof Client === false) {
@@ -99,15 +102,6 @@ const DiscordFeaturesHandler = async (
     );
   } else if (!fs.lstatSync(mainDirectory).isDirectory()) {
     throw new TypeError(`mainDirectory must have the value of: \'__dirname\'`);
-  }
-
-  if (
-    typeof disableAllDefaults !== "boolean" &&
-    typeof disableDefaultHelpCmd !== "boolean" &&
-    typeof disableDefaultReloadCmd !== "boolean" &&
-    typeof disableDefaultMessageCreate !== "boolean"
-  ) {
-    throw new TypeError(`Disable properties must be a type of Boolean`);
   }
 
   if (
@@ -137,67 +131,48 @@ const DiscordFeaturesHandler = async (
   client.dfhSettings = {
     mainDirectory,
     commandDir,
+    disableUnhandledRejection,
+    disableProperCase,
   };
 
   //disable all built in commands and events
-  if (disableProperties.allBuiltIn) {
-    commandsExcluded.push("dfhHelp.js");
-    commandsExcluded.push("dfhReload.js");
-    eventsExcluded.push("dfhMessageCreate.js");
-    eventsExcluded.push("dfhInteractionCreate.js");
-    eventsExcluded.push("dfhSlashCommands.js");
+  if (disableBuiltIn.allBuiltIn) {
+    filesToExcludeInHandlers.commands.push("dfhHelp.js");
+    filesToExcludeInHandlers.commands.push("dfhReload.js");
+    filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
+    filesToExcludeInHandlers.events.push("dfhInteractionCreate.js");
+    filesToExcludeInHandlers.events.push("dfhSlashCommands.js");
   } else {
-    if (disableProperties.commands.help) {
-      commandsExcluded.push("dfhHelp.js");
+    if (disableBuiltIn.commands.help) {
+      filesToExcludeInHandlers.commands.push("dfhHelp.js");
     }
-    if (disableProperties.commands.reload) {
-      commandsExcluded.push("dfhReload.js");
+    if (disableBuiltIn.commands.reload) {
+      filesToExcludeInHandlers.commands.push("dfhReload.js");
     }
-    if (disableProperties.events.messageCreate) {
-      eventsExcluded.push("dfhMessageCreate.js");
+    if (disableBuiltIn.events.messageCreate) {
+      filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
     }
-    if (disableProperties.events.interactionCreate) {
-      eventsExcluded.push("dfhInteractionCreate.js");
+    if (disableBuiltIn.events.interactionCreate) {
+      filesToExcludeInHandlers.events.push("dfhInteractionCreate.js");
     }
-    if (disableProperties.events.loadSlashCommandsReady) {
-      eventsExcluded.push("dfhSlashCommands.js");
+    if (disableBuiltIn.events.loadSlashCommandsReady) {
+      filesToExcludeInHandlers.events.push("dfhSlashCommands.js");
     }
   }
 
   const disableDefaultCommands =
-    disableProperties.allBuiltIn ||
-    (disableProperties.commands.help && disableProperties.commands.reload) ||
-    disableAllDefaults ||
-    (disableDefaultHelpCmd && disableDefaultReloadCmd);
+    disableBuiltIn.allBuiltIn ||
+    (disableBuiltIn.commands.help && disableBuiltIn.commands.reload);
   const disableDefaultEvents =
-    disableProperties.allBuiltIn ||
-    (disableProperties.events.interactionCreate &&
-      disableProperties.events.messageCreate &&
-      disableProperties.events.loadSlashCommandsReady) ||
-    disableAllDefaults ||
-    disableDefaultMessageCreate;
+    disableBuiltIn.allBuiltIn ||
+    (disableBuiltIn.events.interactionCreate &&
+      disableBuiltIn.events.messageCreate &&
+      disableBuiltIn.events.loadSlashCommandsReady);
 
-  if (disableAllDefaults)
-    console.warn(`DEPRECATION WARNING: disableAllDefaults deprecated in next update
-     Use disableBuiltIn.allBuiltIn instead`);
-  if (disableDefaultHelpCmd && !disableDefaultCommands) {
-    console.log(`DEPRECATION WARNING: disableDefaultHelpCmd deprecated in next update
-     Use disableBuiltIn.commands.help instead`);
-    commandsExcluded.push("dfhHelp.js");
-  }
-  if (disableDefaultReloadCmd && !disableDefaultCommands) {
-    console.log(`DEPRECATION WARNING: disableDefaultReloadCmd deprecated in next update
-    Use disableBuiltIn.commands.reload instead`);
-    commandsExcluded.push("dfhReload.js");
-  }
-  if (disableDefaultMessageCreate && !disableDefaultEvents) {
-    console.log(`DEPRECATION WARNING: disableDefaultMessageCreate deprecated in next update
-    Use disableBuiltIn.events.messageCreate instead`);
-    eventsExcluded.push("dfhMessageCreate.js");
-  }
   const commandDirectories = disableDefaultCommands
     ? [commandDir]
     : ["../commands/", commandDir];
+
   const eventDirectories = disableDefaultEvents
     ? [eventDir]
     : ["../events/", eventDir];
