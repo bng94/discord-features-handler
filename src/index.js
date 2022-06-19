@@ -17,8 +17,29 @@ const disablesObject = {
     interactionCreate: false,
     loadSlashCommandsReady: false,
   },
-}
+};
 
+/**
+ * DiscordFeaturesHandler Object
+ * @constructor
+ * @param {Client} client - the Discord.Client object
+ * @param {Object} options - an object for configuration of discord-features-handler
+ * @property {string} config - path to your configuration file
+ * @property {string} mainDirectory - value expected __dirname
+ * @property {string} commandDir - contains sub folders that contains command files
+ * @property {string} eventDir - contains discord events script files
+ * @property {string} modulesDir - contains modules files
+ * @property {Object} disableBuiltIn - disable file based built-in features
+ * @property {boolean} loadCommandsLoggerOff - turn off console.log for command loading 
+ * @property {boolean} loadEventsLoggerOff - turn off console.log for events loading 
+ * @property {boolean} loadModulesLoggerOff - turn off console.log for modules loading 
+ * @property {boolean} disableAllDefaults - DEPRECATION WARNING: Use disableBuiltIn.allBuiltIn instead
+ * @property {boolean} disableDefaultHelpCmd - DEPRECATION WARNING: Use disableBuiltIn.commands.help instead
+ * @property {boolean} disableDefaultReloadCmd - DEPRECATION WARNING: Use disableBuiltIn.commands.reload instead
+ * @property {boolean} disableDefaultMessageCreate - DEPRECATION WARNING: Use disableBuiltIn.events.messageCreate instead
+ * @property {object} filesToExcludeInHandlers - list filename to not load when handler is ran
+ * @property {string} BOT_TOKEN - Your Discord Bot Token [Discord Developer Portal](https://discord.com/developers/applications)
+*/
 const DiscordFeaturesHandler = async (
   client,
   {
@@ -27,7 +48,7 @@ const DiscordFeaturesHandler = async (
      */
     config = "./defaultConfig.js",
     /**
-     * mainDirectory value should always be: __dirname
+     * parent folder of your start script file
      */
     mainDirectory = "",
     /**
@@ -36,6 +57,7 @@ const DiscordFeaturesHandler = async (
     commandDir = "commands",
     /**
      * The folder name that contains your discord bot event files
+   
      */
     eventDir = "events",
     /**
@@ -60,14 +82,9 @@ const DiscordFeaturesHandler = async (
     loadCommandsLoggerOff = false,
     loadEventsLoggerOff = false,
     loadModulesLoggerOff = false,
-
-    // DEPRECATION WARNING: Use disableBuiltIn.allBuiltIn instead
     disableAllDefaults = false,
-    // DEPRECATION WARNING: Use disableBuiltIn.commands.help instead
     disableDefaultHelpCmd = false,
-    // DEPRECATION WARNING: Use disableBuiltIn.commands.reload instead
     disableDefaultReloadCmd = false,
-    // DEPRECATION WARNING: Use disableBuiltIn.events.messageCreate instead
     disableDefaultMessageCreate = false,
     filesToExcludeInHandlers = {
       commands: [""],
@@ -77,14 +94,20 @@ const DiscordFeaturesHandler = async (
     BOT_TOKEN,
   }
 ) => {
-  const commandsExcluded = filesToExcludeInHandlers.commands ? filesToExcludeInHandlers.commands : [""];
-  const eventsExcluded = filesToExcludeInHandlers.events ? filesToExcludeInHandlers.events : [""];
-  const modulesExcluded = filesToExcludeInHandlers.modules ? filesToExcludeInHandlers.modules : [""];
+  const commandsExcluded = filesToExcludeInHandlers.commands
+    ? filesToExcludeInHandlers.commands
+    : [""];
+  const eventsExcluded = filesToExcludeInHandlers.events
+    ? filesToExcludeInHandlers.events
+    : [""];
+  const modulesExcluded = filesToExcludeInHandlers.modules
+    ? filesToExcludeInHandlers.modules
+    : [""];
 
   const disableProperties = {
     ...disablesObject,
-    ...disableBuiltIn
-  }
+    ...disableBuiltIn,
+  };
   if (!client) {
     throw new Error("No Discord JS Client provided as first argument!");
   } else if (client instanceof Client === false) {
@@ -138,7 +161,7 @@ const DiscordFeaturesHandler = async (
 
   client.dfhSettings = {
     mainDirectory,
-    commandDir
+    commandDir,
   };
 
   //disable all built in commands and events
@@ -189,14 +212,12 @@ const DiscordFeaturesHandler = async (
   }
   if (disableDefaultReloadCmd && !disableDefaultCommands) {
     console.log(`DEPRECATION WARNING: disableDefaultReloadCmd deprecated in next update
-    Use disableBuiltIn.commands.reload instead`
-    );
+    Use disableBuiltIn.commands.reload instead`);
     commandsExcluded.push("dfhReload.js");
   }
   if (disableDefaultMessageCreate && !disableDefaultEvents) {
     console.log(`DEPRECATION WARNING: disableDefaultMessageCreate deprecated in next update
-    Use disableBuiltIn.events.messageCreate instead`
-    );
+    Use disableBuiltIn.events.messageCreate instead`);
     eventsExcluded.push("dfhMessageCreate.js");
   }
   const commandDirectories = disableDefaultCommands
