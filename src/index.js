@@ -21,7 +21,6 @@ const disablesObject = {
 
 /**
  * DiscordFeaturesHandler Object
- * @constructor
  * @param {Client} client - the Discord.Client object
  * @param {Object} options - object for configuration of [discord-features-handler](https://bng94.gitbook.io/discord-features-handler-docs/discordfeatureshandler-setup#options)
 */
