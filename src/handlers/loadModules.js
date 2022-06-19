@@ -21,6 +21,8 @@ module.exports = (
       );
     }
 
+    const filesExcluded = [];
+
     const mapping = files.map(async (file) => {
       const stat = fs.lstatSync(path.join(dirname, dir, file));
       if (stat.isDirectory()) {
@@ -36,13 +38,16 @@ module.exports = (
           console.error(`Failed to Load ${file}: ${e}`);
         }
       } else if (filesToExclude.includes(file)) {
-        console.log(`Modules File Excluded on load: ${file}`);
+        filesExcluded.push(`Modules File Excluded on load: ${file}`);
         return;
       }
     });
 
     Promise.all(mapping).then(() => {
-      if (!builtInDirectory) console.log(`Modules Files Loaded`);
+      if (!builtInDirectory) {
+        filesExcluded?.map(str => console.log(str));
+        console.log(`Modules Files Loaded`);
+      }
     });
   };
 
