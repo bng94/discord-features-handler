@@ -49,15 +49,7 @@ DiscordFeaturesHandler(client, options);
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
 
-## Whats New
-
-### 0.13.9 - 2022-06-17
-* New object for DiscordFeaturesHandler options Property to disable Built-in Features:
-  * `disableBuiltIn` is an object that contains boolean properties to disable built-in features. The object is created to be more readable object to use for disabling events and commands.
-* Deprecation warnings for `disableAllDefaults`, `disableDefaultHelpCmd`, `disableDefaultReloadCmd`, and `disableDefaultMessageCreate`. 
-
 You can read all the version and changes history here: [ChangeLog](https://bng94.gitbook.io/discord-features-handler-docs/project-development/changelog)
-
 
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
