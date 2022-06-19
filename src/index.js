@@ -19,11 +19,6 @@ const disablesObject = {
   },
 };
 
-/**
- * DiscordFeaturesHandler Object
- * @param {Client} client - the Discord.Client object
- * @param {Object} options - object for configuration of [discord-features-handler](https://bng94.gitbook.io/discord-features-handler-docs/discordfeatureshandler-setup#options)
-*/
 const DiscordFeaturesHandler = async (
   client,
   {
@@ -66,17 +61,6 @@ const DiscordFeaturesHandler = async (
     loadCommandsLoggerOff = false,
     loadEventsLoggerOff = false,
     loadModulesLoggerOff = false,
-    /**
-     * DEPRECATION WARNING: Use disableBuiltIn.allBuiltIn instead
-     * @property {boolean} disableAllDefaults - DEPRECATION WARNING: Use disableBuiltIn.allBuiltIn instead
-     */
-    disableAllDefaults = false,
-    // DEPRECATION WARNING: Use disableBuiltIn.commands.help instead
-    disableDefaultHelpCmd = false,
-    // DEPRECATION WARNING: Use disableBuiltIn.commands.reload instead
-    disableDefaultReloadCmd = false,
-    // DEPRECATION WARNING: Use disableBuiltIn.events.messageCreate instead
-    disableDefaultMessageCreate = false,
     filesToExcludeInHandlers = {
       commands: [""],
       events: [""],
