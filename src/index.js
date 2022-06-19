@@ -137,26 +137,26 @@ const DiscordFeaturesHandler = async (
 
   //disable all built in commands and events
   if (disableBuiltIn.allBuiltIn) {
-    filesToExcludeInHandlers.commands.push("dfhHelp.js");
-    filesToExcludeInHandlers.commands.push("dfhReload.js");
-    filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
-    filesToExcludeInHandlers.events.push("dfhInteractionCreate.js");
-    filesToExcludeInHandlers.events.push("dfhSlashCommands.js");
+    commandsExcluded.push("dfhHelp.js");
+    commandsExcluded.push("dfhReload.js");
+    eventsExcluded.push("dfhMessageCreate.js");
+    eventsExcluded.push("dfhInteractionCreate.js");
+    eventsExcluded.push("dfhSlashCommands.js");
   } else {
     if (disableBuiltIn.commands.help) {
-      filesToExcludeInHandlers.commands.push("dfhHelp.js");
+      commandsExcluded.push("dfhHelp.js");
     }
     if (disableBuiltIn.commands.reload) {
-      filesToExcludeInHandlers.commands.push("dfhReload.js");
+      commandsExcluded.push("dfhReload.js");
     }
     if (disableBuiltIn.events.messageCreate) {
-      filesToExcludeInHandlers.events.push("dfhMessageCreate.js");
+      eventsExcluded.push("dfhMessageCreate.js");
     }
     if (disableBuiltIn.events.interactionCreate) {
-      filesToExcludeInHandlers.events.push("dfhInteractionCreate.js");
+      eventsExcluded.push("dfhInteractionCreate.js");
     }
     if (disableBuiltIn.events.loadSlashCommandsReady) {
-      filesToExcludeInHandlers.events.push("dfhSlashCommands.js");
+      eventsExcluded.push("dfhSlashCommands.js");
     }
   }
 
