@@ -7,13 +7,8 @@ module.exports = {
         const guildId = [client.config.serverID, ''];
       
         const guild = client.guilds.cache.get(guildId)
-        let commands
-        if (guild) {
-            commands = guild.commands
-        } else {
-            commands = client.application?.commands
-        }
-
+        const commands = guild ? guild.commands : client.application?.commands;
+        
         const cmds = client.commands;
         const slashCmds = cmds.filter((cmd) => cmd.slash === true);
 
