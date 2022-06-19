@@ -6,8 +6,6 @@ Discord-features-handler is a handler for discord commands, slash commands and d
 
 ## Features
 
-
-
 * Command Handler
 * Slash Command Handler
 * Events Handler
