@@ -1,3 +1,4 @@
+const path = require("path");
 module.exports = (client) => {
   client.getPermissionsLevel = ({ author, user, channel, guild, member }) => {
     let permLvl = 0;
@@ -17,7 +18,7 @@ module.exports = (client) => {
   };
 
   /**
-   * 
+   *
    * @param {command properties} command // refer to command properties documentation
    * @returns string if an error exists
    */
@@ -46,7 +47,7 @@ module.exports = (client) => {
   };
 
   /**
-   * 
+   *
    * @param {string} file name of the file
    * @param {string} folder name of the folder that contains the file
    * @param {boolean} loadingMsg if we should display loading msg or not
@@ -54,11 +55,22 @@ module.exports = (client) => {
    * @param {boolean} defaultCommands  if the filename is a built-in command
    * @returns false is commands are loaded, otherwise log error msg
    */
-  client.loadCommand = (file, folder, loadingMsg = false, handler = false, defaultCommands = false) => {
+  client.loadCommand = (
+    file,
+    folder,
+    loadingMsg = false,
+    handler = false,
+    defaultCommands = false
+  ) => {
     try {
       const command = !defaultCommands
-        ? require(`${client.dfhSettings.mainDirectory}\\${client.dfhSettings.commandDir}\\${folder}\\${file}`)
-        : require(`../commands/${folder}/${file}`);;
+        ? require(path.join(
+            client.dfhSettings.mainDirectory,
+            client.dfhSettings.commandDir,
+            folder,
+            file
+          ))
+        : require(`../commands/${folder}/${file}`);
       const error = checkCommandErrors(command);
       if (error != "") {
         const placeHolder = `\nRequired:`;
@@ -80,7 +92,7 @@ module.exports = (client) => {
       }
 
       if (loadingMsg && !defaultCommands) {
-        if(handler) {
+        if (handler) {
           console.log(`Loaded Command: ${file}`);
         } else {
           console.log(`Loading Command: ${file}. 👌`, "CMD");
@@ -106,9 +118,17 @@ module.exports = (client) => {
       await command.shutdown(client);
     }
     delete require.cache[
-      require.resolve(`${client.dfhSettings.mainDirectory}\\${client.dfhSettings.commandDir}\\${folderName}\\${commandName}.js`)
+      require.resolve(
+        path.join(
+          client.dfhSettings.mainDirectory,
+          client.dfhSettings.commandDir,
+          folderName,
+          commandName,
+          ".js"
+        )
+      )
     ];
-    
+
     return false;
   };
 
