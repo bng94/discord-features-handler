@@ -18,34 +18,51 @@ const disablesObject = {
     loadSlashCommandsReady: false,
   },
 };
+/**
+ * DiscordFeaturesHandler that handles loading bot commands, discord events and modules files
+ * @function DiscordFeaturesHandler
+ * @param {Client} client - [Discord Client Object](https://discord.js.org/#/docs/discord.js/stable/class/Client)
+ * @param {Object} options - DiscordFeaturesHandler configuration object 
+ * @param {string} options.config Path to your configuration file, where you can define your bot commands permission levels, bot supports, admins, and bot owner IDs
+ * @param {string} options.mainDirectory The path to your bot start script file. 
+ * 
+ * Expected value: **__dirname**
+ * @param {string} options.commandDir This is the folder name that contains sub folders that contains your bot commands file. 
+ * 
+ * Default Folder Name: **commands**
+ * @param {string} options.eventDir  This is the folder name that contains your discord event files. 
+ * 
+ * Default Folder Name: **events**
+ * @param {string} options.modulesDir This is the folder name for your modules.export files. 
+ * 
+ * Default Folder Name: **modules**
+ * @param {Object} options.disableBuiltIn Object to define what built-in commands and events to disable
+ * @param {bool} options.disableBuiltIn.allBuiltIn Bool to disable all built-in commands and discord events
+ * @param {Object} options.disableBuiltIn.commands Object to contain defined built-in command name to disable
+ * @param {bool} options.disableBuiltIn.commands.help Bool to disable the built-in help command 
+ * @param {bool} options.disableBuiltIn.commands.reload Bool to disable the built-in reload command 
+ * @param {Object} options.disableBuiltIn.events Object to contain defined built-in discord event name to disable
+ * @param {bool} options.disableBuiltIn.events.messageCreate Boolean to disable built-in discord messageCreate event to handle your bot commands execution
+ * @param {bool} options.disableBuiltIn.events.interactionCreate Boolean to disable built-in discord interactionCreate event to handle your bot slash commands execution
+ * @param {bool} options.disableBuiltIn.events.loadSlashCommandsReady Boolean to disable built-in discord ready event to handle and load your slash commands
+ * @param {bool} options.loadCommandsLoggerOff Disable load command: filename.js console.log message
+ * @param {bool} options.loadEventsLoggerOff Disable load event: filename.js console.log message
+ * @param {bool} options.loadModulesLoggerOff Disable load module: filename.js console.log message
+ * @param {Object} options.filesToExcludeInHandlers Object to contain filename and file extension name of files to not load with handler
+ * @param {Array<string>} options.filesToExcludeInHandlers.commands Array of strings of command files to not load when this handler runs 
+ * @param {Array<string>} options.filesToExcludeInHandlers.events Array of strings of event files to not load when this handler runs 
+ * @param {Array<string>} options.filesToExcludeInHandlers.modules Array of strings of module files to not load when this handler runs 
+ * @param {String} options.BOT_TOKEN Your Discord Bot token found in [Discord Developer Portal](https://discordapp.com/developers/applications/)
+ */
 
 const DiscordFeaturesHandler = async (
   client,
-  {
-    /**
-     * Configuration file for bot support,admin, and owner Ids and cmd permissions levels
-     */
+ {
     config = "./defaultConfig.js",
-    /**
-     * mainDirectory value should always be: __dirname
-     * parent folder of your start script file
-     */
     mainDirectory = "",
-    /**
-     * The parent folder name that contains folders of discord bot command files
-     */
     commandDir = "commands",
-    /**
-     * The folder name that contains your discord bot event files
-     */
     eventDir = "events",
-    /**
-     * the folder name that contains your module.exports files
-     */
     modulesDir = "modules",
-    /**
-     * object that contains boolean variables for built-in features to disable. Default: false
-     */
     disableBuiltIn = {
       allBuiltIn: false,
       commands: {
@@ -150,7 +167,7 @@ const DiscordFeaturesHandler = async (
     commandDir
   };
 
-  //disable all built in commands and events
+  //Disable all built in commands and events
   if (disableProperties.allBuiltIn) {
     commandsExcluded.push("dfhHelp.js");
     commandsExcluded.push("dfhReload.js");

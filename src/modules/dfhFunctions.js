@@ -1,5 +1,23 @@
 const path = require("path");
 module.exports = (client) => {
+
+  /**
+   * Takes in an interaction  object if its a slash command
+   * @param {Interaction} interaction [Discord Interaction Object](https://discord.js.org/#/docs/discord.js/stable/class/Interaction)
+   * @param {User} interaction.user User which sent this interaction
+   * @param {TextBasedChannels} interaction.channel The channel which this interaction was sent
+   * @param {Guild} interaction.guild The guild which this interaction was sent
+   * @param {GuildMember} interaction.member The guild member which sent this interaction was sent
+   * or
+   * Takes in an message object if its a regular command
+   * @param {message} message [Discord Message Object](https://discord.js.org/#/docs/discord.js/stable/class/Message)
+   * @param {User} message.author User of the person who sent the message
+   * @param {TextBasedChannels} message.channel Channel which the message was sent
+   * @param {Guild} message.guild Guild which the message was sent
+   * @param {GuildMember} message.member Guild member, the person who sent the message
+   * @returns permLevel The permission level of the user
+   */
+
   client.getPermissionsLevel = ({ author, user, channel, guild, member }) => {
     let permLvl = 0;
     const currentUser = author || user;
@@ -19,7 +37,7 @@ module.exports = (client) => {
 
   /**
    *
-   * @param {command properties} command // refer to command properties documentation
+   * @param {command} command refer to command properties documentation
    * @returns string if an error exists
    */
   const checkCommandErrors = (command) => {
@@ -104,6 +122,12 @@ module.exports = (client) => {
     }
   };
 
+  /**
+   * 
+   * @param {string} commandName name of the command to unload
+   * @param {string} folderName folder name where the command is located in
+   * @returns {String} result of what happen when attempt to unload the command
+   */
   client.unloadCommand = async (commandName, folderName) => {
     let command;
     if (client.commands.has(commandName)) {
