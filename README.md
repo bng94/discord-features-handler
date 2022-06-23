@@ -37,16 +37,47 @@ const client = new Client({
 });
 
 
-const options = {
+DiscordFeaturesHandler(client,  {
   mainDirectory: __dirname,
   config: "./config.js",
   BOT_TOKEN: "YOUR_BOT_TOKEN",
-};
-
-DiscordFeaturesHandler(client, options);
-
+}); 
 ```
->The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents). You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
+>The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents).You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
+
+## Commands Properties
+The properties that are required to have when creating a command file
+
+| Property      | Type        | Default        |  Description                |
+| ------------- | ----------- | -------------- | --------------------------- |
+| name          | string      | ""             | name of your command        |
+| description   | string      | ""             | description of your command        |
+| aliases      | Array | [""]             | aliases of the command, you must set []      |
+| guildOnly      | bool | false             | If command is guild only (not a DM command) |
+| permission      | number | ""             | Permission level required to use command |
+| minArgs      | number | ""             | Minimum number of arguments required for command execution |
+| maxArgs      | number | ""             |Maximum number of arguments required for command execution |
+| usage      | string | ""             | Show how to use the command call |
+| execute(message, args, client)      | func | ""             | Functionality and response of the command call |
+
+## Slash Command Properties
+The properties that are required to have when creating a slash command file
+The properties of all command listed above and the following:
+
+| Property      | Type        | Default        |  Description                |
+| ------------- | ----------- | -------------- | --------------------------- |
+| slash         | bool     | false          | State if this command is a slash command        |
+| slashOptions   | JSON object | ""             | OPTIONAL: Options properties of a slash command, documentation can be found here. [Discord Developer Doc](https://discord.com/developers/docs/interactions/application-commands#slash-commands) |
+| interactionReply(interaction, client)   | func | ""             | Functionality and response of the slash command call. Arguments are interaction and client |
+## Discord Event File Properties
+The properties that are required to have when creating a discord event file.
+
+| Property      | Type        | Default        |  Description                |
+| ------------- | ----------- | -------------- | --------------------------- |
+| name          | string      | ""             | Discord Event Name. List of names can be found [here](www.google.com).          |
+| once          | bool        | false          | if the event should run once on first trigger or on every event trigger |
+| execute (client, params...)  | func | ""             | Functionality and response of the discord event trigger. |
+
 ## Documentation
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
