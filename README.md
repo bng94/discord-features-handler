@@ -127,7 +127,10 @@ Unload the command, by clearing the cache so you can reload the command with a n
 
 > :x:  **When overriding this will override the handler and commands may be able to unload to reload the new command file!**
 
+* client.commands and client.aliases
 
+This contains the command and aliases information to handle loading commands and executing them based off their properties
+> :x:  **DO NOT OVERRIDE: Command handler will break**
 ## Documentation
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
