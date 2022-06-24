@@ -58,7 +58,7 @@ The properties that are required to have when creating a command file
 | minArgs      | number | ""             | Minimum number of arguments required for command execution |
 | maxArgs      | number | ""             |Maximum number of arguments required for command execution |
 | usage      | string | ""             | Show how to use the command call |
-| execute(message, args, client)      | func | ""             | Functionality and response of the command call |
+| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `Client Object`, and `user's permission level` |
 
 ## Slash Command Properties
 The properties that are required to have when creating a slash command file
@@ -68,15 +68,65 @@ The properties of all command listed above and the following:
 | ------------- | ----------- | -------------- | --------------------------- |
 | slash         | bool     | false          | State if this command is a slash command        |
 | slashOptions   | JSON object | ""             | OPTIONAL: Options properties of a slash command, documentation can be found here. [Discord Developer Doc](https://discord.com/developers/docs/interactions/application-commands#slash-commands) |
-| interactionReply(interaction, client)   | func | ""             | Functionality and response of the slash command call. Arguments are interaction and client |
-## Discord Event File Properties
-The properties that are required to have when creating a discord event file.
+| interactionReply(interaction, client)   | func | ""             | Functionality and response of the slash command call. Parameters are `interaction` and `client` |
+## Discord Event File 
+When creating a discord event file in your events folder, will required the following properties:
 
 | Property      | Type        | Default        |  Description                |
 | ------------- | ----------- | -------------- | --------------------------- |
 | name          | string      | ""             | Discord Event Name. List of names can be found [here](www.google.com).          |
 | once          | bool        | false          | if the event should run once on first trigger or on every event trigger |
-| execute (client, params...)  | func | ""             | Functionality and response of the discord event trigger. |
+| execute (client, ...params)  | func | ""             | Functionality and response of the discord event trigger. **Params** are parameters of the event you are defining.  |
+
+## Modules Files 
+
+You can create a plain module.exports file in your modules folder. The only parameter being passed in is the client object. No properties are required to be defined.
+
+```js
+  module.exports = (client) => {
+    // do something
+  }; 
+```
+
+## Built-in functions
+
+### String.prototype.toProperCase
+This add a new function to a string object where you can make all the first letter of a word in that object, capitalize. 
+
+### unhandledRejection
+This handles and console.log any unhandled errors. Which are methods that are missing .catch(e) and causes to crashes the bot. This function prevent the  crash and handles it.
+
+> :warning:  **May not catch every cases and bot can still crash!**
+With some test cases the bot still crashes and shuts down.
+
+
+```js
+process.on("unhandledRejection", (e) => {
+  console.log(e);
+});
+```
+
+### The following functions can be overwritten by re-defining
+If you create a new `client.<functionName>` you can override then existing function with the new function.
+
+*  client.getPermissionsLevel ( parameter )
+
+> :warning:  **Please do not override unless you are creating your own permission level configuration with a different approach then this handler uses!**
+
+> This parameter is either an interaction object or message object, based off the command type and which type of command was called. This function returns a permission level based off the `config.js` file. 
+
+* client.loadCommand
+
+This function handles load the command 
+
+> :x:  **When overriding this will override the handler and commands will not load!**
+
+* client.unloadCommand
+
+Unload the command, by clearing the cache so you can reload the command with a new command file.
+
+> :x:  **When overriding this will override the handler and commands may be able to unload to reload the new command file!**
+
 
 ## Documentation
 
