@@ -62,12 +62,11 @@ module.exports = {
       return message.reply(response).catch((error) => console.log(error));
     }
   },
-  async interactionReply(interaction, client) {
+  async interactionReply(interaction, client, level) {
     await interaction.deferReply();
     const { options } = interaction;
     const name = options.getString("cmd_name");
 
-    const level = client.getPermissionsLevel(interaction);
     const commands = client.commands.filter((cmd) => cmd.permissions <= level);
     const data = getAllCommandsArray(client, commands);
 

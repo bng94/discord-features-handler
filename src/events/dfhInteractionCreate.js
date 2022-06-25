@@ -7,7 +7,8 @@ module.exports = {
         
         console.log(`${commandName}`, `${interaction.user.tag}`, `SLASH CMD`);
         console.log(commandId, 'ID', 'SLASH CMD');
-
-        cmd.interactionReply(interaction, client);
+        
+        const level = client.getPermissionsLevel(interaction);
+        cmd.interactionReply(interaction, client, level);
     },
 };
