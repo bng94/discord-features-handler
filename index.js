@@ -1,3 +1,3 @@
 import DiscordFeaturesHandler from "./src";
 
-exports.DiscordFeaturesHandler;
+exports.DiscordFeaturesHandler = DiscordFeaturesHandler;

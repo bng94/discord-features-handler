@@ -58,7 +58,7 @@ The properties that are required to have when creating a command file
 | minArgs      | number | ""             | Minimum number of arguments required for command execution |
 | maxArgs      | number | ""             |Maximum number of arguments required for command execution |
 | usage      | string | ""             | Show how to use the command call |
-| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `Client Object`, and `user's permission level` |
+| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level` |
 
 ## Slash Command Properties
 The properties that are required to have when creating a slash command file
@@ -68,7 +68,7 @@ The properties of all command listed above and the following:
 | ------------- | ----------- | -------------- | --------------------------- |
 | slash         | bool     | false          | State if this command is a slash command        |
 | slashOptions   | JSON object | ""             | OPTIONAL: Options properties of a slash command, documentation can be found here. [Discord Developer Doc](https://discord.com/developers/docs/interactions/application-commands#slash-commands) |
-| interactionReply(interaction, client)   | func | ""             | Functionality and response of the slash command call. Parameters are `interaction` and `client` |
+| interactionReply(interaction, client, level)   | func | ""             | Functionality and response of the slash command call. Parameters are `interaction` and `client Object`, and `user's permission level`  |
 ## Discord Event File 
 When creating a discord event file in your events folder, will required the following properties:
 
@@ -109,28 +109,29 @@ process.on("unhandledRejection", (e) => {
 ### The following functions can be overwritten by re-defining
 If you create a new `client.<functionName>` you can override then existing function with the new function.
 
-*  client.getPermissionsLevel ( parameter )
+#### client.getPermissionsLevel ( parameter )
 
 > :warning:  **Please do not override unless you are creating your own permission level configuration with a different approach then this handler uses!**
 
-> This parameter is either an interaction object or message object, based off the command type and which type of command was called. This function returns a permission level based off the `config.js` file. 
+This parameter is either an interaction object or message object, based off the command type and which type of command was called. This function returns a permission level based off the `config.js` file. 
 
-* client.loadCommand
+> 
 
-This function handles load the command 
+#### client.loadCommand
 
 > :x:  **When overriding this will override the handler and commands will not load!**
 
-* client.unloadCommand
+This function handles load the command 
+
+#### client.unloadCommand
+> :x:  **When overriding this will override the handler and commands may be able to unload to reload the new command file!**
 
 Unload the command, by clearing the cache so you can reload the command with a new command file.
 
-> :x:  **When overriding this will override the handler and commands may be able to unload to reload the new command file!**
+#### client.commands and client.aliases
+> :x:  **DO NOT OVERRIDE: This saves all the properties of the command files so that we can load the commands for you**
 
-* client.commands and client.aliases
-
-This contains the command and aliases information to handle loading commands and executing them based off their properties
-> :x:  **DO NOT OVERRIDE: Command handler will break**
+These are Discord.Collection object that contains the command and aliases information to handle loading commands and executing them based off their properties
 ## Documentation
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
