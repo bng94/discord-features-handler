@@ -94,11 +94,10 @@ You can create a plain module.exports file in your modules folder. The only para
 This add a new function to a string object where you can make all the first letter of a word in that object, capitalize. 
 
 ### unhandledRejection
-This handles and console.log any unhandled errors. Which are methods that are missing .catch(e) and causes to crashes the bot. This function prevent the  crash and handles it.
-
 > :warning:  **May not catch every cases and bot can still crash!**
-With some test cases the bot still crashes and shuts down.
+If error is caught repetitively it can causes the bot to crash.
 
+This handles and console.log any unhandled errors. Which are methods that are missing .catch(e) and causes to crashes the bot. This function prevent the  crash and handles it.
 
 ```js
 process.on("unhandledRejection", (e) => {
