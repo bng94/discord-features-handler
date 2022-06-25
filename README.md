@@ -74,7 +74,7 @@ When creating a discord event file in your events folder, will required the foll
 
 | Property      | Type        | Default        |  Description                |
 | ------------- | ----------- | -------------- | --------------------------- |
-| name          | string      | ""             | Discord Event Name. List of names can be found [here](www.google.com).          |
+| name          | string      | ""             | Discord Event Name. List of names can be found [here](https://discord.js.org/#/docs/main/stable/class/Client).          |
 | once          | bool        | false          | if the event should run once on first trigger or on every event trigger |
 | execute (client, ...params)  | func | ""             | Functionality and response of the discord event trigger. **Params** are parameters of the event you are defining.  |
 
