@@ -1,6 +1,5 @@
 const path = require("path");
 module.exports = (client) => {
-
   /**
    * Takes in an interaction  object if its a slash command
    * @param {Interaction} interaction [Discord Interaction Object](https://discord.js.org/#/docs/discord.js/stable/class/Interaction)
@@ -123,7 +122,7 @@ module.exports = (client) => {
   };
 
   /**
-   * 
+   *
    * @param {string} commandName name of the command to unload
    * @param {string} folderName folder name where the command is located in
    * @returns {String} result of what happen when attempt to unload the command
@@ -147,8 +146,7 @@ module.exports = (client) => {
           client.dfhSettings.mainDirectory,
           client.dfhSettings.commandDir,
           folderName,
-          commandName,
-          ".js"
+          commandName + ".js"
         )
       )
     ];
