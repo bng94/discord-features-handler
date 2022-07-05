@@ -27,13 +27,29 @@ module.exports = {
 
     const fileName = command.name;
     const commandFolders = fs.readdirSync(absolute + "/commands");
-    const folderName = commandFolders
-      .map((folder) => {
-        if (fs.existsSync(`./commands/${folder}/${fileName}.js`)) {
-          return folder;
-        }
-      })
-      .join("");
+    try {
+      const folderName = commandFolders
+        .map((folder) => {
+          if (
+            fs.existsSync(
+              path.join(
+                client.dfhSettings.mainDirectory,
+                client.dfhSettings.commandDir,
+                folder,
+                fileName + ".js"
+              )
+            )
+          ) {
+            return folder;
+          } else if (fs.existsSync(`./commands/${folder}/${fileName}.js`)) {
+            return folder;
+          }
+        })
+        .join("");
+    } catch (e) {
+      console.log(`Error fetching foldername from dfhReload.js Command: ${e}`);
+      return message.reply(`Error fetching folder: ${e}`);
+    }
     let response = await client.unloadCommand(fileName, folderName);
     if (response) return message.reply(`Error Unloading: ${response}`);
 
