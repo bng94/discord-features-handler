@@ -157,16 +157,24 @@ module.exports = (client) => {
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
 
-  // <String>.toProperCase() returns a proper-cased string such as:
-  // "A quick brown fox jumps the lazy dog".toProperCase()
-  // returns "A Quick Brown Fox Jumps The Lazy Dog"
-  String.prototype.toProperCase = function () {
+  /**
+   * @function String#toProperCase()
+   * Change the first letter of the string (and every word in string) to uppercase letter
+   * **Input:** "A quick brown fox jumps the lazy dog".toProperCase()
+   * **Output:** "A Quick Brown Fox Jumps The Lazy Dog"
+   * @returns string with first letter of all word(s) in string as uppercase
+   */
+  String.prototype.toProperCase = () => {
     return this.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
   };
 
-  process.on("unhandledRejection", (e) => {
-    console.log(e);
-  });
+  // <Array>.random() returns a single random element from an array
+  // [a, b, c, d, e].random() can return a, b, c, d or e.
+  Array.prototype.random = function () {
+    return this[Math.floor(Math.random() * this.length)];
+  };
+
+
 };
