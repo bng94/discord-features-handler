@@ -5,6 +5,7 @@ const loadCommands = require("./handlers/loadCommands.js");
 const loadEvents = require("./handlers/loadEvents.js");
 const loadModules = require("./handlers/loadModules.js");
 const functions = require("./modules/dfhFunctions.js");
+const dfhUnhandledRejection = require("./modules/dfhUnhandledRejection.js");
 
 const disablesObject = {
   allBuiltIn: false,
@@ -45,9 +46,16 @@ const disablesObject = {
  * @param {bool} options.disableBuiltIn.events.messageCreate Boolean to disable built-in discord messageCreate event to handle your bot commands execution
  * @param {bool} options.disableBuiltIn.events.interactionCreate Boolean to disable built-in discord interactionCreate event to handle your bot slash commands execution
  * @param {bool} options.disableBuiltIn.events.loadSlashCommandsReady Boolean to disable built-in discord ready event to handle and load your slash commands
+ * @param {bool} options.disableUnhandledRejectionHandler Bool to disable discord-features-handler unhandledRejection handler
  * @param {bool} options.loadCommandsLoggerOff Disable load command: filename.js console.log message
  * @param {bool} options.loadEventsLoggerOff Disable load event: filename.js console.log message
  * @param {bool} options.loadModulesLoggerOff Disable load module: filename.js console.log message
+ * @param {number} options.modulesPreloadTime The wait time to load all discord commands, and discord event files before loading modules files.
+ * Ensure the connection to Discord API is established to access data when required in modules files.
+ * 
+ * **Expected Value**: Time in milliseconds; 1000 is 1 second
+ * 
+ * **Default**: 5000 (5 seconds)
  * @param {Object} options.filesToExcludeInHandlers Object to contain filename and file extension name of files to not load with handler
  * @param {Array<string>} options.filesToExcludeInHandlers.commands Array of strings of command files to not load when this handler runs 
  * @param {Array<string>} options.filesToExcludeInHandlers.events Array of strings of event files to not load when this handler runs 
@@ -75,6 +83,8 @@ const DiscordFeaturesHandler = async (
         loadSlashCommandsReady: false,
       },
     },
+    disableUnhandledRejectionHandler = false,
+    modulesPreloadTime = 5000,
     loadCommandsLoggerOff = false,
     loadEventsLoggerOff = false,
     loadModulesLoggerOff = false,
@@ -155,7 +165,11 @@ const DiscordFeaturesHandler = async (
   `);
 
   functions(client);
-  await client.wait(10000);
+  if(!disableUnhandledRejectionHandler){
+    dfhUnhandledRejection(client);
+  }
+  await client.wait(1000);
+
   client.config = config.endsWith("./defaultConfig.js")
     ? require(config)
     : require(path.join(mainDirectory, config));
@@ -234,10 +248,10 @@ const DiscordFeaturesHandler = async (
     console.warn(e);
     throw new Error(`Please check if your discord bot token is valid!`);
   });
-  await client.wait(10000);
+  await client.wait(modulesPreloadTime);
   loadModules(
     client,
-    ["../modules", modulesDir],
+    [modulesDir],
     modulesExcluded,
     mainDirectory,
     loadModulesLoggerOff
