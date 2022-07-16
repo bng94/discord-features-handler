@@ -21,7 +21,7 @@ module.exports = (
         console.log(
           "[log]",
           "[CMD]",
-          ` Loading a total of ${commandFiles.length} commands from ${folder} folder.`
+          `Loading a total of ${commandFiles.length} commands from ${folder} folder.`
         );
       }
       commandFiles.forEach((file) => {

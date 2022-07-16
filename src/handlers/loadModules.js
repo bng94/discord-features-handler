@@ -17,7 +17,7 @@ module.exports = (
       console.log(
         "[log]",
         "[Modules]",
-        ` Loading a total of ${files.length} modules in folder.`
+        `Loading a total of ${files.length} modules in folder.`
       );
     }
 
@@ -38,14 +38,17 @@ module.exports = (
           console.error(`Failed to Load ${file}: ${e}`);
         }
       } else if (filesToExclude.includes(file)) {
-        filesExcluded.push(`Modules File Excluded on load: ${file}`);
+        filesExcluded.push(file);
         return;
       }
     });
 
     Promise.all(mapping).then(() => {
       if (!builtInDirectory) {
-        filesExcluded?.map(str => console.log(str));
+        if(filesExcluded){
+          console.log(`Modules Files Excluded on load:`);
+          console.log("[Files]", filesExcluded.join(', '))
+        }
         console.log(`Modules Files Loaded`);
       }
     });
