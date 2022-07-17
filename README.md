@@ -16,6 +16,13 @@ Discord-features-handler is a handler for discord commands, slash commands and d
 * String.prototype.toProperCase()
 * Array.prototype.Random()
 
+
+## Demo
+
+Here is github repository of mine where a discord bot is created using DiscordFeaturesHandler.
+
+[Discord Bot using DiscordFeaturesHandler](https://github.com/bng94/heroku-bot)
+
 ## Installation
 
 Installing DiscordFeaturesHandler
@@ -37,7 +44,6 @@ const client = new Client({
   partials: [...],
 });
 
-
 DiscordFeaturesHandler(client,  {
   mainDirectory: __dirname,
   config: "./config.js",
@@ -45,6 +51,7 @@ DiscordFeaturesHandler(client,  {
 }); 
 ```
 >The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents).You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
+
 
 ## DiscordFeaturesHandler Properties
 Thees are the properties of the DiscordFeaturesHandler
@@ -58,12 +65,12 @@ Here are the some parameters of options Object. For a full list please check out
 | Parameter     | Type        | Required       | Default        |  Description                |
 | ------------- | ----------- | -------------- | -------------- | --------------------------- |
 | mainDirectory | string      | true  |  ""             | The absolute path to the directory containing the executing main script file. Expected Value: **__dirname**        |
-| config       | string       | false  | "./config"      | path to your configuration file. Default value is to default configuration file provided.              |
+| config       | string       | false  | "./config"      | The path to your configuration file. Default value is path to default configuration file provided.              |
 | BOT_TOKEN   | string        | true  | ""      | This is your bot token that you can find in your [Discord Developer Portal](https://discordapp.com/developers/applications/). This is required to login to your discord bot. |
-| commandDir   | string        | false  | "commands"      | Folder name of your command folder that contains sub-folders which contains the command files. Default name is: **commands**.    |
-| eventDir     | string        | false  | "events"      | Folder name of your event folder containing discord event files. Default name is: **events**.    |
-| modulesDir   | string        | false  | "modules"      | Folder name of your module folder that contains your module files. Default name is: **commands**.    |
-| modulesPreloadTime   | number        | false  | 5000      | Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off if and how many file in the module folder requires access to the API. |
+| commandDir   | string        | false  | "commands"      | Folder name of your command folder that contains sub-folders which contains the command files. The sub-folders are the category names of the command inside those folders. Default folder name is: **commands**.    |
+| eventDir     | string        | false  | "events"      | Folder name of your event folder containing discord event files. Default folder name is: **events**.    |
+| modulesDir   | string        | false  | "modules"      | Folder name of your module folder that contains your module files. Default folder name is: **modules**.    |
+| modulesPreloadTime   | number        | false  | 5000      | Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off how many files in the module folder requires access to the API. Default time in milliseconds is 5000. |
 
 
 ## Commands Properties
@@ -78,7 +85,7 @@ The properties that are required to have when creating a command file
 | permission      | number | ""             | Permission level required to use command |
 | minArgs      | number | ""             | Minimum number of arguments required for command execution |
 | maxArgs      | number | ""             |Maximum number of arguments required for command execution |
-| usage      | string | ""             | Show how to use the command call |
+| usage      | string | ""             | Show how to use the command arguments in the command call |
 | execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level` |
 
 ## Slash Command Properties
