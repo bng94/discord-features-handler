@@ -88,6 +88,28 @@ The properties that are required to have when creating a command file
 | usage      | string | ""             | Show how to use the command arguments in the command call |
 | execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level` |
 
+##### Example Command:
+```js
+module.exports = {
+	name: 'ping',
+	description: 'Ping Pong Command!',
+	aliases: ['p'],
+	guildOnly: true,
+	permissions: 0,
+	minArgs: 0, 
+	usage: '',
+    /** 
+    * @param {message} message The discord message object
+    * @param {Array<string>} args The arguments following the command call
+    * @param {Client} client The discord client object
+    * @param {number} level The permission level of the user who made the command call
+    */
+	execute(message, args, client, level) { 
+		return message.channel.send('Pong.');
+	},
+};
+```
+
 ## Slash Command Properties
 The properties that are required to have when creating a slash command file
 The properties of all command listed above and the following:
@@ -97,6 +119,41 @@ The properties of all command listed above and the following:
 | slash         | bool     | false          | State if this command is a slash command        |
 | slashOptions   | JSON object | ""             | OPTIONAL: Options properties of a slash command, documentation can be found here. [Discord Developer Doc](https://discord.com/developers/docs/interactions/application-commands#slash-commands) |
 | interactionReply(interaction, client, level)   | func | ""             | Functionality and response of the slash command call. Parameters are `interaction` and `client Object`, and `user's permission level`  |
+
+
+##### Example Slash Command:
+```js
+module.exports = {
+	name: 'ping',
+	description: 'Ping Pong Command!',
+	aliases: ['p'],
+	guildOnly: true,
+	permissions: 0,
+	minArgs: 0, 
+	usage: '',
+	slash: true,
+    /** 
+    * @param {message} message The discord message object
+    * @param {Array<string>} args The arguments following the command call
+    * @param {Client} client The discord client object
+    * @param {number} level The permission level of the user who made the command call
+    */
+	execute(message, args, client, level) { 
+      return message.channel.send('Pong.');
+    },
+    /** 
+    * @param {interaction} interaction The discord interaction object
+    * @param {Client} client The discord client object
+    * @param {number} level The permission level of the user who made the command call
+    */
+    async interactionReply(interaction, client, level) {
+      await interaction.reply({
+        content: 'Pong!'
+      });
+    }
+};
+```
+
 ## Discord Event File 
 When creating a discord event file in your events folder, will required the following properties:
 
@@ -105,6 +162,17 @@ When creating a discord event file in your events folder, will required the foll
 | name          | string      | ""             | Discord Event Name. List of names can be found [here](https://discord.js.org/#/docs/main/stable/class/Client).          |
 | once          | bool        | false          | if the event should run once on first trigger or on every event trigger |
 | execute (client, ...params)  | func | ""             | Functionality and response of the discord event trigger. **Params** are parameters of the event you are defining.  |
+
+##### Example Ready Event
+```js
+module.exports = {
+  name: "ready",
+  once: true,
+  async execute(client) {
+      console.log('Bot just started!');
+  },
+};
+```
 
 ## Modules Files 
 
