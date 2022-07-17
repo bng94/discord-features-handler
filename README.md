@@ -14,6 +14,14 @@ Discord-features-handler is a handler for discord commands, slash commands and d
 * Pre-made Help Command
 * Unhandled Rejection Handler
 * String.prototype.toProperCase()
+* Array.prototype.Random()
+
+
+## Demo
+
+Here is github repository of mine where a discord bot is created using DiscordFeaturesHandler.
+
+[Discord Bot using DiscordFeaturesHandler](https://github.com/bng94/heroku-bot)
 
 ## Installation
 
@@ -36,7 +44,6 @@ const client = new Client({
   partials: [...],
 });
 
-
 DiscordFeaturesHandler(client,  {
   mainDirectory: __dirname,
   config: "./config.js",
@@ -44,6 +51,27 @@ DiscordFeaturesHandler(client,  {
 }); 
 ```
 >The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents).You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
+
+
+## DiscordFeaturesHandler Properties
+Thees are the properties of the DiscordFeaturesHandler
+| Property      | Type        | Default        |  Description                |
+| ------------- | ----------- | -------------- | --------------------------- |
+| client        | Client      | ""             | [Discord Client Object](https://discord.js.org/#/docs/main/stable/class/Client)        |
+| options       | Object      | {...}          | Object that contains parameters to configure DiscordFeaturesHandler 
+
+### options
+Here are the some parameters of options Object. For a full list please check out the [documentation](https://bng94.gitbook.io/discord-features-handler-docs/structure/discordfeatureshandler-setup).
+| Parameter     | Type        | Required       | Default        |  Description                |
+| ------------- | ----------- | -------------- | -------------- | --------------------------- |
+| mainDirectory | string      | true  |  ""             | The absolute path to the directory containing the executing main script file. Expected Value: **__dirname**        |
+| config       | string       | false  | "./config"      | The path to your configuration file. Default value is path to default configuration file provided.              |
+| BOT_TOKEN   | string        | true  | ""      | This is your bot token that you can find in your [Discord Developer Portal](https://discordapp.com/developers/applications/). This is required to login to your discord bot. |
+| commandDir   | string        | false  | "commands"      | Folder name of your command folder that contains sub-folders which contains the command files. The sub-folders are the category names of the command inside those folders. Default folder name is: **commands**.    |
+| eventDir     | string        | false  | "events"      | Folder name of your event folder containing discord event files. Default folder name is: **events**.    |
+| modulesDir   | string        | false  | "modules"      | Folder name of your module folder that contains your module files. Default folder name is: **modules**.    |
+| modulesPreloadTime   | number        | false  | 5000      | Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off how many files in the module folder requires access to the API. Default time in milliseconds is 5000. |
+
 
 ## Commands Properties
 The properties that are required to have when creating a command file
@@ -57,7 +85,7 @@ The properties that are required to have when creating a command file
 | permission      | number | ""             | Permission level required to use command |
 | minArgs      | number | ""             | Minimum number of arguments required for command execution |
 | maxArgs      | number | ""             |Maximum number of arguments required for command execution |
-| usage      | string | ""             | Show how to use the command call |
+| usage      | string | ""             | Show how to use the command arguments in the command call |
 | execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level` |
 
 ## Slash Command Properties
@@ -90,14 +118,28 @@ You can create a plain module.exports file in your modules folder. The only para
 
 ## Built-in functions
 
-### String.prototype.toProperCase
-This add a new function to a string object where you can make all the first letter of a word in that object, capitalize. 
+### String.prototype.toProperCase()
+This add a new function to a String constructor object where you can make all the first letter of a word in that object, capitalize. 
+```js
+const str = "A quick brown fox jumps over the lazy dog";
+
+console.log(str.toProperCase());
+//expected output: "A Quick Brown Fox Jumps Over The Lazy Dog"
+```
+
+### Array.prototype.random()
+This add a new function to a Array constructor object where in returns a random element in the array.
+```js
+const arr = ['a', 'b', 'c', 'd', 'e'];
+
+console.log(arr.random());
+//expected output is either: a, b, c, d, or e
+```
 
 ### unhandledRejection
-> :warning:  **May not catch every cases and bot can still crash!**
-If error is caught repetitively it can causes the bot to crash.
+> :warning:  **Catches unhandled promise rejections**
 
-This handles and console.log any unhandled errors. Which are methods that are missing .catch(e) and causes to crashes the bot. This function prevent the  crash and handles it.
+This handles and console.log any unhandled errors. Which are methods that are missing .catch(e) that causes to crashes the bot. This function prevent the  crash and handles it by console logging it.
 
 ```js
 process.on("unhandledRejection", (e) => {
@@ -113,8 +155,6 @@ If you create a new `client.<functionName>` you can override then existing funct
 > :warning:  **Please do not override unless you are creating your own permission level configuration with a different approach then this handler uses!**
 
 This parameter is either an interaction object or message object, based off the command type and which type of command was called. This function returns a permission level based off the `config.js` file. 
-
-> 
 
 #### client.loadCommand
 
@@ -143,9 +183,8 @@ If you found and bug and issues please [report the issue](https://github.com/bng
 ## Contributing
 When contributing to this repository, please first discuss the change you wish to make via issue before making a change or PR.
 
-
 ## Notes
-discord-features-handler allows you to create the command and event files settings by setting the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client).
+discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). This help the developer focus on creating features and functions for their discord bot without worrying about how to connect to the Discord API using discord.js.
 
 This is my first npm package that I created due to having three bots that I have created for different purposes and using the same formats. Feel free to check this package out, contribute, PR and send any issues that you come across! 
 

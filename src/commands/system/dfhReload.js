@@ -27,9 +27,21 @@ module.exports = {
 
     const fileName = command.name;
     const commandFolders = fs.readdirSync(absolute + "/commands");
+
     const folderName = commandFolders
       .map((folder) => {
-        if (fs.existsSync(`./commands/${folder}/${fileName}.js`)) {
+        if (
+          fs.existsSync(
+            path.join(
+              client.dfhSettings.mainDirectory,
+              client.dfhSettings.commandDir,
+              folder,
+              fileName + ".js"
+            )
+          )
+        ) {
+          return folder;
+        } else if (fs.existsSync(`./commands/${folder}/${fileName}.js`)) {
           return folder;
         }
       })
