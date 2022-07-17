@@ -164,7 +164,7 @@ module.exports = (client) => {
    * **Output:** "A Quick Brown Fox Jumps The Lazy Dog"
    * @returns string with first letter of all word(s) in string as uppercase
    */
-  String.prototype.toProperCase = () => {
+  String.prototype.toProperCase = function () {
     return this.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });

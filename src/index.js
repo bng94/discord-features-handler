@@ -47,9 +47,9 @@ const disablesObject = {
  * @param {bool} options.disableBuiltIn.events.interactionCreate Boolean to disable built-in discord interactionCreate event to handle your bot slash commands execution
  * @param {bool} options.disableBuiltIn.events.loadSlashCommandsReady Boolean to disable built-in discord ready event to handle and load your slash commands
  * @param {bool} options.disableUnhandledRejectionHandler Bool to disable discord-features-handler unhandledRejection handler
- * @param {bool} options.loadCommandsLoggerOff Disable load command: filename.js console.log message
- * @param {bool} options.loadEventsLoggerOff Disable load event: filename.js console.log message
- * @param {bool} options.loadModulesLoggerOff Disable load module: filename.js console.log message
+ * @param {bool} options.loadCommandsLoggerOff Disable console log of command files being loaded
+ * @param {bool} options.loadEventsLoggerOff Disable console log of event files being loaded
+ * @param {bool} options.loadModulesLoggerOff Disable console log of module files being loaded
  * @param {number} options.modulesPreloadTime The time to wait before loading modules files. This is used to establish a waiting time to connect to the Discord API and 
  * ensure we can access the users and guilds the bot is connected to for the Discord Channels, users, guild information to use within the module files that are waiting to be loaded.
  * 
@@ -170,7 +170,6 @@ const DiscordFeaturesHandler = async (
   if (!disableUnhandledRejectionHandler) {
     dfhUnhandledRejection(client);
   }
-  await client.wait(1000);
 
   client.config = config.endsWith("./defaultConfig.js")
     ? require(config)
