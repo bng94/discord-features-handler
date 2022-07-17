@@ -45,9 +45,8 @@ module.exports = (
 
     Promise.all(mapping).then(() => {
       if (!builtInDirectory) {
-        if(filesExcluded){
-          console.log(`Modules Files Excluded on load:`);
-          console.log("[Files]", filesExcluded.join(', '))
+        if (filesExcluded.length > 0) {
+          console.log("[Module Files]", "[Excluded]:", filesExcluded.join(", "));
         }
         console.log(`Modules Files Loaded`);
       }
