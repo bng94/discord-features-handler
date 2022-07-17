@@ -170,8 +170,10 @@ module.exports = (client) => {
     });
   };
 
-  // <Array>.random() returns a single random element from an array
-  // [a, b, c, d, e].random() can return a, b, c, d or e.
+  /**
+   * <Array>.random() returns a single random element from an array
+   * @returns [a, b, c, d, e].random() can return a, b, c, d or e.
+   */
   Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)];
   };
