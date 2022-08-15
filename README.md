@@ -255,7 +255,7 @@ If you found and bug and issues please [report the issue](https://github.com/bng
 When contributing to this repository, please first discuss the change you wish to make via issue before making a change or PR.
 
 ## Notes
-discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). As a *flexible handler*, this help the developer focus on creating features and functions for their discord bot without worrying about how to connect to the Discord API using discord.js and focus on the main aspect of the bot which is the functionality.
+discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). As a *flexible handler*, this help the developer focus on what required for their discord bot without worrying about how to connect to the Discord API using discord.js and focus on the main aspect of the bot which is the functionality and features for their bot.
 
 This is my first npm package that I created due to having three bots that I have created for different purposes and using the same formats. Feel free to check this package out, contribute, PR and send any issues that you come across! 
 
