@@ -34,5 +34,8 @@
   "homepage": "https://github.com/bng94/discord-features-handler#readme",
   "dependencies": {
     "discord.js": "^13.7.0"
+  },
+  "peerDependencies": {
+    "discord.js": "13.x"
   }
 }
