@@ -1,8 +1,8 @@
 module.exports = {
   name: "interactionCreate",
   async execute(interaction, client) {
+    const { commandName, commandId, customId } = interaction;
     if (interaction.isCommand()) {
-      const { commandName, commandId } = interaction;
       const cmd = client.commands.get(commandName);
 
       console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
