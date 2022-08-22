@@ -64,13 +64,13 @@ DiscordFeaturesHandler(client,  {
 ##### Folder Structure
 - node_modules
 - commands
-  - sub-folder(s) *(category named folders for your command files)*
+  - sub-folder(s) *(named category folders to categories your command files)*
     - command files
 - events 
   - your discord.js event files
 - modules
   - module files 
-- config.js *(configuration file)*
+- config.js *(**optional**: configuration file)*
 - index.js *(your bot start file)*
 
 
