@@ -33,7 +33,7 @@ Installing DiscordFeaturesHandler
 
 Development Build:
 
-> :warning: This development installation may have bugs as new features as being tested and developed before next build. If you are interesting in what being developed and in the development installation, you can check out the [docs road map page](https://bng94.gitbook.io/discord-features-handler-docs/project-development/roadmap).
+> :warning: This is a development branch is still in development of new features and there may be bugs. Check out the [road map](https://bng94.gitbook.io/discord-features-handler-docs/project-development/roadmap) page to see what is added and tested before next build and release.
 
 ```js
   npm install github:bng94/discord-features-handler#dev
@@ -58,7 +58,20 @@ DiscordFeaturesHandler(client,  {
   BOT_TOKEN: "YOUR_BOT_TOKEN",
 }); 
 ```
+
 >The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents).You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
+
+##### Folder Structure
+- node_modules
+- commands
+  - sub-folder(s) *(category named folders for your command files)*
+    - command files
+- events 
+  - your discord.js event files
+- modules
+  - module files 
+- config.js *(configuration file)*
+- index.js *(your bot start file)*
 
 
 ## DiscordFeaturesHandler Properties
@@ -94,7 +107,7 @@ The properties that are required to have when creating a command file
 | minArgs      | number | ""             | Minimum number of arguments required for command execution |
 | maxArgs      | number | ""             |Maximum number of arguments required for command execution |
 | usage      | string | ""             | Show how to use the command arguments in the command call |
-| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level` |
+| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level to run a command` |
 
 ##### Example Command:
 ```js
