@@ -13,19 +13,15 @@ module.exports = {
     }
     if (interaction.isButton()) {
       //TODO: add interaction from cmd property
-      console.log("interaction button");
     }
     if (interaction.isAutocomplete()) {
       //TODO: add interaction from cmd property
-      console.log("interaction isAutocomplete");
     }
     if (interaction.isContextMenu()) {
       //TODO: add interaction from cmd property
-      console.log("interaction isContextMenu");
     }
     if (interaction.isModalSubmit()) {
       //TODO: add interaction from cmd property
-      console.log("interaction isModalSubmit");
     }
   },
 };
