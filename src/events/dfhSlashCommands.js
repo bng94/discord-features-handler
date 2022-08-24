@@ -14,8 +14,13 @@ module.exports = {
 
         const cmdArray = [...slashCmds.values()];
         
-        console.log(`Loading slash commands...`)
-        for (const cmd of cmdArray) { 
+        console.log(
+            "[log]",
+            "[Slash Commands]",
+            `Loading a total of ${cmdArray.length} slash commands.`
+        );
+        
+        const mappingSlashCommands = cmdArray.map(cmd => {
             let tempObj = {
                 name: cmd.name,
                 description: cmd.description
@@ -26,6 +31,8 @@ module.exports = {
             }
 
             commands?.create(tempObj);
-        }       
+        })
+        
+
 	},
 };

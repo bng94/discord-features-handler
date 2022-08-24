@@ -31,6 +31,14 @@ Installing DiscordFeaturesHandler
   npm install discord-features-handler
 ```
 
+Development Build:
+
+> :warning: This is a development branch is still in development of new features and there may be bugs. Check out the [road map](https://bng94.gitbook.io/discord-features-handler-docs/project-development/roadmap) page to see what is added and tested before next build and release.
+
+```js
+  npm install github:bng94/discord-features-handler#dev
+```
+
 ## Usage
 
 Here is a basic example of how to setup discord-features-handler. 
@@ -50,7 +58,20 @@ DiscordFeaturesHandler(client,  {
   BOT_TOKEN: "YOUR_BOT_TOKEN",
 }); 
 ```
+
 >The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents).You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
+
+##### Folder Structure
+- node_modules
+- commands
+  - sub-folder(s) *(named category folders to categories your command files)*
+    - command files
+- events 
+  - your discord.js event files
+- modules
+  - module files 
+- config.js *(**optional**: configuration file)*
+- index.js *(your bot start file)*
 
 
 ## DiscordFeaturesHandler Properties
@@ -86,7 +107,29 @@ The properties that are required to have when creating a command file
 | minArgs      | number | ""             | Minimum number of arguments required for command execution |
 | maxArgs      | number | ""             |Maximum number of arguments required for command execution |
 | usage      | string | ""             | Show how to use the command arguments in the command call |
-| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level` |
+| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level to run a command` |
+
+##### Example Command:
+```js
+module.exports = {
+	name: 'ping',
+	description: 'Ping Pong Command!',
+	aliases: ['p'],
+	guildOnly: true,
+	permissions: 0,
+	minArgs: 0, 
+	usage: '',
+    /** 
+    * @param {message} message The discord message object
+    * @param {Array<string>} args The arguments following the command call
+    * @param {Client} client The discord client object
+    * @param {number} level The permission level of the user who made the command call
+    */
+	execute(message, args, client, level) { 
+		return message.channel.send('Pong.');
+	},
+};
+```
 
 ## Slash Command Properties
 The properties that are required to have when creating a slash command file
@@ -97,6 +140,44 @@ The properties of all command listed above and the following:
 | slash         | bool     | false          | State if this command is a slash command        |
 | slashOptions   | JSON object | ""             | OPTIONAL: Options properties of a slash command, documentation can be found here. [Discord Developer Doc](https://discord.com/developers/docs/interactions/application-commands#slash-commands) |
 | interactionReply(interaction, client, level)   | func | ""             | Functionality and response of the slash command call. Parameters are `interaction` and `client Object`, and `user's permission level`  |
+
+
+##### Example Slash Command:
+```js
+module.exports = {
+	name: 'ping',
+	description: 'Ping Pong Command!',
+	aliases: ['p'],
+	guildOnly: true,
+	permissions: 0,
+	minArgs: 0, 
+	usage: '',
+	/**
+	* This is required and set as true. Otherwise would not recognize as a slash command
+	*/
+	slash: true,
+    /** 
+    * @param {message} message The discord message object
+    * @param {Array<string>} args The arguments following the command call
+    * @param {Client} client The discord client object
+    * @param {number} level The permission level of the user who made the command call
+    */
+	execute(message, args, client, level) { 
+      return message.channel.send('Pong.');
+    },
+    /** 
+    * @param {interaction} interaction The discord interaction object
+    * @param {Client} client The discord client object
+    * @param {number} level The permission level of the user who made the command call
+    */
+    async interactionReply(interaction, client, level) {
+      await interaction.reply({
+	content: 'Pong!'
+      });
+    }
+};
+```
+
 ## Discord Event File 
 When creating a discord event file in your events folder, will required the following properties:
 
@@ -105,6 +186,17 @@ When creating a discord event file in your events folder, will required the foll
 | name          | string      | ""             | Discord Event Name. List of names can be found [here](https://discord.js.org/#/docs/main/stable/class/Client).          |
 | once          | bool        | false          | if the event should run once on first trigger or on every event trigger |
 | execute (client, ...params)  | func | ""             | Functionality and response of the discord event trigger. **Params** are parameters of the event you are defining.  |
+
+##### Example Ready Event
+```js
+module.exports = {
+  name: "ready",
+  once: true,
+  async execute(client) {
+      console.log('Bot just started!');
+  },
+};
+```
 
 ## Modules Files 
 
@@ -180,16 +272,13 @@ You can read all the version and changes history here: [ChangeLog](https://bng94
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
-## Contributing
-When contributing to this repository, please first discuss the change you wish to make via issue before making a change or PR.
-
 ## Notes
-discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). This help the developer focus on creating features and functions for their discord bot without worrying about how to connect to the Discord API using discord.js.
+discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). As a *flexible handler*, this help the developer focus on what required for their discord bot without worrying about how to connect to the Discord API using discord.js and focus on the main aspect of the bot which is the functionality and features for their bot. 
 
-This is my first npm package that I created due to having three bots that I have created for different purposes and using the same formats. Feel free to check this package out, contribute, PR and send any issues that you come across! 
+This is my first npm package that I created due to having three bots that I have created for different purposes, but using the same formats to start-up the bot. Please bear with me as I improving the package for those interesting in supporting and using it!
+## Support and New Features 
+This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!
 
-## Privacy Concerns
-We do not save or maintain any information of your bot token. Discord-Features-Handler requires your bot token, to allow async/await tasks inside the modules folder, which can enables databases connection such as for MongoDB. For MongoDB to work and allowing it to post and update channels. We need all our discord events, ready event and bot to be logged in to be able to connect to the servers which uses the databases and display the information when bot starts up.
 
 ## License
 

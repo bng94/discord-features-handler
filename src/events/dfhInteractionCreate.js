@@ -1,14 +1,27 @@
 module.exports = {
-    name: 'interactionCreate',
-    async execute(interaction, client) {
-        if (!interaction.isCommand()) return;
-        const { commandName, commandId  } = interaction;
-        const cmd = client.commands.get(commandName);
-        
-        console.log(`${commandName}`, `${interaction.user.tag}`, `SLASH CMD`);
-        console.log(commandId, 'ID', 'SLASH CMD');
-        
-        const level = client.getPermissionsLevel(interaction);
-        cmd.interactionReply(interaction, client, level);
-    },
+  name: "interactionCreate",
+  async execute(interaction, client) {
+    const { commandName, commandId, customId } = interaction;
+    if (interaction.isCommand()) {
+      const cmd = client.commands.get(commandName);
+
+      console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
+      console.log("[SLASH CMD]", "[ID]", commandId);
+
+      const level = client.getPermissionsLevel(interaction);
+      cmd.interactionReply(interaction, client, level);
+    }
+    if (interaction.isButton()) {
+      //TODO: add interaction from cmd property
+    }
+    if (interaction.isAutocomplete()) {
+      //TODO: add interaction from cmd property
+    }
+    if (interaction.isContextMenu()) {
+      //TODO: add interaction from cmd property
+    }
+    if (interaction.isModalSubmit()) {
+      //TODO: add interaction from cmd property
+    }
+  },
 };
