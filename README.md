@@ -273,11 +273,12 @@ You can read all the version and changes history here: [ChangeLog](https://bng94
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Notes
-discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). As a *flexible handler*, this help the developer focus on what required for their discord bot without worrying about how to connect to the Discord API using discord.js and focus on the main aspect of the bot which is the functionality and features for their bot.
+discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). As a *flexible handler*, this help the developer focus on what required for their discord bot without worrying about how to connect to the Discord API using discord.js and focus on the main aspect of the bot which is the functionality and features for their bot. 
 
-This is my first npm package that I created due to having three bots that I have created for different purposes and using the same formats. Feel free to check this package out, contribute, PR and send any issues that you come across! 
+This is my first npm package that I created due to having three bots that I have created for different purposes, but using the same formats to start-up the bot. Please bear with me as I improving the package for those interesting in supporting and using it!
 ## Support and New Features 
-This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. Please create a PR upon submitting the changes.
+This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!
+
 
 ## License
 
