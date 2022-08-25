@@ -42,7 +42,6 @@ module.exports = {
         (cmd) => cmd.modalCustomId === customId
       )[0];
 
-
       try {
         return cmd.modalInteraction();
       } catch (e) {
