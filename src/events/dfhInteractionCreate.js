@@ -2,13 +2,13 @@ module.exports = {
   name: "interactionCreate",
   async execute(interaction, client) {
     const { commandName, commandId, customId } = interaction;
+    const level = client.getPermissionsLevel(interaction);
     if (interaction.isCommand()) {
       const cmd = client.commands.get(commandName);
 
       console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
       console.log("[SLASH CMD]", "[ID]", commandId);
 
-      const level = client.getPermissionsLevel(interaction);
       try {
         return cmd.interactionReply(interaction, client, level);
       } catch (e) {
@@ -26,16 +26,32 @@ module.exports = {
       )[0];
 
       try {
-        return cmd.buttonInteraction();
+        return cmd.buttonInteraction(interaction, client, level);
       } catch (e) {
         console.log("isButton interaction execution failed", e);
       }
     }
     if (interaction.isAutocomplete()) {
-      //TODO: add interaction from cmd property
+      const cmd = client.commands.get(commandName);
+      try {
+        return cmd.autoCompleteInteraction(interaction, client, level);
+      } catch (e) {
+        console.log(
+          "isCommand interaction (slash command) execution failed",
+          e
+        );
+      }
     }
-    if (interaction.isContextMenu()) {
-      //TODO: add interaction from cmd property
+    if (interaction.isContextMenu() || interaction.isUserContextMenu()) {
+      const cmd = client.commands.get(commandName);
+      try {
+        return cmd.contextMenuInteraction(interaction, client, level);
+      } catch (e) {
+        console.log(
+          "isCommand interaction (slash command) execution failed",
+          e
+        );
+      }
     }
     if (interaction.isModalSubmit()) {
       const cmd = client.commands.filter(
@@ -43,7 +59,7 @@ module.exports = {
       )[0];
 
       try {
-        return cmd.modalInteraction();
+        return cmd.modalInteraction(interaction, client, level);
       } catch (e) {
         console.log("isModalSubmit interaction execution failed", e);
       }
