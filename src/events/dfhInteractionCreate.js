@@ -9,7 +9,14 @@ module.exports = {
       console.log("[SLASH CMD]", "[ID]", commandId);
 
       const level = client.getPermissionsLevel(interaction);
-      return cmd.interactionReply(interaction, client, level);
+      try {
+        return cmd.interactionReply(interaction, client, level);
+      } catch (e) {
+        console.log(
+          "isCommand interaction (slash command) execution failed",
+          e
+        );
+      }
     }
 
     if (interaction.isButton()) {
@@ -17,7 +24,12 @@ module.exports = {
       const cmd = client.commands.filter(
         (cmd) => cmd.buttonCustomId === customId
       )[0];
-      return cmd.buttonInteraction;
+
+      try {
+        return cmd.buttonInteraction();
+      } catch (e) {
+        console.log("isButton interaction execution failed", e);
+      }
     }
     if (interaction.isAutocomplete()) {
       //TODO: add interaction from cmd property
@@ -29,7 +41,13 @@ module.exports = {
       const cmd = client.commands.filter(
         (cmd) => cmd.modalCustomId === customId
       )[0];
-      return cmd.modalInteraction;
+
+
+      try {
+        return cmd.modalInteraction();
+      } catch (e) {
+        console.log("isModalSubmit interaction execution failed", e);
+      }
     }
   },
 };
