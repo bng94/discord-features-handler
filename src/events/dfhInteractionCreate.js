@@ -9,10 +9,15 @@ module.exports = {
       console.log("[SLASH CMD]", "[ID]", commandId);
 
       const level = client.getPermissionsLevel(interaction);
-      cmd.interactionReply(interaction, client, level);
+      return cmd.interactionReply(interaction, client, level);
     }
+
     if (interaction.isButton()) {
       //TODO: add interaction from cmd property
+      const cmd = client.commands.filter(
+        (cmd) => cmd.buttonCustomId === customId
+      )[0];
+      return cmd.buttonInteraction;
     }
     if (interaction.isAutocomplete()) {
       //TODO: add interaction from cmd property
@@ -21,7 +26,10 @@ module.exports = {
       //TODO: add interaction from cmd property
     }
     if (interaction.isModalSubmit()) {
-      //TODO: add interaction from cmd property
+      const cmd = client.commands.filter(
+        (cmd) => cmd.modalCustomId === customId
+      )[0];
+      return cmd.modalInteraction;
     }
   },
 };
