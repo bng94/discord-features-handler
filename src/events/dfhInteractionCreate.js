@@ -19,8 +19,15 @@ module.exports = {
       }
     }
 
+    /**
+     ** NOTE:
+     ** Since interactionReply return a command response, these modal/buttons may not, error may encounter (haven't fully tested all if else scenarios)
+     **
+     */
     if (interaction.isButton()) {
       //TODO: add interaction from cmd property
+      //* Similar to interactionReply, this should return the command
+      //* Since we need to check the id to ensure it matches the button action we are trying to execute, we need to filter here, since it may not match to the cmd file name (which it should in theory), it is easier to trace this method
       const cmd = client.commands.filter(
         (cmd) => cmd.buttonCustomId === customId
       )[0];
