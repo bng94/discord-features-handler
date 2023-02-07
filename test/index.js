@@ -1,18 +1,16 @@
-const { Client, Collection, Intents } = require("discord.js");
+const { Client, GatewayIntentBits, Partials } = require("discord.js");
 const DiscordFeaturesHandler = require("../src");
 
 const client = new Client({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_BANS,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.DIRECT_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.MessageContent,
   ],
-  partials: ["MESSAGE", "CHANNEL", "REACTION"],
+  partials: [Partials.Channel, Partials.Channel, Partials.Reaction],
 });
 
 DiscordFeaturesHandler(client, {
@@ -25,12 +23,12 @@ DiscordFeaturesHandler(client, {
   loadCommandsLoggerOff: true,
   loadEventsLoggerOff: true,
   loadModulesLoggerOff: true,
-  // optional: 
+  // optional:
   // files we want to excludes when handler is invoked
   // files must be in their respective folders to work
   // commands files in their sub folders
   // events and modules files in their folder
   filesToExcludeInHandlers: {
-    commands: ['ping.js']
-  }
+    commands: ["ping.js"],
+  },
 });

@@ -33,6 +33,6 @@
   },
   "homepage": "https://github.com/bng94/discord-features-handler#readme",
   "dependencies": {
-    "discord.js": "^14.x"
+    "discord.js": "^14.7.1"
   }
 }
