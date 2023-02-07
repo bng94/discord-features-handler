@@ -50,9 +50,9 @@ const disablesObject = {
  * @param {bool} options.loadCommandsLoggerOff Disable console log of command files being loaded
  * @param {bool} options.loadEventsLoggerOff Disable console log of event files being loaded
  * @param {bool} options.loadModulesLoggerOff Disable console log of module files being loaded
- * @param {number} options.modulesPreloadTime The time to wait before loading modules files. This is used to establish a waiting time to connect to the Discord API and 
+ * @param {number} options.modulesPreloadTime The time to wait before loading modules files. This is used to establish a waiting time to connect to the Discord API and
  * ensure we can access the users and guilds the bot is connected to for the Discord Channels, users, guild information to use within the module files that are waiting to be loaded.
- * 
+ *
  * **Expected Value**: Time in milliseconds; 5000 is 5 seconds
  *
  * **Default**: 5000
@@ -111,6 +111,26 @@ const DiscordFeaturesHandler = async (
     ...disableBuiltIn,
   };
 
+  if (!mainDirectory) {
+    throw new TypeError(
+      `mainDirectory declaration is required: Value is: \'mainDirectory: __dirname,\'`
+    );
+  } else if (!fs.lstatSync(mainDirectory).isDirectory()) {
+    throw new TypeError(`mainDirectory must have the value of: \'__dirname\'`);
+  }
+
+  if (
+    require(mainDirectory + "\\package.json").dependencies["discord.js"] <
+    "^14.7.0"
+  ) {
+    throw new Error(
+      "Discord.js v14.7.0 or higher is required, you are using discord.js v" +
+        require(mainDirectory + "\\package.json").dependencies[
+          "discord.js"
+        ].replace("^", "")
+    );
+  }
+
   if (!client) {
     throw new Error("No Discord JS Client provided as first argument!");
   } else if (client instanceof Client === false) {
@@ -119,14 +139,6 @@ const DiscordFeaturesHandler = async (
 
   if (!BOT_TOKEN) {
     throw new TypeError("Discord Bot Token is undefined");
-  }
-
-  if (!mainDirectory) {
-    throw new TypeError(
-      `mainDirectory declaration is required: Value is: \'mainDirectory: __dirname,\'`
-    );
-  } else if (!fs.lstatSync(mainDirectory).isDirectory()) {
-    throw new TypeError(`mainDirectory must have the value of: \'__dirname\'`);
   }
 
   if (
@@ -143,7 +155,9 @@ const DiscordFeaturesHandler = async (
   }
 
   if (typeof disableUnhandledRejectionHandler !== "boolean") {
-    throw new TypeError(`disableUnhandledRejectionHandler must be a boolean value`);
+    throw new TypeError(
+      `disableUnhandledRejectionHandler must be a boolean value`
+    );
   }
 
   if (typeof modulesPreloadTime !== "number") {
