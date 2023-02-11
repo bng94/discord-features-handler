@@ -1,3 +1,4 @@
+const { ChannelType } = require("discord.js");
 module.exports = {
   name: "messageCreate",
   execute(message, client) {
@@ -13,7 +14,7 @@ module.exports = {
     if (!cmd) return;
     console.log(`[CMD]`, `[${message.author.tag}]`, `${message.content}`);
 
-    if (cmd.guildOnly && message.channel.type === "DM") {
+    if (cmd.guildOnly && message.channel.type === ChannelType.DM) {
       return message.reply("I can't execute that command inside DMs!");
     }
 
@@ -51,7 +52,6 @@ module.exports = {
       );
     }
 
-    
     try {
       cmd.execute(message, args, client, level);
     } catch (e) {
