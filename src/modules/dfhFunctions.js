@@ -1,3 +1,4 @@
+const { ChannelType } = require("discord.js");
 const path = require("path");
 module.exports = (client) => {
   /**
@@ -26,7 +27,9 @@ module.exports = (client) => {
 
     while (permOrder.length) {
       const currentLevel = permOrder.shift();
-      if (currentLevel.check(currentUser, channel, guild, member)) {
+      if (
+        currentLevel.check(currentUser, channel, guild, member, ChannelType)
+      ) {
         permLvl = currentLevel.level;
         break;
       }
@@ -177,6 +180,4 @@ module.exports = (client) => {
   Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)];
   };
-
-
 };

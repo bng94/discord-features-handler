@@ -19,14 +19,14 @@ const config = {
 
   // ?optional: These two are optional variable and purely for sample setup
   // defines the mod role and admin role names for permissions.
-  // You can also use .env and set these roles there, 
+  // You can also use .env and set these roles there,
   modRole: "Mod",
   adminRole: "Admin",
 
   // !PERMISSION LEVEL DEFINITIONS.
   // Level 1,2, 6,7 are undefined
   permissions: [
-    // Default User and for all Direct Message Users 
+    // Default User and for all Direct Message Users
     // (excluding bot support, admin, owner)
     {
       level: 0,
@@ -34,7 +34,7 @@ const config = {
       check: () => true,
     },
     // Level 1, 2, can be defined to tailored to your needs for servers
-    
+
     // Level: 3
     // This is the server mod role, based off role based modRole variable.
     {
@@ -72,8 +72,8 @@ const config = {
     {
       level: 5,
       name: "Server Owner",
-      check: (author, channel, guild) => {
-        channel.type === "GUILD_TEXT"
+      check: (author, channel, guild, guildMember, ChannelType) => {
+        channel.type === ChannelType.GuildText
           ? guild.ownerId === author.id
             ? true
             : false
@@ -81,13 +81,13 @@ const config = {
       },
     },
     // Level 6, 7, can be defined to tailored to your needs
-    
+
     // Level: 8
     // This is the bot support, predefined in the support array variable above
     {
       level: 8,
       name: "Bot Support",
-    check: (author) => {
+      check: (author) => {
         if (!config.support) {
           if (config.ownerID === author.id) {
             return true;
@@ -99,7 +99,7 @@ const config = {
         return config.support.includes(author.id);
       },
     },
-    
+
     // Level: 9
     // This is the Bot Admin
     // Some limited access like rebooting the bot or reloading commands.
@@ -118,10 +118,10 @@ const config = {
         return config.admins.includes(author.id);
       },
     },
-    
+
     // Level: 10
     // This is the Bot Owner, you should use your user id and set it to yourself
-    // Highest Permissions because of dangerous commands such as eval 
+    // Highest Permissions because of dangerous commands such as eval
     // You can also use this to fun commands that only you can use
     {
       level: 10,
