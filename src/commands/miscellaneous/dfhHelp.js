@@ -1,7 +1,12 @@
 /**
  * Display all commands based off the user's permission level defined in config.js
  */
-const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
+const {
+  ActionRowBuilder,
+  ButtonBuilder,
+  EmbedBuilder,
+  ButtonStyle,
+} = require("discord.js");
 const filterTime = 60000;
 
 module.exports = {
@@ -158,12 +163,12 @@ const getAllCommandsArray = (client, commands) => {
  *
  * @param {Array<string>} data the data to display on the embed
  * @param {Client} client Discord client object
- * @returns MessageEmbed to display
+ * @returns EmbedBuilder to display
  */
 const getDefaultEmbed = (data, client) => {
   const categories = data.map((cat) => `**${cat.category}**`).join(`\n`);
 
-  const defaultEmbed = new MessageEmbed().setTitle("Help Menu").setAuthor({
+  const defaultEmbed = new EmbedBuilder().setTitle("Help Menu").setAuthor({
     name: `${client.user.username} Help Menu`,
     iconURL: `${client.user.avatarURL()}`,
   }).setDescription(`There are ${data.length} categories!\n${categories}
@@ -179,7 +184,7 @@ Click the respective buttons to see the commands of the category.  You have ${
  * @param {Array<string>} data the data to display on the embed
  * @param {Number} i index of category to show
  * @param {Client} client Discord client object
- * @returns MessageEmbed to display
+ * @returns EmbedBuilder to display
  */
 const getUpdateEmbed = (data, i, client) => {
   const index = data.findIndex((d) => d.category === i.customId);
@@ -190,7 +195,7 @@ const getUpdateEmbed = (data, i, client) => {
     })
     .join("\n");
 
-  return new MessageEmbed()
+  return new EmbedBuilder()
     .setAuthor({
       name: `${client.user.username} Help Menu`,
       iconURL: `${client.user.avatarURL()}`,
@@ -213,22 +218,22 @@ const getRowOfButtons = (data, disabled = false) => {
   const colorForCategory = [
     {
       name: "admin",
-      color: "SECONDARY",
+      color: ButtonStyle.Secondary,
     },
     {
       name: "commands",
-      color: "PRIMARY",
+      color: ButtonStyle.Primary,
     },
     {
       name: "miscellaneous",
-      color: "SUCCESS",
+      color: ButtonStyle.Success,
     },
     {
       name: "system",
-      color: "SECONDARY",
+      color: ButtonStyle.Secondary,
     },
   ];
-  const defaultColor = "PRIMARY";
+  const defaultColor = ButtonStyle.Primary;
 
   const btnArray = data.map((res) => {
     const catName = res.category;
@@ -238,14 +243,14 @@ const getRowOfButtons = (data, disabled = false) => {
     );
     const style = index !== -1 ? colorForCategory[index].color : defaultColor;
 
-    return new MessageButton()
+    return new ButtonBuilder()
       .setCustomId(catName)
       .setLabel(catName)
       .setStyle(style)
       .setDisabled(disabled);
   });
 
-  let row = new MessageActionRow();
+  let row = new ActionRowBuilder();
 
   if (btnArray.length > 0) {
     btnArray.map((btn) => row.addComponents(btn));
@@ -298,7 +303,7 @@ const getSingleCmd = async (commands, name, client) => {
     value: `${command.cooldown || 3} second(s)`,
     inline: true,
   });
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setAuthor({
       name: `${client.user.tag}`,
       iconURL: `${client.user.avatarURL()}`,

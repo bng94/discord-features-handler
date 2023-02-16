@@ -1,4 +1,4 @@
-const { version, MessageEmbed } = require("discord.js");
+const { version, EmbedBuilder } = require("discord.js");
 const pack = require("../../../package.json");
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
   minArgs: 0,
   usage: "",
   execute(message, args, client, level) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(0x800000)
       .setThumbnail(`${client.user.avatarURL()}`)
       .setTitle(`About Me`)
