@@ -19,8 +19,15 @@ module.exports = (
         loadEvents(path.join(dir, file));
       } else if (filesToExclude.includes(file) === false) {
         const event = require(path.join(dirname, dir, file));
-        const eventName = event.name ? event.name : path.basename(file, ".js");
-        if (!eventName) continue;
+        const eventName = event.name;
+        if (!eventName) {
+          console.error(
+            "File:",
+            file,
+            `\n Event name is invalid, import { Events } from discord.js and include the event type you are using. Ex: name: 'Events.ClientReady'`
+          );
+          continue;
+        }
         try {
           if (event.once) {
             client.once(
@@ -46,7 +53,12 @@ module.exports = (
       }
     }
     if (builtInDirectory) return;
-    console.log(`[log]`, `[Event]`, `Successfully loaded ${counter} events.`, "Event");
+    console.log(
+      `[log]`,
+      `[Event]`,
+      `Successfully loaded ${counter} events.`,
+      "Event"
+    );
   };
 
   const loadingEvents = directory.map((dirs) => {

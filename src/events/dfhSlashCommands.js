@@ -1,5 +1,7 @@
+const { Events } = require("discord.js");
+
 module.exports = {
-  name: "ready",
+  name: Events.ClientReady,
   once: true,
   async execute(client) {
     const guildId = [client.config.serverID, ""];

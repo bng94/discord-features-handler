@@ -1,6 +1,6 @@
-const { ChannelType } = require("discord.js");
+const { ChannelType, Events } = require("discord.js");
 module.exports = {
-  name: "messageCreate",
+  name: Events.MessageCreate,
   execute(message, client) {
     const prefix = client.config.prefix;
     if (message.author.bot) return;
