@@ -120,7 +120,7 @@ const DiscordFeaturesHandler = async (
   }
 
   if (
-    require(mainDirectory + "package.json").dependencies["discord.js"] <
+    require(mainDirectory + "/package.json").dependencies["discord.js"] <
     "^14.7.0"
   ) {
     throw new Error(
