@@ -120,12 +120,12 @@ const DiscordFeaturesHandler = async (
   }
 
   if (
-    require(mainDirectory + "\\package.json").dependencies["discord.js"] <
+    require(mainDirectory + "package.json").dependencies["discord.js"] <
     "^14.7.0"
   ) {
     throw new Error(
       "Discord.js v14.7.0 or higher is required, you are using discord.js v" +
-        require(mainDirectory + "\\package.json").dependencies[
+        require(mainDirectory + "package.json").dependencies[
           "discord.js"
         ].replace("^", "")
     );
