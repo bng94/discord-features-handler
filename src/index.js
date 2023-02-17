@@ -122,13 +122,10 @@ const DiscordFeaturesHandler = async (
   /**
    * This assume node_modules folder is on same level at package.json, works well if the user is using an CI/CD environment.
    */
-  if (require("../../../package.json").dependencies["discord.js"] < "^14.7.0") {
+  if (require("discord.js").version < "^14.7.0") {
     throw new Error(
       "Discord.js v14.7.0 or higher is required, you are using discord.js v" +
-        require("../../../package.json").dependencies["discord.js"].replace(
-          "^",
-          ""
-        )
+        require("discord.js").version.replace("^", "")
     );
   }
 
