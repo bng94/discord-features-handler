@@ -22,13 +22,13 @@ module.exports = {
     const level = client.getPermissionsLevel(message);
     // filter the commands saved in new collection object
     const commands = client.commands.filter((cmd) => cmd.permissions <= level);
-    const data = getAllCommandsArray(client, commands);
+    const data = getSortedCommandArray(client, commands);
 
     if (!args.length) {
       // get embed with data and categorized all the commands displayed
-      const embed = getDefaultEmbed(data, client);
+      const embed = getInitialEmbed(data, client);
       //get rows of buttons based of cmds categories
-      const row = getRowOfButtons(data);
+      const row = getButtonRows(data);
 
       //send initial message and await
       message
@@ -56,7 +56,7 @@ module.exports = {
           // handles after the collection event ended
           // disable listening to btn inputs after filterTime expires
           return collector.on("end", async (collected) => {
-            const lastRow = getRowOfButtons(data, true);
+            const lastRow = getButtonRows(data, true);
             return await msg.edit({ components: [lastRow] });
           });
         });
@@ -73,11 +73,11 @@ module.exports = {
     const name = options.getString("cmd_name");
 
     const commands = client.commands.filter((cmd) => cmd.permissions <= level);
-    const data = getAllCommandsArray(client, commands);
+    const data = getSortedCommandArray(client, commands);
 
     if (!name) {
-      const embed = getDefaultEmbed(data, client);
-      const row = getRowOfButtons(data);
+      const embed = getInitialEmbed(data, client);
+      const row = getButtonRows(data);
 
       await interaction.editReply({
         embeds: [embed],
@@ -100,7 +100,7 @@ module.exports = {
       // handles after the collection event ended
       // disable listening to btn inputs after filterTime expires
       return collector.on("end", async (collected) => {
-        const lastRow = getRowOfButtons(data, true);
+        const lastRow = getButtonRows(data, true);
         return await interaction.editReply({ components: [lastRow] });
       });
     } else {
@@ -119,7 +119,7 @@ module.exports = {
  * formatted array of all commands categorized based off sub folder names
  * @returns
  */
-const getAllCommandsArray = (client, commands) => {
+const getSortedCommandArray = (client, commands) => {
   const dataArray = [];
   const prefix = client.config.prefix;
   const commandNames = commands.map((cmd) => cmd.name);
@@ -165,7 +165,7 @@ const getAllCommandsArray = (client, commands) => {
  * @param {Client} client Discord client object
  * @returns EmbedBuilder to display
  */
-const getDefaultEmbed = (data, client) => {
+const getInitialEmbed = (data, client) => {
   const categories = data.map((cat) => `**${cat.category}**`).join(`\n`);
 
   const defaultEmbed = new EmbedBuilder().setTitle("Help Menu").setAuthor({
@@ -203,7 +203,7 @@ const getUpdateEmbed = (data, i, client) => {
     .setTitle(`${data[index].category} Category`)
     .setDescription(cmds)
     .setFields({
-      name: `To see a more details about a specifc command type following and replace "name" with the command name:`,
+      name: `To see a more details about a specific command type following and replace "name" with the command name:`,
       value: `/help name or ${client.config.prefix}help name`,
     });
 };
@@ -214,7 +214,7 @@ const getUpdateEmbed = (data, i, client) => {
  * @param {Boolean} disabled the button once timer expires
  * @returns different colors variations for the component
  */
-const getRowOfButtons = (data, disabled = false) => {
+const getButtonRows = (data, disabled = false) => {
   const colorForCategory = [
     {
       name: "admin",
