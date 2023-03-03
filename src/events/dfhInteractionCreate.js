@@ -22,7 +22,7 @@ module.exports = {
       interaction.type === InteractionType.ApplicationCommandAutocomplete
     ) {
       const cmdName = client.commands.find((cmd) =>
-        cmd.autoCompleteCustomIds.includes(customId)
+        cmd.autoCompleteCustomIds?.includes(customId)
       ).name;
       const cmd = client.commands.get(cmdName);
       try {
@@ -35,7 +35,7 @@ module.exports = {
       }
     } else if (interaction.type === InteractionType.MessageComponent) {
       const cmdName = client.commands.find((cmd) =>
-        cmd.customIds.includes(customId)
+        cmd.customIds?.includes(customId)
       ).name;
       const cmd = client.commands.get(cmdName);
       try {
@@ -45,7 +45,7 @@ module.exports = {
       }
     } else if (interaction.type === InteractionType.ModalSubmit) {
       const cmdName = client.commands.find((cmd) =>
-        cmd.modalCustomIds.includes(customId)
+        cmd.modalCustomIds?.includes(customId)
       ).name;
       const cmd = client.commands.get(cmdName);
 
