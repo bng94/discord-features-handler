@@ -119,16 +119,6 @@ const DiscordFeaturesHandler = async (
     throw new TypeError(`mainDirectory must have the value of: \'__dirname\'`);
   }
 
-  /**
-   * This assume node_modules folder is on same level at package.json, works well if the user is using an CI/CD environment.
-   */
-  if (require("discord.js").version.version.replace("^", "") < "14.7.0") {
-    throw new Error(
-      "Discord.js v14.7.0 or higher is required, you are using discord.js v" +
-        require("discord.js").version.replace("^", "")
-    );
-  }
-
   if (!client) {
     throw new Error("No Discord JS Client provided as first argument!");
   } else if (client instanceof Client === false) {
