@@ -21,7 +21,10 @@ module.exports = {
     } else if (
       interaction.type === InteractionType.ApplicationCommandAutocomplete
     ) {
-      const cmd = client.commands.get(commandName);
+      const cmdName = client.commands.find(
+        (cmd) => cmd.autoCompleteCustomId === customId
+      ).name;
+      const cmd = client.commands.get(cmdName);
       try {
         return cmd.autoCompleteInteraction(interaction, client, level);
       } catch (e) {
@@ -31,17 +34,20 @@ module.exports = {
         );
       }
     } else if (interaction.type === InteractionType.MessageComponent) {
-      const cmd = client.commands.filter((cmd) => cmd.customId === customId)[0];
-
+      const cmdName = client.commands.find(
+        (cmd) => cmd.customId === customId
+      ).name;
+      const cmd = client.commands.get(cmdName);
       try {
         return cmd.componentInteraction(interaction, client, level);
       } catch (e) {
         console.log("MessageComponent interaction execution failed", e);
       }
     } else if (interaction.type === InteractionType.ModalSubmit) {
-      const cmd = client.commands.filter(
+      const cmdName = client.commands.find(
         (cmd) => cmd.modalCustomId === customId
-      )[0];
+      ).name;
+      const cmd = client.commands.get(cmdName);
 
       try {
         return cmd.modalInteraction(interaction, client, level);
