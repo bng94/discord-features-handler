@@ -30,6 +30,14 @@ module.exports = {
           e
         );
       }
+    } else if (interaction.type === InteractionType.MessageComponent) {
+      const cmd = client.commands.filter((cmd) => cmd.customId === customId)[0];
+
+      try {
+        return cmd.componentInteraction(interaction, client, level);
+      } catch (e) {
+        console.log("MessageComponent interaction execution failed", e);
+      }
     } else if (interaction.type === InteractionType.ModalSubmit) {
       const cmd = client.commands.filter(
         (cmd) => cmd.modalCustomId === customId
