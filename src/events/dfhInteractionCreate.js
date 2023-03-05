@@ -23,7 +23,10 @@ module.exports = {
     ) {
       const cmdName = client.commands.find((cmd) =>
         cmd.autoCompleteCustomIds?.includes(customId)
-      ).name;
+      )?.name;
+      if (!cmdName)
+        return console.error(interaction.customId, "interactionCreate Failed");
+
       const cmd = client.commands.get(cmdName);
       try {
         return cmd.autoCompleteInteraction(interaction, client, level);
@@ -36,7 +39,9 @@ module.exports = {
     } else if (interaction.type === InteractionType.MessageComponent) {
       const cmdName = client.commands.find((cmd) =>
         cmd.customIds?.includes(customId)
-      ).name;
+      )?.name;
+      if (!cmdName)
+        return console.error(interaction.customId, "interactionCreate Failed");
       const cmd = client.commands.get(cmdName);
       try {
         return cmd.componentInteraction(interaction, client, level);
@@ -46,7 +51,10 @@ module.exports = {
     } else if (interaction.type === InteractionType.ModalSubmit) {
       const cmdName = client.commands.find((cmd) =>
         cmd.modalCustomIds?.includes(customId)
-      ).name;
+      )?.name;
+      if (!cmdName)
+        return console.error(interaction.customId, "interactionCreate Failed");
+
       const cmd = client.commands.get(cmdName);
 
       try {
