@@ -19,9 +19,16 @@ module.exports = {
   usage: "<command name>",
   async execute(message, args, client) {
     // using the built-in functions and get the permission level of user
-    const level = client.getPermissionsLevel(message);
+    const level = client.getPermissionsLevel({
+      author: message.author,
+      channel: message.channel,
+      guild: message.guild,
+      guildMember: message.member,
+    });
     // filter the commands saved in new collection object
-    const commands = client.commands.filter((cmd) => cmd.permissions <= level);
+    const commands = await client.commands.filter(
+      (cmd) => cmd.permissions <= level
+    );
     const data = getSortedCommandArray(client, commands);
 
     if (!args.length) {
@@ -72,7 +79,9 @@ module.exports = {
     const { options } = interaction;
     const name = options.getString("cmd_name");
 
-    const commands = client.commands.filter((cmd) => cmd.permissions <= level);
+    const commands = await client.commands.filter(
+      (cmd) => cmd.permissions <= level
+    );
     const data = getSortedCommandArray(client, commands);
 
     if (!name) {
@@ -121,7 +130,9 @@ module.exports = {
  */
 const getSortedCommandArray = (client, commands) => {
   const dataArray = [];
-  const prefix = client.config.prefix;
+  const prefix = Array.isArray(client.config.prefix)
+    ? client.config.prefix[0]
+    : client.config.prefix;
   const commandNames = commands.map((cmd) => cmd.name);
   const longestName = commandNames.reduce(function (a, b) {
     return a.length > b.length ? a : b;
@@ -190,7 +201,14 @@ const getUpdateEmbed = (data, i, client) => {
   const index = data.findIndex((d) => d.category === i.customId);
   const cmds = data[index].commands
     .map((cmd) => {
-      let cmdName = cmd.name.replace(client.config.prefix, "").toProperCase();
+      let cmdName = cmd.name
+        .replace(
+          Array.isArray(client.config.prefix)
+            ? client.config.prefix[0]
+            : client.config.prefix,
+          ""
+        )
+        .toProperCase();
       return `**${cmdName}**\n${cmd.description}\n`;
     })
     .join("\n");
@@ -204,7 +222,11 @@ const getUpdateEmbed = (data, i, client) => {
     .setDescription(cmds)
     .setFields({
       name: `To see a more details about a specific command type following and replace "name" with the command name:`,
-      value: `/help name or ${client.config.prefix}help name`,
+      value: `/help name or ${
+        Array.isArray(client.config.prefix)
+          ? client.config.prefix[0]
+          : client.config.prefix
+      }help name`,
     });
 };
 
@@ -267,51 +289,59 @@ const getButtonRows = (data, disabled = false) => {
  * @returns information about the command requested to lookup
  */
 const getSingleCmd = async (commands, name, client) => {
+  const prefix = Array.isArray(client.config.prefix)
+    ? client.config.prefix[0]
+    : client.config.prefix;
   const command = await commands.find(
     (cmd) => cmd.name === name || cmd.aliases === name
   );
+
   if (!command) {
-    return { content: "that's not a valid command!" };
+    return {
+      content: `The command, **${name}**
+    + does not exist!`,
+    };
   }
 
   const fieldObj = [];
-  if (command.aliases.length)
+  const aliases = command.aliases.join(", ");
+  if (aliases.length !== 0) {
     fieldObj.push({
       name: `Aliases:`,
-      value: `${command.aliases.join(", ")}`,
+      value: `${aliases}`,
       inline: true,
     });
-
+  }
   fieldObj.push({
     name: `Category:`,
     value: `${command.category}`,
     inline: true,
   });
 
-  if (command.usage)
+  if (command.usage.length !== 0) {
     fieldObj.push({
       name: `Usage:`,
       value: `${prefix}${command.name} ${command.usage}`,
     });
+  }
   fieldObj.push({
     name: `Slash:`,
-    value: `${command.slash ? `True` : `False`}`,
+    value: `${command.data ? `True` : `False`}`,
     inline: true,
   });
-  fieldObj.push({
-    name: `Cooldown:`,
-    value: `${command.cooldown || 3} second(s)`,
-    inline: true,
-  });
-  const embed = new EmbedBuilder()
-    .setAuthor({
-      name: `${client.user.tag}`,
-      iconURL: `${client.user.avatarURL()}`,
-    })
-    .setTitle(`${command.name.toProperCase()} Command`)
-    .setDescription(command.description)
-    .setTimestamp()
-    .setFields(fieldObj);
+  try {
+    const embed = new EmbedBuilder()
+      .setAuthor({
+        name: `${client.user.tag}`,
+        iconURL: `${client.user.avatarURL()}`,
+      })
+      .setTitle(`${command.name.toProperCase()} Command`)
+      .setDescription(command.description)
+      .setTimestamp()
+      .setFields(fieldObj);
 
-  return { embeds: [embed] };
+    return { embeds: [embed] };
+  } catch (e) {
+    console.log(e);
+  }
 };

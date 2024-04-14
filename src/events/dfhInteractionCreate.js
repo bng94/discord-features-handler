@@ -3,10 +3,18 @@ module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction, client) {
     const { commandName, commandId, customId } = interaction;
-    const level = client.getPermissionsLevel(interaction);
+    const level = client.getPermissionsLevel({
+      author: interaction.user,
+      channel: interaction.channel,
+      guild: interaction.guild,
+      guildMember: interaction.member,
+    });
     if (interaction.type === InteractionType.ApplicationCommand) {
       const cmd = client.commands.get(commandName);
 
+      if (!cmd) {
+        return console.error("Unable to find slash command:" + cmd);
+      }
       console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
       console.log("[SLASH CMD]", "[ID]", commandId);
 

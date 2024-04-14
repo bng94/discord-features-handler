@@ -1,13 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-module.exports = (
+module.exports = ({
   client,
   directory = ["../events"],
   filesToExclude = [],
   mainDirectory,
-  loggerOff
-) => {
+  logger,
+}) => {
   const loadEvents = (dir) => {
     const builtInDirectory = dir.includes("../events");
     const dirname = builtInDirectory ? __dirname : mainDirectory;
@@ -40,7 +40,7 @@ module.exports = (
               async (...args) => await event.execute(...args, client)
             );
           }
-          if (!loggerOff) {
+          if (logger) {
             console.log(`[log]`, `[Event]`, `Loaded Event File: ${file}`);
           }
           counter++;

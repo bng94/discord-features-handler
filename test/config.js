@@ -1,21 +1,26 @@
+const { ChannelType } = require("discord.js");
+
 const config = {
   // Your discord user id
   // owner: access to source code of bot etc...
-  ownerID: process.env.ownerID,
+  ownerID: process.env.OWNER_iD,
   // this can be both array or a single user id of your bot admins users
   // bot admins: reload bot commands, restart bot so forth...
-  admins: process.env.ownerID,
+  admins: process.env.OWNER_iD,
   // this can be both array or a single user id of your bot support users
   // bot support: people who knows how your bot works and do simple fix
-  support: process.env.ownerID,
+  support: process.env.OWNER_iD,
   // prefix is what the keyword to execute your bot commands
   // most people uses "!" , or ".". You can select what you want!
   prefix: "!",
-  // if we should show command denied message for
-  // Being required to be a bot support or higher to use the command
-  // *Recommend: true, so we can give the "imagination" those command don't exist
-  // *Hides commands that regular users to don't see and they don't have access to
-  hideDeniedBotAdminCommandsUsage: false,
+  // Your Discord Bot token found in [Discord Developer Portal](https://discordapp.com/developers/applications/)
+  token: process.env.DISCORD_TOKEN,
+  //Your application's client id (Discord Developer Portal > "General Information" > application id)
+  clientId: process.env.CLIENT_ID,
+  // Optional: Your development server's id
+  guildId: process.env.DEVELOPMENT_GUILD_ID,
+  // *This will display admin commands that regular users to don't see and they don't have access to, will show users a denied access message to who does not have permission level of 7 or higher.
+  displayAdminCommandCallsByNonAdmin: false,
 
   // ?optional: These two are optional variable and purely for sample setup
   // defines the mod role and admin role names for permissions.
@@ -40,13 +45,13 @@ const config = {
     {
       level: 3,
       name: "Moderator",
-      check: (author, channel, guild, guildMember) => {
-        try {
-          const modRole = guild.roles.cache.find(
-            (r) => r.name.toLowerCase() === config.modRole.toLowerCase()
-          );
-          if (modRole && guildMember._roles.has(modRole.id)) return true;
-        } catch (e) {
+      check: ({ guild, guildMember }) => {
+        const modRole = guild.roles.cache.find(
+          (r) => r.name.toLowerCase() === config.modRole.toLowerCase()
+        );
+        if (modRole && guildMember.roles.cache.has(modRole.id)) {
+          return true;
+        } else {
           return false;
         }
       },
@@ -56,13 +61,12 @@ const config = {
     {
       level: 4,
       name: "Administrator",
-      check: (author, channel, guild, guildMember) => {
-        try {
-          const adminRole = guild.roles.cache.find(
-            (r) => r.name.toLowerCase() === config.adminRole.toLowerCase()
-          );
-          return adminRole && guildMember._roles.has(adminRole.id);
-        } catch (e) {
+      check: ({ guild, guildMember }) => {
+        const adminRole = guild.roles.cache.find(
+          (r) => r.name.toLowerCase() === config.adminRole.toLowerCase()
+        );
+        if (adminRole && guildMember.roles.cache.has(adminRole.id)) return true;
+        else {
           return false;
         }
       },
@@ -72,8 +76,8 @@ const config = {
     {
       level: 5,
       name: "Server Owner",
-      check: (author, channel, guild, guildMember, ChannelType) => {
-        channel.type === ChannelType.GuildText
+      check: ({ author, channel, guild }) => {
+        return channel.type === ChannelType.GuildText
           ? guild.ownerId === author.id
             ? true
             : false
@@ -87,7 +91,7 @@ const config = {
     {
       level: 8,
       name: "Bot Support",
-      check: (author) => {
+      check: ({ author }) => {
         if (!config.support) {
           if (config.ownerID === author.id) {
             return true;
@@ -106,7 +110,7 @@ const config = {
     {
       level: 9,
       name: "Bot Admin",
-      check: (author) => {
+      check: ({ author }) => {
         if (!config.admins) {
           if (config.ownerID === author.id) {
             return true;
@@ -127,7 +131,7 @@ const config = {
       level: 10,
       name: "Bot Owner",
       // A simple check, compares the message author id to the one stored in the config file.
-      check: (author) => {
+      check: ({ author }) => {
         return config.ownerID === author.id;
       },
     },

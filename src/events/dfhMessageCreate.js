@@ -2,15 +2,35 @@ const { ChannelType, Events } = require("discord.js");
 module.exports = {
   name: Events.MessageCreate,
   execute(message, client) {
-    const prefix = client.config.prefix;
+    const configPrefix = client.config.prefix;
     if (message.author.bot) return;
-    if (!message.content.startsWith(prefix)) return;
+
+    if (
+      typeof configPrefix === String &&
+      !message.content.startsWith(configPrefix)
+    )
+      return;
+    if (
+      Array.isArray(configPrefix) &&
+      !configPrefix.some((prefix) => message.content.startsWith(prefix))
+    )
+      return;
+
+    const prefix = Array.isArray(configPrefix)
+      ? configPrefix.find((prefix) => message.content.startsWith(prefix))
+      : configPrefix;
+
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
     const cmd =
       client.commands.get(command) ||
       client.commands.get(client.aliases.get(command));
-    const level = client.getPermissionsLevel(message);
+    const level = client.getPermissionsLevel({
+      author: message.author,
+      channel: message.channel,
+      guild: message.guild,
+      guildMember: message.member,
+    });
     if (!cmd) return;
     console.log(`[CMD]`, `[${message.author.tag}]`, `${message.content}`);
 
@@ -23,7 +43,10 @@ module.exports = {
       : cmd.permissions;
 
     if (level < cmdPermissions) {
-      if (cmdPermissions > 7 && client.config.hideDeniedBotAdminCommandsUsage) {
+      if (
+        cmdPermissions > 7 &&
+        client.config.displayAdminCommandCallsByNonAdmin
+      ) {
         return console.log(
           `[CMD DENIED]`,
           `${message.content}`,

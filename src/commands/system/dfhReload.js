@@ -4,7 +4,7 @@ const absolute = path.resolve();
 module.exports = {
   name: "reload",
   description: "Reload a command!",
-  aliases: [],
+  aliases: [""],
   guildOnly: false,
   permissions: 8,
   minArgs: 1,
@@ -30,18 +30,19 @@ module.exports = {
 
     const folderName = commandFolders
       .map((folder) => {
-        if (
-          fs.existsSync(
-            path.join(
-              client.dfhSettings.mainDirectory,
-              client.dfhSettings.commandDir,
-              folder,
-              fileName + ".js"
-            )
-          )
-        ) {
-          return folder;
-        } else if (fs.existsSync(`./commands/${folder}/${fileName}.js`)) {
+        const filePathJS = path.join(
+          client.dfhSettings.mainDirectory,
+          client.dfhSettings.commandDir,
+          folder,
+          fileName + ".js"
+        );
+        const filePathTS = path.join(
+          client.dfhSettings.mainDirectory,
+          client.dfhSettings.commandDir,
+          folder,
+          fileName + ".ts"
+        );
+        if (fs.existsSync(filePathJS) || fs.existsSync(filePathTS)) {
           return folder;
         }
       })
@@ -49,7 +50,11 @@ module.exports = {
     let response = await client.unloadCommand(fileName, folderName);
     if (response) return message.reply(`Error Unloading: ${response}`);
 
-    response = client.loadCommand(fileName, folderName, true);
+    response = client.loadCommand({
+      file: fileName,
+      folder: folderName,
+      loadingMsg: true,
+    });
     if (response) return message.reply(`Error Loading: ${response}`);
     message.reply(`The command \`${commandName}\` has been reloaded`);
   },

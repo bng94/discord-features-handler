@@ -1,4 +1,4 @@
-module.exports = (client) => {
+module.exports = () => {
   process.on("unhandledRejection", (e) => {
     console.log(e);
   });
