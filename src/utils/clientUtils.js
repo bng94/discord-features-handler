@@ -35,6 +35,13 @@ const checkCommandErrors = (cmd) => {
   return error;
 };
 
+/**
+ *
+ * @param {client} client
+ * @param {import("..").Config} config
+ * @param {*} directories
+ * @returns {Client}
+ */
 const configureClient = (client, config, directories) => {
   client.config = config;
   client.commands = new Collection();

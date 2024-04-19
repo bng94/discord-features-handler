@@ -141,9 +141,9 @@ const DiscordFeaturesHandler = async (
       "Environment variable DISCORD_TOKEN is undefined, your bot secret token"
     );
   }
-  if (typeof process.env.OWNER_iD === "undefined") {
+  if (typeof process.env.OWNER_ID === "undefined") {
     throw new Error(
-      "Environment variable OWNER_iD is undefined, your discord user Id"
+      "Environment variable OWNER_ID is undefined, your discord user Id"
     );
   }
   if (typeof process.env.CLIENT_ID === "undefined") {
@@ -151,14 +151,15 @@ const DiscordFeaturesHandler = async (
       `Environment variable CLIENT_ID is undefined, You can find it by going to Discord Developer Portal > "General Information" > application id)`
     );
   }
-  console.log(`Thank you for installing DiscordFeaturesHandler!`);
-  console.log(`Loading your files now...
-  `);
 
   if (!disableUnhandledRejectionHandler) {
     UnhandledRejection();
   }
+
   functions();
+
+  console.log(`Thank you for installing DiscordFeaturesHandler!`);
+  console.log(`Loading your files now...`);
 
   const configFile = config.endsWith("./defaultConfig.js")
     ? require(config)

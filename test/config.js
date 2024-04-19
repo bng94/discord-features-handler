@@ -3,13 +3,13 @@ const { ChannelType } = require("discord.js");
 const config = {
   // Your discord user id
   // owner: access to source code of bot etc...
-  ownerID: process.env.OWNER_iD,
+  ownerID: process.env.OWNER_ID,
   // this can be both array or a single user id of your bot admins users
   // bot admins: reload bot commands, restart bot so forth...
-  admins: process.env.OWNER_iD,
+  admins: process.env.OWNER_ID,
   // this can be both array or a single user id of your bot support users
   // bot support: people who knows how your bot works and do simple fix
-  support: process.env.OWNER_iD,
+  support: process.env.OWNER_ID,
   // prefix is what the keyword to execute your bot commands
   // most people uses "!" , or ".". You can select what you want!
   prefix: "!",

@@ -2,7 +2,6 @@ import {
   CategoryChildChannel,
   ChannelType,
   Client,
-  Events,
   Collection,
   Guild,
   GuildMember,
@@ -222,6 +221,10 @@ interface CommandFile {
    */
   description: string;
   /**
+   * Category of the command
+   */
+  category: string;
+  /**
    * Array of strings for command aliases
    */
   aliases: string[];
@@ -320,15 +323,23 @@ declare module "discord.js" {
       /**
        * Channel which the message was sent
        */
-      channel: TextChannel;
+      channel:
+        | TextChannel
+        | VoiceChannel
+        | CategoryChannel
+        | DMChannel
+        | NewsChannel
+        | StoreChannel
+        | ThreadChannel
+        | TextBasedChannel;
       /**
        * Guild which the message was sent
        */
-      guild: Guild;
+      guild: Guild | null;
       /**
        * Guild member, the person who sent the message
        */
-      guildMember: GuildMember;
+      guildMember: GuildMember | null;
     }): number;
 
     /**
@@ -361,22 +372,33 @@ declare module "discord.js" {
   }
 }
 
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      DISCORD_TOKEN: string;
+      OWNER_ID: string;
+      CLIENT_ID: string;
+      DEVELOPMENT_GUILD_ID: string;
+    }
+  }
+}
+
 interface Config {
   /**
    * The developer discord user Id,
-   * **Default**: process.env.OWNER_iD
+   * **Default**: process.env.OWNER_ID
    */
   ownerID: string;
   /**
    * The bot admin user(s) of the bot
    * can be an variable from your .env file
-   * **Default**: process.env.OWNER_iD
+   * **Default**: process.env.OWNER_ID
    */
   admins: string | string[];
   /**
    * The bot support user(s) of the bot
    * can be an variable from your .env file
-   * **Default**: process.env.OWNER_iD
+   * **Default**: process.env.OWNER_ID
    */
   support: string | string[];
   /**
@@ -403,11 +425,11 @@ interface Config {
    * If you want to delete a specific slash command,
    * If you type boolean, true, then all the slash commands will be deleted
    */
-  toDeleteSlashCommand: string | true;
+  toDeleteSlashCommand?: string | true;
   /**
    * Enable a command denied message to users who do not have permission level of 7 or higher. Default is false
    */
-  displayAdminCommandCallsByNonAdmin: boolean;
+  displayAdminCommandCallsByNonAdmin?: boolean;
   /**
    * The role name of your moderator of all guild server this bot is in; Default Permission level of 4.
    */

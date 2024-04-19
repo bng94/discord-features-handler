@@ -29,11 +29,33 @@ module.exports = async ({
         if (stat.isDirectory()) {
           await loadModules(path.join(dir, file));
         } else if (filesToExclude.includes(file) === false) {
-          const feature = require(path.join(dirname, dir, file));
+          let feature;
+          if (file.endsWith(".ts")) {
+            const featureModule = await import(
+              `file://${path.join(dirname, dir, file)}`
+            );
+            feature = featureModule.default;
+
+            if (typeof feature !== "function") {
+              feature = feature.default;
+            }
+          } else if (file.endsWith(".js")) {
+            feature = require(path.join(dirname, dir, file));
+          }
+
           if (!builtInDirectory && logger) {
             console.log(`Loading module file: ${file}`);
           }
           try {
+            if (!feature) {
+              throw Error(
+                `Invalid file type: ${
+                  file.endsWith(".ts")
+                    ? " No default export of the module found."
+                    : ""
+                }`
+              );
+            }
             await feature(client);
           } catch (e) {
             console.error(`Failed to Load ${file}: ${e}`);
@@ -58,6 +80,7 @@ module.exports = async ({
       }
     } catch (error) {
       console.error(
+        error,
         `Modules Directory, "${dir}" doesn't not exist in: ${mainDirectory}}`
       );
     }
