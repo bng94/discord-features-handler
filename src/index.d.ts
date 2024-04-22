@@ -139,31 +139,31 @@ type FilesToExcludeInHandlers = {
  **/
 interface DiscordFeaturesHandlerOptions {
   /**
-   * @property {string} config Path to your configuration file, where you can define your bot commands permission levels, bot supports, admins, and bot owner IDs
+   * Path to your configuration file, where you can define your bot commands permission levels, bot supports, admins, and bot owner IDs
    */
   config?: string;
   /**
-   * @property {directories} directories - Object containing all your directories name and location
+   * Object containing all your directories name and location
    */
   directories: Directories;
   /**
-   * @property {builtin_files} builtin_files  - Object to define what built-in commands and events to disable
+   * Object to define what built-in commands and events to disable
    */
   builtin_files?: BuiltinFiles;
   /**
-   * @property {onLoad_list_files} file_Load_Logger - Object to define directory files to log upon loading the files
+   * Object to define directory files to log upon loading the files
    */
   onLoad_list_files?: FileLoadedLogger;
   /**
-   * @property {boolean} [disableUnhandledRejectionHandler=false] - Disable discord-features-handler unhandledRejection handler
+   * Disable discord-features-handler unhandledRejection handler
    */
   disableUnhandledRejectionHandler?: boolean;
   /**
-   * @property {number} [modulesPreloadTime=5000] - The time to wait before loading modules files in milliseconds (Default: 5000)
+   * The time to wait before loading modules files in milliseconds (Default: 5000)
    */
   modulesPreloadTime?: number;
   /**
-   * @property {filesToExcludeInHandlers} filesToExcludeInHandlers - Object to contain filename and file extension name of files to not load with handler
+   * Object to contain filename and file extension name of files to not load with handler
    */
   filesToExcludeInHandlers?: FilesToExcludeInHandlers;
 }
@@ -455,5 +455,11 @@ declare function DiscordFeaturesHandler(
   options: DiscordFeaturesHandlerOptions
 ): void;
 
-export default DiscordFeaturesHandler;
-export { Config, CommandFile, EventFile, Permissions, CheckPermissions };
+export {
+  DiscordFeaturesHandler,
+  Config,
+  CommandFile,
+  EventFile,
+  Permissions,
+  CheckPermissions,
+};
