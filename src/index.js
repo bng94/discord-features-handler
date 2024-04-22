@@ -1,14 +1,17 @@
+require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const { Client, Collection } = require("discord.js");
+const { Client } = require("discord.js");
 const loadCommands = require("./handlers/loadCommands.js");
 const loadEvents = require("./handlers/loadEvents.js");
 const loadModules = require("./handlers/loadModules.js");
-const functions = require("./modules/dfhFunctions.js");
-const dfhUnhandledRejection = require("./modules/dfhUnhandledRejection.js");
+const functions = require("./modules/functions.js");
+const UnhandledRejection = require("./modules/UnhandledRejection.js");
+const { configureClient } = require("./utils/clientUtils.js");
+const { checkConfig } = require("./utils/configUtils.js");
 
-const disablesObject = {
-  allBuiltIn: false,
+const BUILT_IN_FILES = {
+  disable_all: false,
   commands: {
     help: false,
     reload: false,
@@ -16,63 +19,32 @@ const disablesObject = {
   events: {
     messageCreate: false,
     interactionCreate: false,
-    loadSlashCommandsReady: false,
   },
 };
-/**
- * DiscordFeaturesHandler that handles loading bot commands, discord events and modules files
- * @function DiscordFeaturesHandler
- * @param {Client} client - [Discord Client Object](https://discord.js.org/#/docs/discord.js/stable/class/Client)
- * @param {Object} options - DiscordFeaturesHandler configuration object
- * @param {string} options.config Path to your configuration file, where you can define your bot commands permission levels, bot supports, admins, and bot owner IDs
- * @param {string} options.mainDirectory The path to your bot start script file.
- *
- * Expected value: **__dirname**
- * @param {string} options.commandDir This is the folder name that contains sub folders that contains your bot commands file.
- *
- * Default Folder Name: **commands**
- * @param {string} options.eventDir  This is the folder name that contains your discord event files.
- *
- * Default Folder Name: **events**
- * @param {string} options.modulesDir This is the folder name for your modules.export files.
- *
- * Default Folder Name: **modules**
- * @param {Object} options.disableBuiltIn Object to define what built-in commands and events to disable
- * @param {bool} options.disableBuiltIn.allBuiltIn Bool to disable all built-in commands and discord events
- * @param {Object} options.disableBuiltIn.commands Object to contain defined built-in command name to disable
- * @param {bool} options.disableBuiltIn.commands.help Bool to disable the built-in help command
- * @param {bool} options.disableBuiltIn.commands.reload Bool to disable the built-in reload command
- * @param {Object} options.disableBuiltIn.events Object to contain defined built-in discord event name to disable
- * @param {bool} options.disableBuiltIn.events.messageCreate Boolean to disable built-in discord messageCreate event to handle your bot commands execution
- * @param {bool} options.disableBuiltIn.events.interactionCreate Boolean to disable built-in discord interactionCreate event to handle your bot slash commands execution
- * @param {bool} options.disableBuiltIn.events.loadSlashCommandsReady Boolean to disable built-in discord ready event to handle and load your slash commands
- * @param {bool} options.disableUnhandledRejectionHandler Bool to disable discord-features-handler unhandledRejection handler
- * @param {bool} options.loadCommandsLoggerOff Disable console log of command files being loaded
- * @param {bool} options.loadEventsLoggerOff Disable console log of event files being loaded
- * @param {bool} options.loadModulesLoggerOff Disable console log of module files being loaded
- * @param {number} options.modulesPreloadTime The time to wait before loading modules files. This is used to establish a waiting time to connect to the Discord API and 
- * ensure we can access the users and guilds the bot is connected to for the Discord Channels, users, guild information to use within the module files that are waiting to be loaded.
- * 
- * **Expected Value**: Time in milliseconds; 5000 is 5 seconds
- *
- * **Default**: 5000
- * @param {Object} options.filesToExcludeInHandlers Object to contain filename and file extension name of files to not load with handler
- * @param {Array<string>} options.filesToExcludeInHandlers.commands Array of strings of command files to not load when this handler runs
- * @param {Array<string>} options.filesToExcludeInHandlers.events Array of strings of event files to not load when this handler runs
- * @param {Array<string>} options.filesToExcludeInHandlers.modules Array of strings of module files to not load when this handler runs
- * @param {String} options.BOT_TOKEN Your Discord Bot token found in [Discord Developer Portal](https://discordapp.com/developers/applications/)
- */
+
+const LOG_FILES = {
+  commands: false,
+  events: false,
+  modules: false,
+};
+
+const DEFAULT_DIRECTORIES = {
+  main: ".",
+  commands: "commands",
+  events: "events",
+  modules: "modules",
+};
 
 const DiscordFeaturesHandler = async (
   client,
   {
     config = "./defaultConfig.js",
-    mainDirectory = "",
-    commandDir = "commands",
-    eventDir = "events",
-    modulesDir = "modules",
-    disableBuiltIn = {
-      allBuiltIn: false,
+    directories = {
+      commands: "commands",
+      events: "events",
+      modules: "modules",
+    },
+    builtin_files = {
       commands: {
         help: false,
         reload: false,
@@ -80,20 +52,20 @@ const DiscordFeaturesHandler = async (
       events: {
         messageCreate: false,
         interactionCreate: false,
-        loadSlashCommandsReady: false,
       },
+    },
+    onLoad_list_files = {
+      commands: false,
+      events: false,
+      modules: false,
     },
     disableUnhandledRejectionHandler = false,
     modulesPreloadTime = 5000,
-    loadCommandsLoggerOff = false,
-    loadEventsLoggerOff = false,
-    loadModulesLoggerOff = false,
     filesToExcludeInHandlers = {
       commands: [""],
       events: [""],
       modules: [""],
     },
-    BOT_TOKEN,
   }
 ) => {
   const commandsExcluded = filesToExcludeInHandlers.commands
@@ -107,9 +79,26 @@ const DiscordFeaturesHandler = async (
     : [""];
 
   const disableProperties = {
-    ...disablesObject,
-    ...disableBuiltIn,
+    ...BUILT_IN_FILES,
+    ...builtin_files,
   };
+  directories = {
+    ...DEFAULT_DIRECTORIES,
+    ...directories,
+  };
+
+  onLoad_list_files = {
+    ...LOG_FILES,
+    ...onLoad_list_files,
+  };
+
+  if (!directories.main) {
+    throw new TypeError(
+      `mainDirectory declaration is required: Value is: \'mainDirectory: __dirname,\'`
+    );
+  } else if (!fs.lstatSync(directories.main).isDirectory()) {
+    throw new TypeError(`mainDirectory must have the value of: \'__dirname\'`);
+  }
 
   if (!client) {
     throw new Error("No Discord JS Client provided as first argument!");
@@ -117,127 +106,125 @@ const DiscordFeaturesHandler = async (
     throw new TypeError(`client is not a valid discord.js Client Object`);
   }
 
-  if (!BOT_TOKEN) {
-    throw new TypeError("Discord Bot Token is undefined");
-  }
-
-  if (!mainDirectory) {
-    throw new TypeError(
-      `mainDirectory declaration is required: Value is: \'mainDirectory: __dirname,\'`
-    );
-  } else if (!fs.lstatSync(mainDirectory).isDirectory()) {
-    throw new TypeError(`mainDirectory must have the value of: \'__dirname\'`);
-  }
-
   if (
-    typeof disableProperties.allBuiltIn !== "boolean" &&
-    typeof disableProperties.commands.help !== "boolean" &&
-    typeof disableProperties.commands.reload !== "boolean" &&
-    typeof disableProperties.events.interactionCreate !== "boolean" &&
-    typeof disableProperties.events.messageCreate !== "boolean" &&
-    typeof disableProperties.events.loadSlashCommandsReady !== "boolean"
+    typeof disableProperties.disable_all !== "boolean" &&
+    typeof disableProperties.commands === "undefined" &&
+    typeof disableProperties.events === "undefined"
   ) {
-    throw new TypeError(
-      `disableBuiltIn Object properties must be an boolean Value`
-    );
+    throw new TypeError(`builtin_files properties must be an boolean Value`);
   }
 
   if (typeof disableUnhandledRejectionHandler !== "boolean") {
-    throw new TypeError(`disableUnhandledRejectionHandler must be a boolean value`);
+    throw new TypeError(
+      `disableUnhandledRejectionHandler must be a boolean value`
+    );
   }
 
   if (typeof modulesPreloadTime !== "number") {
     throw new TypeError(`modulesPreloadTime is not a valid number value`);
   }
 
-  if (typeof loadCommandsLoggerOff !== "boolean") {
-    throw new TypeError(`loadCommandsLoggerOff must be a boolean value`);
+  if (typeof onLoad_list_files.commands !== "boolean") {
+    throw new TypeError(`onLoad_list_files.commands must be a boolean value`);
   }
 
-  if (typeof loadEventsLoggerOff !== "boolean") {
-    throw new TypeError(`loadEventsLoggerOff must be a boolean value`);
+  if (typeof onLoad_list_files.events !== "boolean") {
+    throw new TypeError(`onLoad_list_files.events must be a boolean value`);
   }
 
-  if (typeof loadModulesLoggerOff !== "boolean") {
-    throw new TypeError(`loadModulesLoggerOff must be a boolean value`);
+  if (typeof onLoad_list_files.modules !== "boolean") {
+    throw new TypeError(`onLoad_list_files.modules must be a boolean value`);
   }
+
+  if (typeof process.env.DISCORD_TOKEN === "undefined") {
+    throw new Error(
+      "Environment variable DISCORD_TOKEN is undefined, your bot secret token"
+    );
+  }
+  if (typeof process.env.OWNER_ID === "undefined") {
+    throw new Error(
+      "Environment variable OWNER_ID is undefined, your discord user Id"
+    );
+  }
+  if (typeof process.env.CLIENT_ID === "undefined") {
+    throw new Error(
+      `Environment variable CLIENT_ID is undefined, You can find it by going to Discord Developer Portal > "General Information" > application id)`
+    );
+  }
+
+  if (!disableUnhandledRejectionHandler) {
+    UnhandledRejection();
+  }
+
+  functions();
 
   console.log(`Thank you for installing DiscordFeaturesHandler!`);
-  console.log(`Loading your files now...
-  `);
+  console.log(`Loading your files now...`);
 
-  functions(client);
-  if (!disableUnhandledRejectionHandler) {
-    dfhUnhandledRejection(client);
-  }
-
-  client.config = config.endsWith("./defaultConfig.js")
+  const configFile = config.endsWith("./defaultConfig.js")
     ? require(config)
-    : require(path.join(mainDirectory, config));
-  client.commands = new Collection();
-  client.aliases = new Collection();
+    : require(path.join(directories.main, config));
 
-  client.dfhSettings = {
-    mainDirectory,
-    commandDir,
-  };
+  await checkConfig(configFile);
+  client = configureClient(client, configFile, directories);
 
-  //Disable all built in commands and events
-  if (disableProperties.allBuiltIn) {
+  if (disableProperties.disable_all) {
     commandsExcluded.push("dfhHelp.js");
     commandsExcluded.push("dfhReload.js");
     eventsExcluded.push("dfhMessageCreate.js");
     eventsExcluded.push("dfhInteractionCreate.js");
-    eventsExcluded.push("dfhSlashCommands.js");
   } else {
-    if (disableProperties.commands.help) {
-      commandsExcluded.push("dfhHelp.js");
+    if (disableProperties.commands) {
+      if (disableProperties.commands.help) {
+        commandsExcluded.push("dfhHelp.js");
+      }
+      if (disableProperties.commands.reload) {
+        commandsExcluded.push("dfhReload.js");
+      }
     }
-    if (disableProperties.commands.reload) {
-      commandsExcluded.push("dfhReload.js");
-    }
-    if (disableProperties.events.messageCreate) {
-      eventsExcluded.push("dfhMessageCreate.js");
-    }
-    if (disableProperties.events.interactionCreate) {
-      eventsExcluded.push("dfhInteractionCreate.js");
-    }
-    if (disableProperties.events.loadSlashCommandsReady) {
-      eventsExcluded.push("dfhSlashCommands.js");
+    if (disableProperties.events) {
+      if (disableProperties.events.messageCreate) {
+        eventsExcluded.push("dfhMessageCreate.js");
+      }
+      if (disableProperties.events.interactionCreate) {
+        eventsExcluded.push("dfhInteractionCreate.js");
+      }
     }
   }
 
   const disableDefaultCommands =
-    disableProperties.allBuiltIn ||
-    (disableProperties.commands.help && disableProperties.commands.reload);
+    disableProperties.disable_all ||
+    (disableProperties.commands &&
+      disableProperties.commands.help &&
+      disableProperties.commands.reload);
   const disableDefaultEvents =
-    disableProperties.allBuiltIn ||
-    (disableProperties.events.interactionCreate &&
-      disableProperties.events.messageCreate &&
-      disableProperties.events.loadSlashCommandsReady);
+    disableProperties.disable_all ||
+    (disableProperties.events &&
+      disableProperties.events.interactionCreate &&
+      disableProperties.events.messageCreate);
 
   const commandDirectories = disableDefaultCommands
-    ? [commandDir]
-    : ["../commands/", commandDir];
+    ? [directories.commands]
+    : ["../commands/", directories.commands];
 
   const eventDirectories = disableDefaultEvents
-    ? [eventDir]
-    : ["../events/", eventDir];
+    ? [directories.events]
+    : ["../events/", directories.events];
 
-  loadCommands(
+  loadCommands({
     client,
-    commandDirectories,
-    commandsExcluded,
-    mainDirectory,
-    loadCommandsLoggerOff
-  );
-  loadEvents(
+    directory: commandDirectories,
+    filesToExclude: commandsExcluded,
+    mainDirectory: directories.main,
+    logger: onLoad_list_files.commands,
+  });
+  loadEvents({
     client,
-    eventDirectories,
-    eventsExcluded,
-    mainDirectory,
-    loadEventsLoggerOff
-  );
+    directory: eventDirectories,
+    filesToExclude: eventsExcluded,
+    mainDirectory: directories.main,
+    logger: onLoad_list_files.events,
+  });
 
   client.levelCache = {};
   for (let i = 0; i < client.config.permissions.length; i++) {
@@ -245,18 +232,19 @@ const DiscordFeaturesHandler = async (
     client.levelCache[thisLevel.name.toString()] = thisLevel.level;
   }
 
-  client.login(BOT_TOKEN).catch((e) => {
+  client.login(client.config.token).catch((e) => {
     console.warn(e);
     throw new Error(`Please check if your discord bot token is valid!`);
   });
   await client.wait(modulesPreloadTime);
-  loadModules(
+
+  loadModules({
     client,
-    [modulesDir],
-    modulesExcluded,
-    mainDirectory,
-    loadModulesLoggerOff
-  );
+    directory: [directories.modules],
+    filesToExclude: modulesExcluded,
+    mainDirectory: directories.main,
+    logger: onLoad_list_files.modules,
+  });
 };
 
 module.exports = DiscordFeaturesHandler;

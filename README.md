@@ -15,6 +15,7 @@ Discord-features-handler is a handler for discord commands, slash commands and d
 * Unhandled Rejection Handler
 * String.prototype.toProperCase()
 * Array.prototype.Random()
+* Supports TypeScript Natively
 
 
 ## Demo
@@ -33,7 +34,7 @@ Installing DiscordFeaturesHandler
 
 Development Build:
 
-> :warning: This is a development branch is still in development of new features and there may be bugs. Check out the [road map](https://bng94.gitbook.io/discord-features-handler-docs/project-development/roadmap) page to see what is added and tested before next build and release.
+> :warning:  This following dev build is for developers who want to experiment with new features and may encounter bugs. Refer to the [roadmap](https://bng94.gitbook.io/discord-features-handler-docs/project-development/roadmap) page to track the additions and tests planned before the next build and release.
 
 ```js
   npm install github:bng94/discord-features-handler#dev
@@ -46,68 +47,180 @@ A simple example with only the essentials to get a bot up and running:
 
 ```js
 const { Client, Intents } = require("discord.js");
-const DiscordFeaturesHandler = require("discord-features-handler");
+const {DiscordFeaturesHandler} = require("discord-features-handler");
 const client = new Client({
   intents: [...],
   partials: [...],
 });
 
 DiscordFeaturesHandler(client,  {
-  mainDirectory: __dirname,
   config: "./config.js",
-  BOT_TOKEN: "YOUR_BOT_TOKEN",
+  directories: {
+    main: __dirname,
+  },
 }); 
 ```
 
 >The intents are gateway intents are what discord gives for bot developers access to events based on what data it need for their function. You can find the [list of intents here](https://discord.com/developers/docs/topics/gateway#list-of-intents). You can read more about intents in the [discordjs.guide docs](https://discordjs.guide/popular-topics/intents.html#privileged-intents).You should enable all partials for your use cases, as missing one then the event does not get emitted. You can read more about partials in the [discordjs.guide docs](https://discordjs.guide/popular-topics/partials.html#handling-partial-data).
 
 ##### Folder Structure
-- node_modules
-- commands
-  - sub-folder(s) *(named category folders to categories your command files)*
-    - command files
-- events 
-  - your discord.js event files
-- modules
-  - module files 
-- config.js *(**optional**: configuration file)*
-- index.js *(your bot start file)*
 
+```arduino
+discord-bot/
+├── commands/
+│   ├── miscellaneous/   //this can be any name you want
+│   │   └── ping.js
+├── events/
+│   └── ready.js
+├── modules/
+├── node_modules/
+├── .env
+├── config.js
+├── index.js
+├── package-lock.json
+└── package.json
+```
 
 ## DiscordFeaturesHandler Properties
-Thees are the properties of the DiscordFeaturesHandler
-| Property      | Type        | Default        |  Description                |
-| ------------- | ----------- | -------------- | --------------------------- |
-| client        | Client      | ""             | [Discord Client Object](https://discord.js.org/#/docs/main/stable/class/Client)        |
-| options       | Object      | {...}          | Object that contains parameters to configure DiscordFeaturesHandler 
+These are the properties of the DiscordFeaturesHandler:
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>client</td>
+      <td>Client</td>
+      <td>""</td>
+      <td><a href="https://discord.js.org/#/docs/main/stable/class/Client">Discord Client Object</a></td>
+    </tr>
+    <tr>
+      <td>options</td>
+      <td>Object</td>
+      <td>{}</td>
+      <td>Object that contains parameters to configure DiscordFeaturesHandler</td>
+    </tr>
+  </tbody>
+</table>
 
 ### options
 Here are the some parameters of options Object. For a full list please check out the [documentation](https://bng94.gitbook.io/discord-features-handler-docs/structure/discordfeatureshandler-setup).
-| Parameter     | Type        | Required       | Default        |  Description                |
-| ------------- | ----------- | -------------- | -------------- | --------------------------- |
-| mainDirectory | string      | true  |  ""             | The absolute path to the directory containing the executing main script file. Expected Value: **__dirname**        |
-| config       | string       | false  | "./config"      | The path to your configuration file. Default value is path to default configuration file provided.              |
-| BOT_TOKEN   | string        | true  | ""      | This is your bot token that you can find in your [Discord Developer Portal](https://discordapp.com/developers/applications/). This is required to login to your discord bot. |
-| commandDir   | string        | false  | "commands"      | Folder name of your command folder that contains sub-folders which contains the command files. The sub-folders are the category names of the command inside those folders. Default folder name is: **commands**.    |
-| eventDir     | string        | false  | "events"      | Folder name of your event folder containing discord event files. Default folder name is: **events**.    |
-| modulesDir   | string        | false  | "modules"      | Folder name of your module folder that contains your module files. Default folder name is: **modules**.    |
-| modulesPreloadTime   | number        | false  | 5000      | Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off how many files in the module folder requires access to the API. Default time in milliseconds is 5000. |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>directories</td>
+      <td>object</td>
+      <td>true</td>
+      <td>{ main: __dirname, 
+        commands: "commands", 
+        events: "events", 
+        modules: "modules"
+      }</td>
+      <td>Contains the absolute path to the directory containing the executing main script file, and your folder names for commands, events, and modules folders. Expected Value: { main: __dirname }</td>
+    </tr>
+    <tr>
+      <td>config</td>
+      <td>string</td>
+      <td>false</td>
+      <td>"./config"</td>
+      <td>The path to your configuration file. Default value is path to default configuration file provided.</td>
+    </tr>
+    <tr>
+      <td>modulesPreloadTime</td>
+      <td>number</td>
+      <td>false</td>
+      <td>5000</td>
+      <td>Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off how many files in the module folder require access to a API call such a call to a database. Default time in milliseconds is 5000.</td>
+    </tr>
+  </tbody>
+</table>
 
 
 ## Commands Properties
-The properties that are required to have when creating a command file
+The properties that are **required** to have when creating a command file
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>string</td>
+      <td>""</td>
+      <td>Name of your command</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>string</td>
+      <td>""</td>
+      <td>Description of your command</td>
+    </tr>
+    <tr>
+      <td>aliases</td>
+      <td>Array</td>
+      <td>[""]</td>
+      <td>Aliases of the command. You must set `[]`</td>
+    </tr>
+    <tr>
+      <td>guildOnly</td>
+      <td>boolean</td>
+      <td>false</td>
+      <td>If command is guild only (not a DM command)</td>
+    </tr>
+    <tr>
+      <td>permission</td>
+      <td>number</td>
+      <td>""</td>
+      <td>Permission level required to use command</td>
+    </tr>
+    <tr>
+      <td>minArgs</td>
+      <td>number</td>
+      <td>""</td>
+      <td>Minimum number of arguments required for command execution</td>
+    </tr>
+    <tr>
+      <td>maxArgs</td>
+      <td>number</td>
+      <td>""</td>
+      <td>Maximum number of arguments required for command execution</td>
+    </tr>
+    <tr>
+      <td>usage</td>
+      <td>string</td>
+      <td>""</td>
+      <td>Show how to use the command arguments in the command call</td>
+    </tr>
+    <tr>
+      <td>execute(message, args, client, level)</td>
+      <td>func</td>
+      <td>""</td>
+      <td>Functionality and response of the command call. Parameters are `message` object, `arguments` array, `client` object, and user's permission level to run a command</td>
+    </tr>
+  </tbody>
+</table>
 
-| Property      | Type        | Default        |  Description                |
-| ------------- | ----------- | -------------- | --------------------------- |
-| name          | string      | ""             | name of your command        |
-| description   | string      | ""             | description of your command        |
-| aliases      | Array | [""]             | aliases of the command, you must set []      |
-| guildOnly      | bool | false             | If command is guild only (not a DM command) |
-| permission      | number | ""             | Permission level required to use command |
-| minArgs      | number | ""             | Minimum number of arguments required for command execution |
-| maxArgs      | number | ""             |Maximum number of arguments required for command execution |
-| usage      | string | ""             | Show how to use the command arguments in the command call |
-| execute(message, args, client, level)      | func | ""             | Functionality and response of the command call. Parameters are `message object`, `arguments array`, `client Object`, and `user's permission level to run a command` |
+   
 
 ##### Example Command:
 ```js
@@ -131,22 +244,40 @@ module.exports = {
 };
 ```
 
-## Slash Command Properties
-The properties that are required to have when creating a slash command file
-The properties of all command listed above and the following:
-
-| Property      | Type        | Default        |  Description                |
-| ------------- | ----------- | -------------- | --------------------------- |
-| slash         | bool     | false          | State if this command is a slash command        |
-| slashOptions   | JSON object | ""             | OPTIONAL: Options properties of a slash command, documentation can be found here. [Discord Developer Doc](https://discord.com/developers/docs/interactions/application-commands#slash-commands) |
-| interactionReply(interaction, client, level)   | func | ""             | Functionality and response of the slash command call. Parameters are `interaction` and `client Object`, and `user's permission level`  |
+### Additional Required Command Properties for Slash commands
+The properties that are required when creating a command file for slash commands are listed above, and they include the following additional properties.
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>data</td>
+      <td>SlashCommandBuilder()</td>
+      <td>DiscordJS SlashCommandBuilder</td>
+    </tr>
+    <tr>
+      <td>interactionReply(interaction, client, level)</td>
+      <td>func</td>
+      <td>Functionality and response of the slash command call. Parameters are `interaction`, `client` object, and `user's permission level`.</td>
+    </tr>
+  </tbody>
+</table>
 
 
 ##### Example Slash Command:
-```js
+```javascript 
+const { SlashCommandBuilder } = require("discord.js");
+const name = "ping";
+const description = "Ping Pong Command";
+
 module.exports = {
-	name: 'ping',
-	description: 'Ping Pong Command!',
+	name,
+	description,
 	aliases: ['p'],
 	guildOnly: true,
 	permissions: 0,
@@ -155,7 +286,8 @@ module.exports = {
 	/**
 	* This is required and set as true. Otherwise would not recognize as a slash command
 	*/
-	slash: true,
+	data: new SlashBuilderCommand().setName(name)
+	    .setDescription(description),
     /** 
     * @param {message} message The discord message object
     * @param {Array<string>} args The arguments following the command call
@@ -163,7 +295,7 @@ module.exports = {
     * @param {number} level The permission level of the user who made the command call
     */
 	execute(message, args, client, level) { 
-      return message.channel.send('Pong.');
+      return message.channel.send({ content: 'Pong.'});
     },
     /** 
     * @param {interaction} interaction The discord interaction object
@@ -172,7 +304,7 @@ module.exports = {
     */
     async interactionReply(interaction, client, level) {
       await interaction.reply({
-	content: 'Pong!'
+	      content: 'Pong!'
       });
     }
 };
@@ -181,11 +313,36 @@ module.exports = {
 ## Discord Event File 
 When creating a discord event file in your events folder, will required the following properties:
 
-| Property      | Type        | Default        |  Description                |
-| ------------- | ----------- | -------------- | --------------------------- |
-| name          | string      | ""             | Discord Event Name. List of names can be found [here](https://discord.js.org/#/docs/main/stable/class/Client).          |
-| once          | bool        | false          | if the event should run once on first trigger or on every event trigger |
-| execute (client, ...params)  | func | ""             | Functionality and response of the discord event trigger. **Params** are parameters of the event you are defining.  |
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>string</td>
+      <td>""</td>
+      <td>Discord Event Name. List of names can be found <a href="https://discord.js.org/docs/packages/discord.js/14.14.1/Events:Enum">listed as enums</a> and <a href="https://discord.js.org/docs/packages/discord.js/14.14.1/ClientEvents:Interface">here with their params listed</a>.</td>
+    </tr>
+    <tr>
+      <td>once</td>
+      <td>boolean</td>
+      <td>false</td>
+      <td>If the event should run once on the first trigger or on every event trigger.</td>
+    </tr>
+    <tr>
+      <td>execute(client, ...params)</td>
+      <td>func</td>
+      <td>""</td>
+      <td>Functionality and response of the discord event trigger. <strong>Params</strong> are parameters of the event you are defining.</td>
+    </tr>
+  </tbody>
+</table>
 
 ##### Example Ready Event
 ```js
@@ -200,7 +357,7 @@ module.exports = {
 
 ## Modules Files 
 
-You can create a plain module.exports file in your modules folder. The only parameter being passed in is the client object. No properties are required to be defined.
+You can create a plain module.exports file in your modules folder. The only parameter being passed in is the client object. No properties are required.
 
 ```js
   module.exports = (client) => {
@@ -239,30 +396,6 @@ process.on("unhandledRejection", (e) => {
 });
 ```
 
-### The following functions can be overwritten by re-defining
-If you create a new `client.<functionName>` you can override then existing function with the new function.
-
-#### client.getPermissionsLevel ( parameter )
-
-> :warning:  **Please do not override unless you are creating your own permission level configuration with a different approach then this handler uses!**
-
-This parameter is either an interaction object or message object, based off the command type and which type of command was called. This function returns a permission level based off the `config.js` file. 
-
-#### client.loadCommand
-
-> :x:  **When overriding this will override the handler and commands will not load!**
-
-This function handles load the command 
-
-#### client.unloadCommand
-> :x:  **When overriding this will override the handler and commands may be able to unload to reload the new command file!**
-
-Unload the command, by clearing the cache so you can reload the command with a new command file.
-
-#### client.commands and client.aliases
-> :x:  **DO NOT OVERRIDE: This saves all the properties of the command files so that we can load the commands for you**
-
-These are Discord.Collection object that contains the command and aliases information to handle loading commands and executing them based off their properties
 ## Documentation
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
@@ -273,9 +406,10 @@ You can read all the version and changes history here: [ChangeLog](https://bng94
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Notes
-discord-features-handler allows you to create the command and event files by using the pre-define properties with the respective command name or event name (event name associated with the event, such as ready, messageCreate, messageUpdate, or interactionCreate as listed on [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client). As a *flexible handler*, this help the developer focus on what required for their discord bot without worrying about how to connect to the Discord API using discord.js and focus on the main aspect of the bot which is the functionality and features for their bot. 
+**discord-features-handler** allows you to create command and event files using predefined properties with the respective command or event names (event names associated with events such as `ready`, `messageCreate`, `messageUpdate`, or `interactionCreate` as listed in the [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client)). As a flexible handler, this helps developers focus on what is required for their Discord bot without worrying about how to load files to connect to the Discord API using discord.js, allowing them to focus on the main aspect of the bot: its functionality and features. Developers also have the option to disable the provided `messageCreate` and `interactionCreate` events to customize how events and messages are handled using their own files. This handler also allows you to follow the Discord.js guide with a few changes, such as using a JavaScript file instead of a JSON file for the `config` file, using the `interactionReply` function instead of `execute` for slash commands, and the ability to preload files using this handler.
 
-This is my first npm package that I created due to having three bots that I have created for different purposes, but using the same formats to start-up the bot. Please bear with me as I improving the package for those interesting in supporting and using it!
+This is my first npm package that I created due to having three bots that I have created for different purposes, but using the same formats. 
+
 ## Support and New Features 
 This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!
 

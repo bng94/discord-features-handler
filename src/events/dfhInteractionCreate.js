@@ -1,11 +1,20 @@
+const { InteractionType, Events } = require("discord.js");
 module.exports = {
-  name: "interactionCreate",
+  name: Events.InteractionCreate,
   async execute(interaction, client) {
     const { commandName, commandId, customId } = interaction;
-    const level = client.getPermissionsLevel(interaction);
-    if (interaction.isCommand()) {
+    const level = client.getPermissionsLevel({
+      author: interaction.user,
+      channel: interaction.channel,
+      guild: interaction.guild,
+      guildMember: interaction.member,
+    });
+    if (interaction.type === InteractionType.ApplicationCommand) {
       const cmd = client.commands.get(commandName);
 
+      if (!cmd) {
+        return console.error("Unable to find slash command:" + cmd);
+      }
       console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
       console.log("[SLASH CMD]", "[ID]", commandId);
 
@@ -13,62 +22,53 @@ module.exports = {
         return cmd.interactionReply(interaction, client, level);
       } catch (e) {
         console.log(
-          "isCommand interaction (slash command) execution failed",
+          "ApplicationCommand interaction (slash command) execution failed",
           e
         );
       }
-    }
+    } else if (
+      interaction.type === InteractionType.ApplicationCommandAutocomplete
+    ) {
+      const cmdName = client.commands.find((cmd) =>
+        cmd.autoCompleteCustomIds?.includes(customId)
+      )?.name;
+      if (!cmdName)
+        return console.error(interaction.customId, "interactionCreate Failed");
 
-    /**
-     ** NOTE:
-     ** Since interactionReply return a command response, these modal/buttons may not, error may encounter (haven't fully tested all if else scenarios)
-     **
-     */
-    if (interaction.isButton()) {
-      //TODO: add interaction from cmd property
-      //* Similar to interactionReply, this should return the command
-      //* Since we need to check the id to ensure it matches the button action we are trying to execute, we need to filter here, since it may not match to the cmd file name (which it should in theory), it is easier to trace this method
-      const cmd = client.commands.filter(
-        (cmd) => cmd.buttonCustomId === customId
-      )[0];
-
-      try {
-        return cmd.buttonInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("isButton interaction execution failed", e);
-      }
-    }
-    if (interaction.isAutocomplete()) {
-      const cmd = client.commands.get(commandName);
+      const cmd = client.commands.get(cmdName);
       try {
         return cmd.autoCompleteInteraction(interaction, client, level);
       } catch (e) {
         console.log(
-          "isCommand interaction (slash command) execution failed",
+          "ApplicationCommandAutocomplete interaction (slash command) execution failed",
           e
         );
       }
-    }
-    if (interaction.isContextMenu() || interaction.isUserContextMenu()) {
-      const cmd = client.commands.get(commandName);
+    } else if (interaction.type === InteractionType.MessageComponent) {
+      const cmdName = client.commands.find((cmd) =>
+        cmd.customIds?.includes(customId)
+      )?.name;
+      if (!cmdName)
+        return console.error(interaction.customId, "interactionCreate Failed");
+      const cmd = client.commands.get(cmdName);
       try {
-        return cmd.contextMenuInteraction(interaction, client, level);
+        return cmd.componentInteraction(interaction, client, level);
       } catch (e) {
-        console.log(
-          "isCommand interaction (slash command) execution failed",
-          e
-        );
+        console.log("MessageComponent interaction execution failed", e);
       }
-    }
-    if (interaction.isModalSubmit()) {
-      const cmd = client.commands.filter(
-        (cmd) => cmd.modalCustomId === customId
-      )[0];
+    } else if (interaction.type === InteractionType.ModalSubmit) {
+      const cmdName = client.commands.find((cmd) =>
+        cmd.modalCustomIds?.includes(customId)
+      )?.name;
+      if (!cmdName)
+        return console.error(interaction.customId, "interactionCreate Failed");
+
+      const cmd = client.commands.get(cmdName);
 
       try {
         return cmd.modalInteraction(interaction, client, level);
       } catch (e) {
-        console.log("isModalSubmit interaction execution failed", e);
+        console.log("ModalSubmit interaction execution failed", e);
       }
     }
   },
