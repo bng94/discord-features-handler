@@ -247,4 +247,4 @@ const DiscordFeaturesHandler = async (
   });
 };
 
-module.exports = DiscordFeaturesHandler;
+exports.DiscordFeaturesHandler = DiscordFeaturesHandler;
