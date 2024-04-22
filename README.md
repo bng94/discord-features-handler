@@ -357,7 +357,7 @@ module.exports = {
 
 ## Modules Files 
 
-You can create a plain module.exports file in your modules folder. The only parameter being passed in is the client object. No properties are required.
+You can create a plain module.exports file in your modules folder. The only parameter being passed is an optional parameter, the client object. If using TypeScript make sure this is an default exports instead.
 
 ```js
   module.exports = (client) => {
@@ -406,9 +406,7 @@ You can read all the version and changes history here: [ChangeLog](https://bng94
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Notes
-**discord-features-handler** allows you to create command and event files using predefined properties with the respective command or event names (event names associated with events such as `ready`, `messageCreate`, `messageUpdate`, or `interactionCreate` as listed in the [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client)). As a flexible handler, this helps developers focus on what is required for their Discord bot without worrying about how to load files to connect to the Discord API using discord.js, allowing them to focus on the main aspect of the bot: its functionality and features. Developers also have the option to disable the provided `messageCreate` and `interactionCreate` events to customize how events and messages are handled using their own files. This handler also allows you to follow the Discord.js guide with a few changes, such as using a JavaScript file instead of a JSON file for the `config` file, using the `interactionReply` function instead of `execute` for slash commands, and the ability to preload files using this handler.
-
-This is my first npm package that I created due to having three bots that I have created for different purposes, but using the same formats. 
+This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file, using the property `interactionReply` instead of `execute` property for slash commands, and the ability to preload files using this handler.
 
 ## Support and New Features 
 This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!
