@@ -47,7 +47,7 @@ A simple example with only the essentials to get a bot up and running:
 
 ```js
 const { Client, Intents } = require("discord.js");
-const {DiscordFeaturesHandler} = require("discord-features-handler");
+const { DiscordFeaturesHandler } = require("discord-features-handler");
 const client = new Client({
   intents: [...],
   partials: [...],
@@ -396,6 +396,8 @@ process.on("unhandledRejection", (e) => {
 });
 ```
 
+You can read more about these and other built-in functions in the [official Documentation](https://bng94.gitbook.io/discord-features-handler-docs/).
+
 ## Documentation
 
 The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
@@ -406,7 +408,7 @@ You can read all the version and changes history here: [ChangeLog](https://bng94
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Notes
-This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file, using the property `interactionReply` instead of `execute` property for slash commands, and the ability to preload files using this handler.
+This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file, using the property `interactionReply` instead of `execute` property for slash commands, and without creating your own handler for loading commands and events file. Also loading your modules files that contains features of your bot.
 
 ## Support and New Features 
 This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!

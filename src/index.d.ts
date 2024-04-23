@@ -375,9 +375,21 @@ declare module "discord.js" {
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      /**
+       * Your Discord Bot token found in [Discord Developer Portal](https://discordapp.com/developers/applications/)
+       */
       DISCORD_TOKEN: string;
+      /**
+       * The developer discord user Id
+       */
       OWNER_ID: string;
+      /**
+       * Your application's client id ([Discord Developer Portal](https://discordapp.com/developers/applications/) > "General Information" > application id)
+       */
       CLIENT_ID: string;
+      /**
+       * Your development server Id, (if you want guild based slash commands only)
+       */
       DEVELOPMENT_GUILD_ID: string;
     }
   }
@@ -417,8 +429,8 @@ interface Config {
    */
   clientId: string;
   /**
-   * Your development server Id, (if you want guild based commands only)
-   * **Default**: process.env.CLIENT_ID
+   * Your development server Id, (if you want guild based slash commands only)
+   * **Default**: process.env.DEVELOPMENT_GUILD_ID
    */
   guildId?: string;
   /**
