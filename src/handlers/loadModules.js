@@ -35,10 +35,6 @@ module.exports = async ({
               `file://${path.join(dirname, dir, file)}`
             );
             feature = featureModule.default;
-
-            if (typeof feature !== "function") {
-              feature = feature.default;
-            }
           } else if (file.endsWith(".js")) {
             feature = require(path.join(dirname, dir, file));
           }
@@ -47,6 +43,10 @@ module.exports = async ({
             console.log(`Loading module file: ${file}`);
           }
           try {
+            if (typeof feature !== "function") {
+              feature = feature.default;
+            }
+
             if (!feature) {
               throw Error(
                 `Invalid file type: ${
