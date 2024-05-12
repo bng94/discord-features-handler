@@ -1,0 +1,97 @@
+site_name: discord-features-handler
+site_author: Brandon Ng
+site_description: >-
+  discord-features-handler npm package official documentation website
+copyright: Copyright &copy; 2022 - 2024 discord-features-handler
+nav:
+  - Discord-Features-Handler: index.md
+  - Getting started: 
+    - Installation: getting-started/installation.md
+    - Environment Variables: getting-started/environment-variables.md
+    - Folder Structure: getting-started/folder-structure.md
+    - Bot Script File: getting-started/Bot Script file.md
+  - Setup: 
+    - DiscordFeaturesHandlerOptions: setup/DiscordFeaturesHandlerOptions.md
+    - config file: setup/config-file.md
+    - command files: setup/commands-file.md
+    - slash command files: setup/slash-commands-file.md
+    - other interactions: setup/other-interaction.md
+    - event files: setup/events-file.md
+    - modules file: setup/modules-files.md
+  - Built-in Features:
+    - messageCreate event: builtIn/messageCreate-event.md
+    - interactionCreate event: builtIn/interactionCreate-event.md
+    - help command: builtIn/help-command.md
+    - reload command: builtIn/reload-command.md
+    - functions: builtIn/functions.md
+    - disabling built in: builtIn/disabling-built-in-features.md
+  - Demo: demo.md
+  - About: about.md
+  - Release Notes: release-notes.md
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - toc.follow
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - content.footnote.tooltips
+    - navigation.indexes
+    - navigation.sections
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+      primary: teal
+      accent: purple 
+    - scheme: slate 
+      toggle:
+        icon: material/moon-waning-crescent
+        name: Switch to light mode    
+      primary: teal
+      accent: lime
+
+plugins:
+  - social
+  - search
+
+
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/bng94/discord-features-handler
+    - icon: fontawesome/brands/npm
+      link: https://www.npmjs.com/package/discord-features-handler
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - footnotes
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  -  pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

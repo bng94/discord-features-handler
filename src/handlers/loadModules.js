@@ -11,8 +11,13 @@ module.exports = async ({
   const loadModules = async (dir) => {
     const builtInDirectory = dir.includes("../modules");
     const dirname = builtInDirectory ? __dirname : mainDirectory;
+    const pathToModules = path.join(dirname, dir);
     try {
-      const files = fs.readdirSync(path.join(dirname, dir));
+      if (!fs.existsSync(pathToModules)) {
+        return console.log("\nNo Modules Folder");
+      }
+
+      const files = fs.readdirSync(pathToModules);
 
       if (!builtInDirectory) {
         console.log(
@@ -81,7 +86,7 @@ module.exports = async ({
     } catch (error) {
       console.error(
         error,
-        `Modules Directory, "${dir}" doesn't not exist in: ${mainDirectory}}`
+        `Failed to load Modules Directory, "${dir}" in: ${mainDirectory}}`
       );
     }
   };

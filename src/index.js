@@ -60,7 +60,7 @@ const DiscordFeaturesHandler = async (
       modules: false,
     },
     disableUnhandledRejectionHandler = false,
-    modulesPreloadTime = 5000,
+    modulesPreloadTime = 500,
     filesToExcludeInHandlers = {
       commands: [""],
       events: [""],
@@ -226,7 +226,6 @@ const DiscordFeaturesHandler = async (
     logger: onLoad_list_files.events,
   });
 
-  client.levelCache = {};
   for (let i = 0; i < client.config.permissions.length; i++) {
     const thisLevel = client.config.permissions[i];
     client.levelCache[thisLevel.name.toString()] = thisLevel.level;

@@ -1,3 +1,8 @@
+# Built-in interactionCreate Event
+
+This event handles the creation execution of the slash commands, using the built-in slash command executing from the slash properties of a command file and also using the built-in `client.commands` Collection object. We will also display the slash command Id, incase you decide to delete a slash command.
+
+```javascript
 const { InteractionType, Events } = require("discord.js");
 module.exports = {
   name: Events.InteractionCreate,
@@ -84,3 +89,8 @@ module.exports = {
     }
   },
 };
+
+```
+
+
+
