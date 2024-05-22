@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/bng94/discord-features-handler/issues"
   },
-  "homepage": "https://github.com/bng94/discord-features-handler#readme",
+  "homepage": "https://bng94.github.io/discord-features-handler/",
   "dependencies": {
     "discord.js": "^14.9.0"
   },
