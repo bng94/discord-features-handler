@@ -43,6 +43,7 @@ const checkCommandErrors = (cmd) => {
  * @returns {Client}
  */
 const configureClient = (client, config, directories) => {
+  client.levelCache = {};
   client.config = config;
   client.commands = new Collection();
   client.aliases = new Collection();
