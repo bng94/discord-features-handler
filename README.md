@@ -32,14 +32,6 @@ Installing DiscordFeaturesHandler
   npm install discord-features-handler
 ```
 
-Development Build:
-
-> :warning:  This following dev build is for developers who want to experiment with new features and may encounter bugs. Refer to the [roadmap](https://bng94.gitbook.io/discord-features-handler-docs/project-development/roadmap) page to track the additions and tests planned before the next build and release.
-
-```js
-  npm install github:bng94/discord-features-handler#dev
-```
-
 ## Usage
 
 Here is a basic example of how to setup discord-features-handler. 
@@ -110,7 +102,7 @@ These are the properties of the DiscordFeaturesHandler:
 </table>
 
 ### options
-Here are the some parameters of options Object. For a full list please check out the [documentation](https://bng94.gitbook.io/discord-features-handler-docs/structure/discordfeatureshandler-setup).
+Here are the some parameters of options Object. For a full list please check out the [documentation](https://bng94.github.io/discord-features-handler/setup/DiscordFeaturesHandlerOptions/).
 <table>
   <thead>
     <tr>
@@ -144,8 +136,8 @@ Here are the some parameters of options Object. For a full list please check out
       <td>modulesPreloadTime</td>
       <td>number</td>
       <td>false</td>
-      <td>5000</td>
-      <td>Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off how many files in the module folder require access to a API call such a call to a database. Default time in milliseconds is 5000.</td>
+      <td>500</td>
+      <td>Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off the length as you see fit. Default time in milliseconds is 500.</td>
     </tr>
   </tbody>
 </table>
@@ -209,7 +201,7 @@ The properties that are **required** to have when creating a command file
       <td>usage</td>
       <td>string</td>
       <td>""</td>
-      <td>Show how to use the command arguments in the command call</td>
+      <td>Show by writing an example of how to execute the command using the command argument(s) in the command call</td>
     </tr>
     <tr>
       <td>execute(message, args, client, level)</td>
@@ -396,13 +388,13 @@ process.on("unhandledRejection", (e) => {
 });
 ```
 
-You can read more about these and other built-in functions in the [official Documentation](https://bng94.gitbook.io/discord-features-handler-docs/).
+You can read more about these and other built-in functions in the [official Documentation](https://bng94.github.io/discord-features-handler/builtIn/functions/).
 
 ## Documentation
 
-The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.gitbook.io/discord-features-handler-docs/)
+The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.github.io/discord-features-handler/)
 
-You can read all the version and changes history here: [ChangeLog](https://bng94.gitbook.io/discord-features-handler-docs/project-development/changelog)
+You can read all the version and changes history here: [ChangeLog](https://bng94.github.io/discord-features-handler/release-notes/)
 
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.

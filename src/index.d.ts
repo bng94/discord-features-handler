@@ -1,14 +1,22 @@
 import {
+  AutocompleteInteraction,
   CategoryChildChannel,
   ChannelType,
   Client,
   Collection,
+  CommandInteraction,
+  DMChannel,
   Guild,
+  GuildChannel,
   GuildMember,
   Interaction,
   Message,
+  MessageComponentInteraction,
+  ModalSubmitInteraction,
   SlashCommandBuilder,
+  TextChannel,
   User,
+  UserContextMenuCommandInteraction,
 } from "discord.js";
 
 /**
@@ -159,7 +167,7 @@ interface DiscordFeaturesHandlerOptions {
    */
   disableUnhandledRejectionHandler?: boolean;
   /**
-   * The time to wait before loading modules files in milliseconds (Default: 5000)
+   * The time to wait before loading modules files in milliseconds (Default: 500)
    */
   modulesPreloadTime?: number;
   /**
@@ -184,7 +192,7 @@ interface CheckPermissions {
   /**
    * The channel the message was sent from.
    */
-  channel: CategoryChildChannel;
+  channel: TextChannel | DMChannel;
   /**
    * The channel type the message was sent from.
    */
@@ -223,7 +231,7 @@ interface CommandFile {
   /**
    * Category of the command
    */
-  category: string;
+  category?: string;
   /**
    * Array of strings for command aliases
    */
@@ -254,6 +262,25 @@ interface CommandFile {
    * SlashCommandBuilder object for creating this command into a slash command
    */
   data?: SlashCommandBuilder;
+
+  /**
+   * customIds for your interaction components
+   */
+  customIds?: {
+    /**
+     * customIds for modal
+     */
+    modal?: string[];
+    /**
+     * customIds for select menus and buttons
+     */
+    messageComponent?: string[];
+    /**
+     * customIds for auto complete interaction
+     */
+    autoComplete?: string[];
+  };
+
   /**
    * Executing a prefix command call for this command
    * @param message Message Object
@@ -268,13 +295,59 @@ interface CommandFile {
     level?: number
   ): Promise<Message>;
   /**
-   * Executing a slash command call for this command
+   * Executing a slash interaction command call
    * @param interaction Interaction object
    * @param client Client Object
    * @param level permission level of user
    */
   interactionReply?(
-    interaction: Interaction,
+    interaction: CommandInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+
+  /**
+   * (select or button interaction), if you are using createMessageComponentCollector, you do not need to define this function
+   * Executing a message component interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   */
+  componentInteraction?(
+    interaction: MessageComponentInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * Executing a auto complete interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   */
+  autoCompleteInteraction?(
+    interaction: AutocompleteInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * Executing a modal interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   */
+  modalInteraction?(
+    interaction: ModalSubmitInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * Executing a user context menu interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   */
+  contextMenuInteraction?(
+    interaction: UserContextMenuCommandInteraction,
     client?: Client,
     level?: number
   ): Promise<Interaction>;
@@ -329,7 +402,7 @@ declare module "discord.js" {
         | CategoryChannel
         | DMChannel
         | NewsChannel
-        | StoreChannel
+        | StageChannel
         | ThreadChannel
         | TextBasedChannel;
       /**
@@ -395,6 +468,18 @@ declare global {
   }
 }
 
+interface ConfigRoles {
+  /**
+   * The role name and id (optional)  of your moderator of all guild server this bot is in; Default Permission level of 4.
+   */
+  modRole: { id?: string; name: string };
+  /**
+   * The role name and id (optional) of your administrator of all guild server this bot is in; Default Permission level of 4.
+   */
+  adminRole: { id?: string; name: string };
+  [k: string]: { id?: string; name: string };
+}
+
 interface Config {
   /**
    * The developer discord user Id,
@@ -442,12 +527,21 @@ interface Config {
    * Enable a command denied message to users who do not have permission level of 7 or higher. Default is false
    */
   displayAdminCommandCallsByNonAdmin?: boolean;
+
+  /**
+   * The role names of your permissions of all guild server this bot is in;
+   */
+  roles: ConfigRoles;
   /**
    * The role name of your moderator of all guild server this bot is in; Default Permission level of 4.
+   *
+   * @deprecated use roles.modRoles.name instead
    */
   modRole: string;
   /**
    * The role name of your administrator of all guild server this bot is in; Default Permission level of 4.
+   *
+   * @deprecated use roles.adminRole.name instead
    */
   adminRole: string;
   /**
@@ -470,6 +564,7 @@ declare function DiscordFeaturesHandler(
 export {
   DiscordFeaturesHandler,
   Config,
+  ConfigRoles,
   CommandFile,
   EventFile,
   Permissions,
