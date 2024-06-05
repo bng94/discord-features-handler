@@ -65,13 +65,16 @@ Define the following variables: `DISCORD_TOKEN`, `OWNER_ID`, `CLIENT_ID`, `DEVEL
 	```
 
 === "TS"
-
+	First compile the code: 
+	```
+	npm run build
+	```
+	now you can start up the bot using the following:
 	```
 	npm run dev
 	```
-	or 
+	or
 	```
-	npm run build
 	npm run prod
 	```
 

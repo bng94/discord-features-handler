@@ -29,9 +29,7 @@ Here is the default config.js that is used if no config file is found:
         adminRole: {
           name: "admin"
         },
-      },
-      modRole: "Mod",
-      adminRole: "Admin",
+      },\
       permissions: [
         {
           level: 0,
@@ -45,15 +43,10 @@ Here is the default config.js that is used if no config file is found:
             const modRole = guild.roles.cache.find(
               (r) => r.name.toLowerCase() === config.roles.modRole.name.toLowerCase()
             );
-            const oldModRole = guild.roles.cache.find(
-              (r) => r.name.toLowerCase() === config.modRole.toLowerCase()
-            );
             if (modRole && guildMember.roles.cache.has(modRole.id)) {
-              if (oldModRole && guildMember.roles.cache.has(oldModRole.id)) {
-                return true;
-              } else {
-                return false;
-              }
+              return true;
+            } else {
+              return false;
             }
           },
         },
@@ -64,12 +57,10 @@ Here is the default config.js that is used if no config file is found:
             const adminRole = guild.roles.cache.find(
               (r) => r.name.toLowerCase() === config.roles.adminRole.name.toLowerCase()
             );
-            const oldAdminRole = guild.roles.cache.find(
-              (r) => r.name.toLowerCase() === config.adminRole.toLowerCase()
-            );
-            if (adminRole && guildMember.roles.cache.has(adminRole.id)) return true;
-            else if (oldAdminRole && guildMember.roles.cache.has(oldAdminRole.id)) return true;
-            else {
+
+            if (adminRole && guildMember.roles.cache.has(adminRole.id)) {
+              return true;
+            } else {
               return false;
             }
           },
@@ -153,8 +144,6 @@ Here is the default config.js that is used if no config file is found:
           name: "admin"
         },
       },
-      modRole: "Mod",
-      adminRole: "Admin",
       permissions: [
         {
           level: 0,
@@ -168,15 +157,11 @@ Here is the default config.js that is used if no config file is found:
             const modRole = guild.roles.cache.find(
               (r) => r.name.toLowerCase() === config.roles.modRole.name.toLowerCase()
             );
-            const oldModRole = guild.roles.cache.find(
-              (r) => r.name.toLowerCase() === config.modRole.toLowerCase()
-            );
+
             if (modRole && guildMember.roles.cache.has(modRole.id)) {
-              if (oldModRole && guildMember.roles.cache.has(oldModRole.id)) {
                 return true;
-              } else {
-                return false;
-              }
+            } else {
+              return false;
             }
           },
         },
@@ -187,12 +172,9 @@ Here is the default config.js that is used if no config file is found:
             const adminRole = guild.roles.cache.find(
               (r) => r.name.toLowerCase() === config.roles.adminRole.name.toLowerCase()
             );
-            const oldAdminRole = guild.roles.cache.find(
-              (r) => r.name.toLowerCase() === config.adminRole.toLowerCase()
-            );
-            if (adminRole && guildMember.roles.cache.has(adminRole.id)) return true;
-            else if (oldAdminRole && guildMember.roles.cache.has(oldAdminRole.id)) return true;
-            else {
+            if (adminRole && guildMember.roles.cache.has(adminRole.id)){ 
+              return true;
+            } else {
               return false;
             }
           },
@@ -334,44 +316,30 @@ Here is the default config.js that is used if no config file is found:
 
 
 <details>
-<summary>Roles Type</summary>
-This type is a object that contains the following property.
-<table>
-  <thead>
-    <tr>
-      <th>Property</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>id <span class="optional-label"></span><br/></td>
-      <td><span class="type">string</span></td>
-      <td>The id of the role</td>
-    </tr>
-    <tr>
-      <td>name</td>
-      <td><span class="type">string</span></td>
-      <td>The name of the role.</td>
-    </tr>
-  </tbody>
-</table>
-
-
+  <summary>Roles Type</summary>
+  This type is a object that contains the following property.
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>id <span class="optional-label"></span><br/></td>
+        <td><span class="type">string</span></td>
+        <td>The id of the role</td>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td><span class="type">string</span></td>
+        <td>The name of the role.</td>
+      </tr>
+    </tbody>
+  </table>
 </details>
-
-<p>
-  <strong>modRole</strong> <span class="varType">string</span>
-<span class="deprecated-label"></span><br/>
-  The role name of your moderator role of all guild server this bot is in; Default Permission level of 3. This wil be deprecated in the next build.
-</p>
-
-<p>
-  <strong>adminRole</strong> <span class="varType">string</span>
-<span class="deprecated-label"></span><br/>
-  The role name of your administrator role of all guild server this bot is in; Default Permission level of 4.This wil be deprecated in the next build.
-</p>
 
 <p>
   <strong>permissions</strong> <span class="varType">Array&lt;Object&gt;</span><br/>
@@ -413,9 +381,7 @@ This type is a object that contains the following property.
 </table>
 
 <details>
-<summary>CheckPermissions Type</summary>
-
-
+  <summary>CheckPermissions Type</summary>
   <table>
     <thead>
       <tr>

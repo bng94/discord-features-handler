@@ -64,14 +64,15 @@ module.exports = {
     }
 
     //Check if cmd usage does NOT meet the usage criteria then return
+
+    const length = args.length;
+
     if (
-      ((!cmd.maxArgs || cmd.maxArgs === -1) && args.length < cmd.minArgs) ||
-      (cmd.maxArgs &&
-        cmd.maxArgs != -1 &&
-        (args.length < cmd.minArgs || args.length > cmd.maxArgs))
+      (cmd.minArgs !== 0 && length < cmd.minArgs) ||
+      (cmd.maxArgs && length > cmd.maxArgs)
     ) {
       return message.channel.send(
-        `Incorrect syntax usage! ${prefix}${command} ${cmd.usage}`
+        `Incorrect Arguments Length for the command call! ${prefix}${command} ${cmd.usage}`
       );
     }
 

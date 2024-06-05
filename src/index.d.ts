@@ -45,26 +45,21 @@ type Directories = {
 };
 
 declare global {
-  /**
-   * changes the first letter of every word in the string to uppercase letter
-   * Example: "a quick brown fox jumps the lazy dog".toProperCase()
-   * @method toProperCase
-   * @returns {string} "A Quick Brown Fox Jumps The Lazy Dog"
-   */
   interface String {
     /**
      * Changes the first letter of every word in the string to uppercase letter
+     * Example: "a quick brown fox jumps the lazy dog".toProperCase()
+     * @method toProperCase
+     * @returns {string} "A Quick Brown Fox Jumps The Lazy Dog"
      */
     toProperCase(): string;
   }
 
-  /**
-   * @method random
-   * @returns [a, b, c, d, e].random() can return a, b, c, d or e.
-   */
   interface Array<T> {
     /**
      * <Array>.random() returns a single random element from the array
+     * @method random
+     * @returns [a, b, c, d, e].random() can return a, b, c, d or e.
      */
     random(): T;
   }
@@ -235,7 +230,7 @@ interface CommandFile {
   /**
    * Array of strings for command aliases
    */
-  aliases: string[];
+  aliases?: string[];
   /**
    * Is this command for guild only to use. DM command is not allowed
    */
@@ -251,7 +246,6 @@ interface CommandFile {
   /**
    * Maximum Arguments allowed for the command
    *
-   * Default: -1
    */
   maxArgs?: number;
   /**

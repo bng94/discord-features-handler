@@ -293,7 +293,7 @@ const getSingleCmd = async (commands, name, client) => {
     ? client.config.prefix[0]
     : client.config.prefix;
   const command = await commands.find(
-    (cmd) => cmd.name === name || cmd.aliases === name
+    (cmd) => cmd.name === name || (cmd.aliases && cmd.aliases === name)
   );
 
   if (!command) {
@@ -304,8 +304,8 @@ const getSingleCmd = async (commands, name, client) => {
   }
 
   const fieldObj = [];
-  const aliases = command.aliases.join(", ");
-  if (aliases.length !== 0) {
+  const aliases = command.aliases ? command.aliases.join(", ") : null;
+  if (aliases) {
     fieldObj.push({
       name: `Aliases:`,
       value: `${aliases}`,
