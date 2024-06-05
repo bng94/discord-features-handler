@@ -20,9 +20,9 @@ Discord-features-handler is a handler for discord commands, slash commands and d
 
 ## Demo
 
-Here is github repository of mine where a discord bot is created using DiscordFeaturesHandler.
+Here is a demo bot where I created a discord bot is created using DiscordFeaturesHandler in JavaScript and in TypeScript in the TypeScript Branch.
 
-[Discord Bot using DiscordFeaturesHandler](https://github.com/bng94/heroku-bot)
+[Demo Bot](https://github.com/bng94/heroku-bot)
 
 ## Installation
 
@@ -73,7 +73,14 @@ discord-bot/
 └── package.json
 ```
 
-## DiscordFeaturesHandler Properties
+
+## Documentation
+
+The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.github.io/discord-features-handler/)
+
+You can read all the version and changes history here: [ChangeLog](https://bng94.github.io/discord-features-handler/release-notes/)
+
+### DiscordFeaturesHandler Properties
 These are the properties of the DiscordFeaturesHandler:
 
 <table>
@@ -88,20 +95,20 @@ These are the properties of the DiscordFeaturesHandler:
   <tbody>
     <tr>
       <td>client</td>
-      <td>Client</td>
-      <td>""</td>
-      <td><a href="https://discord.js.org/#/docs/main/stable/class/Client">Discord Client Object</a></td>
+      <td><a href="https://discord.js.org/docs/packages/discord.js/main/BaseClient:Class">Client</a></td>
+      <td>client</td>
+      <td>The DiscordJS BaseClient Object</td>
     </tr>
     <tr>
       <td>options</td>
-      <td>Object</td>
-      <td>{}</td>
-      <td>Object that contains parameters to configure DiscordFeaturesHandler</td>
+      <td><a href="https://bng94.github.io/discord-features-handler/setup/DiscordFeaturesHandlerOptions/">DiscordFeaturesHandlerOptions</a></td>
+      <td>{ ... }</td>
+      <td>Options that contains parameters to configure DiscordFeaturesHandler</td>
     </tr>
   </tbody>
 </table>
 
-### options
+### DiscordFeaturesHandlerOptions
 Here are the some parameters of options Object. For a full list please check out the [documentation](https://bng94.github.io/discord-features-handler/setup/DiscordFeaturesHandlerOptions/).
 <table>
   <thead>
@@ -118,12 +125,8 @@ Here are the some parameters of options Object. For a full list please check out
       <td>directories</td>
       <td>object</td>
       <td>true</td>
-      <td>{ main: __dirname, 
-        commands: "commands", 
-        events: "events", 
-        modules: "modules"
-      }</td>
-      <td>Contains the absolute path to the directory containing the executing main script file, and your folder names for commands, events, and modules folders. Expected Value: { main: __dirname }</td>
+      <td>{ ... }</td>
+      <td>Contains a parameter called main that is the absolute path to the directory containing the executing main script file, and your folder names for commands, events, and modules folders. Expected Value: { main: __dirname }</td>
     </tr>
     <tr>
       <td>config</td>
@@ -131,13 +134,6 @@ Here are the some parameters of options Object. For a full list please check out
       <td>false</td>
       <td>"./config"</td>
       <td>The path to your configuration file. Default value is path to default configuration file provided.</td>
-    </tr>
-    <tr>
-      <td>modulesPreloadTime</td>
-      <td>number</td>
-      <td>false</td>
-      <td>500</td>
-      <td>Establish a waiting time to connect to the Discord API and load the data required for the module files. The time value is in milliseconds. You can set the time based off the length as you see fit. Default time in milliseconds is 500.</td>
     </tr>
   </tbody>
 </table>
@@ -207,7 +203,7 @@ The properties that are **required** to have when creating a command file
       <td>execute(message, args, client, level)</td>
       <td>func</td>
       <td>""</td>
-      <td>Functionality and response of the command call. Parameters are `message` object, `arguments` array, `client` object, and user's permission level to run a command</td>
+      <td>This is a function that is invoked when the command is called to be executed. Parameters are `message` object, `arguments` array, `client` object, and user's permission level to run a command</td>
     </tr>
   </tbody>
 </table>
@@ -236,7 +232,7 @@ module.exports = {
 };
 ```
 
-### Additional Required Command Properties for Slash commands
+### Properties for Slash commands
 The properties that are required when creating a command file for slash commands are listed above, and they include the following additional properties.
 <table>
   <thead>
@@ -249,13 +245,13 @@ The properties that are required when creating a command file for slash commands
   <tbody>
     <tr>
       <td>data</td>
-      <td>SlashCommandBuilder()</td>
+      <td><a href="https://discord.js.org/docs/packages/builders/1.6.0/SlashCommandBuilder:Class">SlashCommandBuilder</a></td>
       <td>DiscordJS SlashCommandBuilder</td>
     </tr>
     <tr>
       <td>interactionReply(interaction, client, level)</td>
       <td>func</td>
-      <td>Functionality and response of the slash command call. Parameters are `interaction`, `client` object, and `user's permission level`.</td>
+      <td> This is a function that is invoked when the slash command is called to be executed Parameters are `interaction`, `client` object, and `user's permission level`.</td>
     </tr>
   </tbody>
 </table>
@@ -331,7 +327,7 @@ When creating a discord event file in your events folder, will required the foll
       <td>execute(client, ...params)</td>
       <td>func</td>
       <td>""</td>
-      <td>Functionality and response of the discord event trigger. <strong>Params</strong> are parameters of the event you are defining.</td>
+      <td>This is the method used to execute and handle the Discord event trigger. <strong>Params</strong> are parameters of the event you are defining.</td>
     </tr>
   </tbody>
 </table>
@@ -389,12 +385,6 @@ process.on("unhandledRejection", (e) => {
 ```
 
 You can read more about these and other built-in functions in the [official Documentation](https://bng94.github.io/discord-features-handler/builtIn/functions/).
-
-## Documentation
-
-The official documentation can be found here: [DiscordFeaturesHandler Documentation](https://bng94.github.io/discord-features-handler/)
-
-You can read all the version and changes history here: [ChangeLog](https://bng94.github.io/discord-features-handler/release-notes/)
 
 ## Bug and Issues
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.

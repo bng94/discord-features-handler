@@ -9,7 +9,25 @@ hide:
 
 # Release Notes
 
-## 2.1.0 - Latest Version
+## 2.1.1 - Latest Version
+
+### Docs
+- Add TypeScript Support page
+- Update config page and removed  `modRole` and `adminRole` property 
+
+### Refactor
+- Removed `modRole` and `adminRole` from config file (These property has been replaced with roles object property).
+- Add more errors check for command files.
+- Refactored minArgs and maxArgs check.
+- Reformated README.md and updated package.json file
+- remove requirement of cmd aliases and updated types file
+
+### Chore
+- Updated build scripts for deployment 
+  
+
+
+## 2.1.0
 
 ### Docs
 
@@ -19,6 +37,7 @@ hide:
 
 ### Features
 
+- Added `roles` as an object property into config file, `modRole` and `adminRole` are one two properties replacing `modRole` and `adminRole` property of config file
 - Added `customIds` as an object property into command files, contains the following keys: `messageComponent`, `modal`, and `autoComplete`. The values are an array of strings containing the customIds for the respective interaction.
 - Added `componentInteraction(interaction, client, level)` method property into command files, as an optional property for select menu and button interactions if you are not using`createMessageComponentCollector`.
 - Added `autoCompleteInteraction(interaction, client, level)` method property into command files for handling auto complete interactions

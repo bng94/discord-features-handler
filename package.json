@@ -1,6 +1,6 @@
 {
   "name": "discord-features-handler",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "An simple discord regular and slash commands, events and modules handler with folder structure",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/bng94/discord-features-handler/issues"
   },
-  "homepage": "https://github.com/bng94/discord-features-handler#readme",
+  "homepage": "https://bng94.github.io/discord-features-handler/",
   "dependencies": {
     "discord.js": "^14.9.0"
   },

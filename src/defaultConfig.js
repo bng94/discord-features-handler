@@ -18,8 +18,6 @@ const config = {
       name: "admin",
     },
   },
-  modRole: "Mod",
-  adminRole: "Admin",
   permissions: [
     {
       level: 0,
@@ -34,11 +32,9 @@ const config = {
           (r) => r.name.toLowerCase() === config.modRole.toLowerCase()
         );
         if (modRole && guildMember.roles.cache.has(modRole.id)) {
-          if (oldModRole && guildMember.roles.cache.has(oldModRole.id)) {
-            return true;
-          } else {
-            return false;
-          }
+          return true;
+        } else {
+          return false;
         }
       },
     },
@@ -50,8 +46,6 @@ const config = {
           (r) => r.name.toLowerCase() === config.adminRole.toLowerCase()
         );
         if (adminRole && guildMember.roles.cache.has(adminRole.id)) return true;
-        else if (oldAdminRole && guildMember.roles.cache.has(oldAdminRole.id))
-          return true;
         else {
           return false;
         }

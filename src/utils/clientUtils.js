@@ -1,18 +1,12 @@
-const {
-  TextChannel,
-  Guild,
-  GuildMember,
-  User,
-  Collection,
-} = require("discord.js");
+const { Collection, SlashCommandBuilder } = require("discord.js");
 const path = require("path");
 /**
  *
- * @param {object} cmd refer to command properties documentation
+ * @param {import("..").CommandFile} cmd refer to command properties documentation
  * @returns string if an error exists
  */
 const checkCommandErrors = (cmd) => {
-  let error = "";
+  let error = null;
   if (typeof cmd.permissions === "undefined") {
     error += `\n- Permission level is Missing!`;
   } else if (isNaN(cmd.permissions)) {
@@ -21,8 +15,45 @@ const checkCommandErrors = (cmd) => {
 
   if (typeof cmd.minArgs === "undefined") {
     error += `\n- Minimum args is Missing!`;
-  } else if (isNaN(cmd.minArgs)) {
-    error += `\n- MinArgs must be a Number!`;
+  } else if (
+    isNaN(cmd.minArgs) ||
+    (isNaN(cmd.minArgs) === false && cmd.minArgs < 0)
+  ) {
+    error += `\n- MinArgs must be a Number equal to 0 or greater!`;
+  }
+
+  if (cmd.maxArgs && isNaN(cmd.maxArgs)) {
+    if (isNaN(cmd.maxArgs)) {
+      error += `\n- maxArgs must be a number and greater then MinArgs`;
+    } else if (cmd.maxArgs !== -1 && cmd.maxArgs <= cmd.minArgs) {
+      error += `\n- maxArgs must be a number greater then MinArgs`;
+    }
+  }
+
+  if (cmd.data && typeof cmd.data !== SlashCommandBuilder) {
+    error += `\n- data must be a SlashCommandBuilder Class`;
+  }
+
+  if (cmd.aliases && !Array.isArray(cmd.aliases)) {
+    error += `\n- aliases must be a Array of String`;
+  }
+
+  if (cmd.customIds) {
+    if (cmd.customIds.modal && !Array.isArray(cmd.customIds.modal)) {
+      error += `\n- customIds for modal must be a Array of String`;
+    }
+    if (
+      cmd.customIds.messageComponent &&
+      !Array.isArray(cmd.customIds.messageComponent)
+    ) {
+      error += `\n- customIds for MessageComponent must be a Array of String`;
+    }
+    if (
+      cmd.customIds.autoComplete &&
+      !Array.isArray(cmd.customIds.autoComplete)
+    ) {
+      error += `\n- customIds for AutoComplete must be a Array of String`;
+    }
   }
 
   if (typeof cmd.usage === "undefined") {
@@ -92,7 +123,7 @@ const configureClient = (client, config, directories) => {
           ))
         : require(`../commands/${folder}/${file}`);
       const error = checkCommandErrors(command);
-      if (error != "") {
+      if (error !== null) {
         const placeHolder = `\nRequired:`;
         throw placeHolder + error;
       }

@@ -10,6 +10,7 @@ nav:
     - Environment Variables: getting-started/environment-variables.md
     - Folder Structure: getting-started/folder-structure.md
     - Bot Script File: getting-started/Bot Script file.md
+    - TypeScript Support: getting-started/TypeScript Support.md
   - Setup: 
     - DiscordFeaturesHandlerOptions: setup/DiscordFeaturesHandlerOptions.md
     - config file: setup/config-file.md
@@ -67,6 +68,9 @@ plugins:
 
 
 extra:
+  analytics:
+    provider: google
+    property: ${{secrets.GOOGLE_ANAYLTICS}}
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/bng94/discord-features-handler
