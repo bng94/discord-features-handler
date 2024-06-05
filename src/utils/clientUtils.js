@@ -6,7 +6,7 @@ const path = require("path");
  * @returns string if an error exists
  */
 const checkCommandErrors = (cmd) => {
-  let error = null;
+  let error = "";
   if (typeof cmd.permissions === "undefined") {
     error += `\n- Permission level is Missing!`;
   } else if (isNaN(cmd.permissions)) {
@@ -28,10 +28,6 @@ const checkCommandErrors = (cmd) => {
     } else if (cmd.maxArgs !== -1 && cmd.maxArgs <= cmd.minArgs) {
       error += `\n- maxArgs must be a number greater then MinArgs`;
     }
-  }
-
-  if (cmd.data && typeof cmd.data !== SlashCommandBuilder) {
-    error += `\n- data must be a SlashCommandBuilder Class`;
   }
 
   if (cmd.aliases && !Array.isArray(cmd.aliases)) {
@@ -123,7 +119,7 @@ const configureClient = (client, config, directories) => {
           ))
         : require(`../commands/${folder}/${file}`);
       const error = checkCommandErrors(command);
-      if (error !== null) {
+      if (error !== "") {
         const placeHolder = `\nRequired:`;
         throw placeHolder + error;
       }

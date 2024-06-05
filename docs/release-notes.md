@@ -9,7 +9,17 @@ hide:
 
 # Release Notes
 
-## 2.1.1 - Latest Version
+## 2.1.2 - Latest Version
+
+### Fix
+- Removed type check for cmd.data which caused an error for commands missing data property.
+
+### Chore
+- Updated build scripts for npm publish 
+  
+
+
+## 2.1.1 
 
 ### Docs
 - Add TypeScript Support page
