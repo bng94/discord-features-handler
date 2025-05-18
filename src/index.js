@@ -233,7 +233,9 @@ const DiscordFeaturesHandler = async (
 
   client.login(client.config.token).catch((e) => {
     console.warn(e);
-    throw new Error(`Please check if your discord bot token is valid!`);
+    throw new Error(
+      `Please check if your discord bot token is valid! The token should be defined in config.token`
+    );
   });
   await client.wait(modulesPreloadTime);
 
