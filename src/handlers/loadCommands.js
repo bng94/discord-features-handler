@@ -46,6 +46,24 @@ module.exports = ({
       });
     }
   };
+
+  // Possible Feature: Delete all slash commands before loading new ones
+  /*
+  const rest = new REST().setToken(client.config.token);
+  const { clientId, guildId } = client.config;
+  try {
+    if (guildId) {
+      await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] });
+      console.log("Successfully deleted all guild slash commands before loading new ones.");
+    } else {
+      await rest.put(Routes.applicationCommands(clientId), { body: [] });
+      console.log("Successfully deleted all global slash commands before loading new ones.");
+    }
+  } catch (err) {
+    console.error("Error deleting slash commands before loading:", err);
+  }
+  */
+
   const loadingCommands = directory.map((dirs) => {
     loadCommands(dirs);
   });
@@ -54,13 +72,13 @@ module.exports = ({
     const rest = new REST().setToken(client.config.token);
     const { clientId, guildId, toDeleteSlashCommand } = client.config;
 
-    const slashCommands = await client.commands
-      .map((cmd) => {
-        if (cmd.data) {
-          return cmd.data.toJSON();
-        }
-      })
-      .filter((data) => data !== undefined);
+    const slashCommandMap = new Map();
+    client.commands.forEach((cmd) => {
+      if (cmd.data && cmd.data.name) {
+        slashCommandMap.set(cmd.data.name, cmd.data.toJSON());
+      }
+    });
+    const slashCommands = Array.from(slashCommandMap.values());
 
     if (slashCommands.length === 0) return;
 
@@ -69,30 +87,17 @@ module.exports = ({
         `Started refreshing ${slashCommands.length} application (/) commands.`
       );
       if (guildId) {
+        await rest
+          .put(Routes.applicationGuildCommands(clientId, guildId), {
+            body: [],
+          })
+          .then(() => console.log(`Successfully refreshed all guild commands.`))
+          .catch(console.error);
+
         const data = await rest.put(
           Routes.applicationGuildCommands(clientId, guildId),
           { body: slashCommands }
         );
-
-        if (typeof toDeleteSlashCommand === "string") {
-          rest
-            .delete(
-              Routes.applicationGuildCommand(
-                clientId,
-                guildId,
-                toDeleteSlashCommand
-              )
-            )
-            .then(() => console.log("Successfully deleted guild command"))
-            .catch(console.error);
-        } else if (toDeleteSlashCommand === true) {
-          rest
-            .put(Routes.applicationGuildCommands(clientId, guildId), {
-              body: [],
-            })
-            .then(() => console.log("Successfully deleted all guild commands."))
-            .catch(console.error);
-        }
 
         console.log(
           "[log]",
@@ -100,24 +105,29 @@ module.exports = ({
           `Successfully Loaded a total of ${data.length} slash commands.`
         );
       } else {
-        const data = await rest.put(Routes.applicationGuildCommands(clientId), {
-          body: slashCommands,
-        });
-        if (typeof toDeleteSlashCommand === "string") {
-          rest
-            .delete(
-              Routes.applicationGuildCommand(clientId, toDeleteSlashCommand)
-            )
-            .then(() => console.log("Successfully deleted guild command"))
-            .catch(console.error);
-        } else if (toDeleteSlashCommand === true) {
-          rest
-            .put(Routes.applicationCommands(clientId), { body: [] })
+        if (toDeleteSlashCommand) {
+          const deleteAction =
+            typeof toDeleteSlashCommand === "string"
+              ? rest.delete(
+                  Routes.applicationGuildCommand(clientId, toDeleteSlashCommand)
+                )
+              : rest.put(Routes.applicationCommands(clientId), { body: [] });
+
+          deleteAction
             .then(() =>
-              console.log("Successfully deleted all application commands.")
+              console.log(
+                `Successfully deleted ${
+                  typeof toDeleteSlashCommand === "string"
+                    ? "specific guild command"
+                    : "all application commands"
+                }.`
+              )
             )
             .catch(console.error);
         }
+        const data = await rest.put(Routes.applicationGuildCommands(clientId), {
+          body: slashCommands,
+        });
 
         console.log(
           "[log]",
@@ -126,8 +136,7 @@ module.exports = ({
         );
       }
     } catch (error) {
-      // And of course, make sure you catch and log any errors!
-      console.error(error);
+      console.error("[Error log]", "[Slash Commands]", `error`);
     }
   });
 };
