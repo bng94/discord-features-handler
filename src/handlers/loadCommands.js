@@ -47,22 +47,26 @@ module.exports = ({
     }
   };
 
-  // Possible Feature: Delete all slash commands before loading new ones
-  /*
-  const rest = new REST().setToken(client.config.token);
-  const { clientId, guildId } = client.config;
-  try {
-    if (guildId) {
-      await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] });
-      console.log("Successfully deleted all guild slash commands before loading new ones.");
-    } else {
-      await rest.put(Routes.applicationCommands(clientId), { body: [] });
-      console.log("Successfully deleted all global slash commands before loading new ones.");
+  const deleteSlashCommands = async () => {
+    const rest = new REST().setToken(client.config.token);
+    const { clientId, guildId } = client.config;
+    try {
+      if (guildId) {
+        await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+          body: [],
+        });
+        console.log("Successfully deleted all guild commands.");
+      } else {
+        await rest.put(Routes.applicationCommands(clientId), { body: [] });
+        console.log("Successfully deleted all application commands.");
+      }
+    } catch (err) {
+      console.error("Error deleting slash commands before loading:", err);
     }
-  } catch (err) {
-    console.error("Error deleting slash commands before loading:", err);
-  }
-  */
+  };
+  (async () => {
+    await deleteSlashCommands();
+  })();
 
   const loadingCommands = directory.map((dirs) => {
     loadCommands(dirs);
