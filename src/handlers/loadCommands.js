@@ -8,6 +8,7 @@ module.exports = ({
   filesToExclude = [""],
   mainDirectory,
   logger,
+  slashCommandIdsToDelete = [],
 }) => {
   const loadCommands = (dir) => {
     const builtInDirectory = dir.includes("../commands/");
@@ -51,22 +52,46 @@ module.exports = ({
     const rest = new REST().setToken(client.config.token);
     const { clientId, guildId } = client.config;
     try {
-      if (guildId) {
-        await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-          body: [],
-        });
-        console.log("Successfully deleted all guild commands.");
-      } else {
-        await rest.put(Routes.applicationCommands(clientId), { body: [] });
-        console.log("Successfully deleted all application commands.");
+      if (slashCommandIdsToDelete.length > 0) {
+        for (const id of slashCommandIdsToDelete) {
+          await rest
+            .delete(Routes.applicationCommand(clientId, id))
+            .then(() =>
+              console.log(`Successfully deleted slash command with ID: ${id}`)
+            )
+            .catch(console.error);
+        }
       }
     } catch (err) {
       console.error("Error deleting slash commands before loading:", err);
     }
   };
   (async () => {
-    await deleteSlashCommands();
+    if (slashCommandIdsToDelete.length > 0) {
+      await deleteSlashCommands();
+    }
   })();
+
+  // const deleteSlashCommands = async () => {
+  //   const rest = new REST().setToken(client.config.token);
+  //   const { clientId, guildId } = client.config;
+  //   try {
+  //     if (guildId) {
+  //       await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+  //         body: [],
+  //       });
+  //       console.log("Successfully deleted all guild commands.");
+  //     } else {
+  //       await rest.put(Routes.applicationCommands(clientId), { body: [] });
+  //       console.log("Successfully deleted all application commands.");
+  //     }
+  //   } catch (err) {
+  //     console.error("Error deleting slash commands before loading:", err);
+  //   }
+  // };
+  // (async () => {
+  //   await deleteSlashCommands();
+  // })();
 
   const loadingCommands = directory.map((dirs) => {
     loadCommands(dirs);

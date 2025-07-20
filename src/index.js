@@ -59,6 +59,7 @@ const DiscordFeaturesHandler = async (
       events: false,
       modules: false,
     },
+    slashCommandIdsToDelete = [],
     disableUnhandledRejectionHandler = false,
     modulesPreloadTime = 500,
     filesToExcludeInHandlers = {
@@ -134,6 +135,16 @@ const DiscordFeaturesHandler = async (
 
   if (typeof onLoad_list_files.modules !== "boolean") {
     throw new TypeError(`onLoad_list_files.modules must be a boolean value`);
+  }
+
+  if (
+    !Array.isArray(slashCommandIdsToDelete) ||
+    !slashCommandIdsToDelete.every((id) => typeof id === "string")
+  ) {
+    console.warn(
+      "slashCommandIdsToDelete should be an array of strings representing slash command IDs"
+    );
+    slashCommandIdsToDelete = [];
   }
 
   if (typeof process.env.DISCORD_TOKEN === "undefined") {
@@ -217,6 +228,7 @@ const DiscordFeaturesHandler = async (
     filesToExclude: commandsExcluded,
     mainDirectory: directories.main,
     logger: onLoad_list_files.commands,
+    slashCommandIdsToDelete,
   });
   loadEvents({
     client,

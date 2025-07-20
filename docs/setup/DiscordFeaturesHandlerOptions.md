@@ -32,9 +32,10 @@ DiscordFeaturesHandler(client, {
     events: false,
     modules: false,
   },
+  slashCommandIdsToDelete = []
   disableUnhandledRejectionHandler = false,
   modulesPreloadTime = 500,
- filesToExcludeInHandlers = {
+  filesToExcludeInHandlers = {
     commands: [""],
     events: [""],
     modules: [""],
@@ -178,6 +179,12 @@ The DiscordFeaturesHandlerOptions object contains properties to configure Discor
     </tr>
   </tbody>
 </table>
+
+<p> <strong>slashCommandIdsToDelete</strong> <span class="varType"><code>Array&lt;string&gt;</code></span>
+<span class="optional-label"></span><br/>
+An array of slash command IDs that should be deleted. Each string in the array represents the unique identifier of a registered slash command you want to remove from your application.
+</p>
+
 
 
 <p>

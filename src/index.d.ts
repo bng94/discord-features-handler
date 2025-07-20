@@ -158,6 +158,11 @@ interface DiscordFeaturesHandlerOptions {
    */
   onLoad_list_files?: FileLoadedLogger;
   /**
+   * If you want to delete specific slash commands, you can provide an array of slash command ids to delete
+   * @example: ["123456789012345678"]
+   */
+  slashCommandIdsToDelete?: string[] | string;
+  /**
    * Disable discord-features-handler unhandledRejection handler
    */
   disableUnhandledRejectionHandler?: boolean;
