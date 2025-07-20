@@ -9,6 +9,9 @@ hide:
 
 # Release Notes
 
+## 2.3.0
+- Added a options to the DiscordFeaturesHandlerOptions to be able to delete specific slash command ids, using slashCommandIdsToDelete 
+
 ## 2.2.0
 - Updated event loader to prevent duplicate event listeners.
 - Updated command loader to prevent duplicate slash commands from being created when the bot restarts.
