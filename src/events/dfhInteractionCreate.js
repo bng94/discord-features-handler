@@ -22,32 +22,33 @@ module.exports = {
         }
       }
 
-      const matchingCustomIds = client.commands.flatMap((cmd) => {
-        let customIds = cmd.customIds ?? [];
-        if (
-          customIds &&
-          typeof customIds === "object" &&
-          !Array.isArray(customIds)
-        ) {
-          customIds = Object.values(customIds);
+      const foundCmd = client.commands.find((cmd) => {
+        if (!cmd.customIds) return false;
+
+        if (Array.isArray(cmd.customIds)) {
+          return cmd.customIds.includes(customId);
         }
-        return customIds.includes(customId) ? customIds : [];
+
+        if (typeof cmd.customIds === "object") {
+          return Object.values(cmd.customIds).includes(customId);
+        }
+
+        return false;
       });
 
-      if (matchingCustomIds.length === 0) {
+      if (!foundCmd) {
         return console.error(
-          "Unable to find command:" +
-            commandName +
-            " with customId: " +
-            customId
+          "Unable to find command with customId: " + customId
         );
       }
 
-      return matchingCustomIds[0].customIdInteraction(
-        interaction,
-        client,
-        level
-      );
+      if (typeof foundCmd.customIdInteraction !== "function") {
+        return console.error(
+          `Command "${foundCmd.name}" does not implement customIdInteraction.`
+        );
+      }
+
+      return foundCmd.customIdInteraction(interaction, client, level);
     } catch (e) {
       console.log("Interaction execution failed", e);
       return interaction.reply({
