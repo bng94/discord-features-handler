@@ -23,6 +23,7 @@ DiscordFeaturesHandler(client, {
       events: false,
       modules: false,
     },
+
     //Disable discord-features-handler unhandledRejection handler functions
     disableUnhandledRejectionHandler = false,
 });

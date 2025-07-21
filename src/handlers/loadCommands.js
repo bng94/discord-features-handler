@@ -9,6 +9,10 @@ module.exports = ({
   mainDirectory,
   logger,
   slashCommandIdsToDelete = [],
+  deleteSlashCommands = {
+    delete_global_slash_commands: false,
+    delete_guild_slash_commands: false,
+  },
 }) => {
   const loadCommands = (dir) => {
     const builtInDirectory = dir.includes("../commands/");
@@ -52,15 +56,13 @@ module.exports = ({
     const rest = new REST().setToken(client.config.token);
     const { clientId, guildId } = client.config;
     try {
-      if (slashCommandIdsToDelete.length > 0) {
-        for (const id of slashCommandIdsToDelete) {
-          await rest
-            .delete(Routes.applicationCommand(clientId, id))
-            .then(() =>
-              console.log(`Successfully deleted slash command with ID: ${id}`)
-            )
-            .catch(console.error);
-        }
+      for (const id of slashCommandIdsToDelete) {
+        await rest
+          .delete(Routes.applicationCommand(clientId, id))
+          .then(() =>
+            console.log(`Successfully deleted slash command with ID: ${id}`)
+          )
+          .catch(console.error);
       }
     } catch (err) {
       console.error("Error deleting slash commands before loading:", err);
@@ -71,27 +73,6 @@ module.exports = ({
       await deleteSlashCommands();
     }
   })();
-
-  // const deleteSlashCommands = async () => {
-  //   const rest = new REST().setToken(client.config.token);
-  //   const { clientId, guildId } = client.config;
-  //   try {
-  //     if (guildId) {
-  //       await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-  //         body: [],
-  //       });
-  //       console.log("Successfully deleted all guild commands.");
-  //     } else {
-  //       await rest.put(Routes.applicationCommands(clientId), { body: [] });
-  //       console.log("Successfully deleted all application commands.");
-  //     }
-  //   } catch (err) {
-  //     console.error("Error deleting slash commands before loading:", err);
-  //   }
-  // };
-  // (async () => {
-  //   await deleteSlashCommands();
-  // })();
 
   const loadingCommands = directory.map((dirs) => {
     loadCommands(dirs);
@@ -116,12 +97,18 @@ module.exports = ({
         `Started refreshing ${slashCommands.length} application (/) commands.`
       );
       if (guildId) {
-        await rest
-          .put(Routes.applicationGuildCommands(clientId, guildId), {
-            body: [],
-          })
-          .then(() => console.log(`Successfully refreshed all guild commands.`))
-          .catch(console.error);
+        if (deleteSlashCommands.delete_guild_slash_commands) {
+          await rest
+            .put(Routes.applicationGuildCommands(clientId, guildId), {
+              body: [],
+            })
+            .then(() =>
+              console.log(
+                `Successfully deleted all guild commands before loading new ones.`
+              )
+            )
+            .catch(console.error);
+        }
 
         const data = await rest.put(
           Routes.applicationGuildCommands(clientId, guildId),
@@ -134,9 +121,12 @@ module.exports = ({
           `Successfully Loaded a total of ${data.length} slash commands.`
         );
       } else {
-        if (toDeleteSlashCommand) {
+        if (
+          deleteSlashCommands.delete_global_slash_commands ||
+          toDeleteSlashCommand
+        ) {
           const deleteAction =
-            typeof toDeleteSlashCommand === "string"
+            toDeleteSlashCommand && typeof toDeleteSlashCommand === "string"
               ? rest.delete(
                   Routes.applicationGuildCommand(clientId, toDeleteSlashCommand)
                 )

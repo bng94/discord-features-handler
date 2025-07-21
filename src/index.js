@@ -60,6 +60,10 @@ const DiscordFeaturesHandler = async (
       modules: false,
     },
     slashCommandIdsToDelete = [],
+    onSlashCommandsLoading = {
+      delete_global_slash_commands: false,
+      delete_guild_slash_commands: false,
+    },
     disableUnhandledRejectionHandler = false,
     modulesPreloadTime = 500,
     filesToExcludeInHandlers = {
@@ -229,6 +233,7 @@ const DiscordFeaturesHandler = async (
     mainDirectory: directories.main,
     logger: onLoad_list_files.commands,
     slashCommandIdsToDelete,
+    deleteSlashCommands: onSlashCommandsLoading,
   });
   loadEvents({
     client,
