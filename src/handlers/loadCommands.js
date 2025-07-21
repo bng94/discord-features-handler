@@ -60,12 +60,21 @@ module.exports = ({
         await rest
           .delete(Routes.applicationCommand(clientId, id))
           .then(() =>
-            console.log(`Successfully deleted slash command with ID: ${id}`)
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              `Successfully deleted slash command with ID: ${id}`
+            )
           )
           .catch(console.error);
       }
     } catch (err) {
-      console.error("Error deleting slash commands before loading:", err);
+      console.error(
+        "[log]",
+        "[Slash CMDs]",
+        "Error deleting slash commands before loading:",
+        err
+      );
     }
   };
   (async () => {
@@ -82,34 +91,46 @@ module.exports = ({
     const rest = new REST().setToken(client.config.token);
     const { clientId, guildId, toDeleteSlashCommand } = client.config;
 
-    const slashCommandMap = new Map();
+    const slashCommands = [];
     client.commands.forEach((cmd) => {
-      if (cmd.data && cmd.data.name) {
-        slashCommandMap.set(cmd.data.name, cmd.data.toJSON());
+      if ("data" in cmd && "interactionReply" in cmd) {
+        slashCommands.push(cmd.data.toJSON());
       }
     });
-    const slashCommands = Array.from(slashCommandMap.values());
 
-    if (slashCommands.length === 0) return;
+    if (slashCommands.length === 0) {
+      console.log("[log]", "[Slash CMDs]", "No slash commands to load.");
+      return;
+    }
 
     try {
-      console.log(
-        `Started refreshing ${slashCommands.length} application (/) commands.`
-      );
       if (guildId) {
-        if (onSlashCommandsLoading.delete_guild_slash_commands) {
+        if (onSlashCommandsLoading.delete_guild_slash_commands === true) {
+          console.log(
+            "[log]",
+            "[Slash CMDs]",
+            "Started deleting guild slash commands..."
+          );
+
           await rest
             .put(Routes.applicationGuildCommands(clientId, guildId), {
               body: [],
             })
             .then(() =>
               console.log(
+                "[log]",
+                "[Slash CMDs]",
                 `Successfully deleted all guild commands before loading new ones.`
               )
             )
             .catch(console.error);
         }
 
+        console.log(
+          "[log]",
+          "[Slash CMDs]",
+          `Loading ${slashCommands.length} guild slash commands...`
+        );
         const data = await rest.put(
           Routes.applicationGuildCommands(clientId, guildId),
           { body: slashCommands }
@@ -117,14 +138,19 @@ module.exports = ({
 
         console.log(
           "[log]",
-          "[Slash Commands]",
+          "[Slash CMDs]",
           `Successfully Loaded a total of ${data.length} slash commands.`
         );
       } else {
         if (
-          onSlashCommandsLoading.delete_global_slash_commands ||
+          onSlashCommandsLoading.delete_global_slash_commands === true ||
           toDeleteSlashCommand
         ) {
+          console.log(
+            "[log]",
+            "[Slash CMDs]",
+            "Started deleting global slash commands..."
+          );
           const deleteAction =
             toDeleteSlashCommand && typeof toDeleteSlashCommand === "string"
               ? rest.delete(
@@ -135,6 +161,8 @@ module.exports = ({
           deleteAction
             .then(() =>
               console.log(
+                "[log]",
+                "[Slash CMDs]",
                 `Successfully deleted ${
                   typeof toDeleteSlashCommand === "string"
                     ? "specific guild command"
@@ -144,18 +172,23 @@ module.exports = ({
             )
             .catch(console.error);
         }
+        console.log(
+          "[log]",
+          "[Slash CMDs]",
+          `Loading ${slashCommands.length} global slash commands...`
+        );
         const data = await rest.put(Routes.applicationGuildCommands(clientId), {
           body: slashCommands,
         });
 
         console.log(
           "[log]",
-          "[Slash Commands]",
+          "[Slash CMDs]",
           `Successfully Loaded a total of ${data.length} Global slash commands.`
         );
       }
     } catch (error) {
-      console.error("[Error log]", "[Slash Commands]", `error`);
+      console.error("[Error log]", "[Slash CMDs]", `error`);
     }
   });
 };

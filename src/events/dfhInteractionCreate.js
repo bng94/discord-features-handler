@@ -11,16 +11,50 @@ module.exports = {
     });
 
     try {
-      if (interaction.isCommand()) {
-        if (!client.commands.has(commandName)) {
-          return console.error("Unable to find command:" + commandName);
-        }
-
+      if (interaction.type === InteractionType.ApplicationCommand) {
         const cmd = client.commands.get(commandName);
+
         if (!cmd) {
-          return console.error("Unable to find command:" + commandName);
+          console.error("Unable to find slash command:" + cmd);
+          return interaction.reply({
+            content: `Command not found: ${commandName}`,
+            ephemeral: true,
+          });
+        }
+        console.log(
+          `[SLASH CMD]`,
+          `[${interaction.user.tag}]`,
+          `${commandName}`
+        );
+        console.log("[SLASH CMD]", "[ID]", commandId);
+
+        try {
+          return cmd.interactionReply(interaction, client, level);
+        } catch (e) {
+          console.log(
+            "ApplicationCommand interaction (slash command) execution failed",
+            e
+          );
+          return interaction.reply({
+            content: `An error occurred while processing your command: ${commandName}. Error:
+            ${e}`,
+            ephemeral: true,
+          });
         }
       }
+      //  if (interaction.isUserContextMenuCommand()) {
+      //   const cmd = client.commands.get(commandName);
+      //   if (!cmd) {
+      //     return console.error("Unable to find context menu command:" + cmd);
+      //   }
+      //   console.log(
+      //     `[CONTEXT MENU CMD]`,
+      //     `[${interaction.user.tag}]`,
+      //     `${commandName} ID: ${commandId}`,
+      //     commandId
+      //   );
+      //   cmd.contextMenuInteraction(interaction, client, level);
+      // }
 
       const foundCmd = client.commands.find((cmd) => {
         if (!cmd.customIds) return false;
@@ -37,16 +71,32 @@ module.exports = {
       });
 
       if (!foundCmd) {
-        return console.error(
-          "Unable to find command with customId: " + customId
-        );
+        console.error("Unable to find command with customId: " + customId);
+
+        return interaction.reply({
+          content: `Command not found for customId: ${customId}`,
+          ephemeral: true,
+        });
       }
 
-      if (typeof foundCmd.customIdInteraction !== "function") {
-        return console.error(
-          `Command "${foundCmd.name}" does not implement customIdInteraction.`
+      if (
+        typeof foundCmd.customIdInteraction !== "function" ||
+        !foundCmd.customIdInteraction
+      ) {
+        console.error(
+          `Command "${foundCmd.name}" has not implemented customIdInteraction.`
         );
+        return interaction.reply({
+          content: `Command "${foundCmd.name}" has not implemented customIdInteraction.`,
+          ephemeral: true,
+        });
       }
+
+      console.log(
+        `[CUSTOM ID CMD]`,
+        `[${interaction.user.tag}]`,
+        `${foundCmd.name} CustomID: ${customId}`
+      );
 
       return foundCmd.customIdInteraction(interaction, client, level);
     } catch (e) {
@@ -56,38 +106,7 @@ module.exports = {
       });
     }
 
-    if (interaction.type === InteractionType.ApplicationCommand) {
-      const cmd = client.commands.get(commandName);
-
-      if (!cmd) {
-        return console.error("Unable to find slash command:" + cmd);
-      }
-      console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
-      console.log("[SLASH CMD]", "[ID]", commandId);
-
-      try {
-        return cmd.interactionReply(interaction, client, level);
-      } catch (e) {
-        console.log(
-          "ApplicationCommand interaction (slash command) execution failed",
-          e
-        );
-      }
-    } else if (interaction.isUserContextMenuCommand()) {
-      const cmd = client.commands.get(commandName);
-      if (!cmd) {
-        return console.error("Unable to find context menu command:" + cmd);
-      }
-      console.log(
-        `[CONTEXT MENU CMD]`,
-        `[${interaction.user.tag}]`,
-        `${commandName} ID: ${commandId}`,
-        commandId
-      );
-      cmd.contextMenuInteraction(interaction, client, level);
-    } else if (
-      interaction.type === InteractionType.ApplicationCommandAutocomplete
-    ) {
+    if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {
       const cmdName = client.commands.find((cmd) =>
         cmd.customIds?.autoComplete?.includes(customId)
       )?.name;
