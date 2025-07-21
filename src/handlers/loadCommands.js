@@ -9,7 +9,7 @@ module.exports = ({
   mainDirectory,
   logger,
   slashCommandIdsToDelete = [],
-  deleteSlashCommands = {
+  onSlashCommandsLoading = {
     delete_global_slash_commands: false,
     delete_guild_slash_commands: false,
   },
@@ -97,7 +97,7 @@ module.exports = ({
         `Started refreshing ${slashCommands.length} application (/) commands.`
       );
       if (guildId) {
-        if (deleteSlashCommands.delete_guild_slash_commands) {
+        if (onSlashCommandsLoading.delete_guild_slash_commands) {
           await rest
             .put(Routes.applicationGuildCommands(clientId, guildId), {
               body: [],
@@ -122,7 +122,7 @@ module.exports = ({
         );
       } else {
         if (
-          deleteSlashCommands.delete_global_slash_commands ||
+          onSlashCommandsLoading.delete_global_slash_commands ||
           toDeleteSlashCommand
         ) {
           const deleteAction =

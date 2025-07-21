@@ -233,7 +233,7 @@ const DiscordFeaturesHandler = async (
     mainDirectory: directories.main,
     logger: onLoad_list_files.commands,
     slashCommandIdsToDelete,
-    deleteSlashCommands: onSlashCommandsLoading,
+    onSlashCommandsLoading,
   });
   loadEvents({
     client,
