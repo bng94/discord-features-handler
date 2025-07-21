@@ -264,22 +264,23 @@ interface CommandFile {
 
   /**
    * customIds for your interaction components
+   * @example
+   * ```ts
+   * customIds: {
+   *   modal: "myModalId",
+   *   model2: "myModalId2",
+   * }
+   * ```
+   *
+   * ```ts
+   *  customIds: ["myModalId", "myModalId2"]
+   * ```
    */
-  customIds?: {
-    /**
-     * customIds for modal
-     */
-    modal?: string[];
-    /**
-     * customIds for select menus and buttons
-     */
-    messageComponent?: string[];
-    /**
-     * customIds for auto complete interaction
-     */
-    autoComplete?: string[];
-  };
-
+  customIds?:
+    | string[]
+    | {
+        [key: string]: string;
+      };
   /**
    * Executing a prefix command call for this command
    * @param message Message Object
@@ -301,6 +302,23 @@ interface CommandFile {
    */
   interactionReply?(
     interaction: CommandInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * Executing a custom id interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   *
+   * This function is used for custom id interactions like buttons, select menus, modals, etc.
+   */
+  customIdInteraction?(
+    interaction:
+      | MessageComponentInteraction
+      | ModalSubmitInteraction
+      | UserContextMenuCommandInteraction
+      | AutocompleteInteraction,
     client?: Client,
     level?: number
   ): Promise<Interaction>;

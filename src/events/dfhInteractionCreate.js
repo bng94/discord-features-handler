@@ -10,6 +10,51 @@ module.exports = {
       guildMember: interaction.member,
     });
 
+    try {
+      if (interaction.isCommand()) {
+        if (!client.commands.has(commandName)) {
+          return console.error("Unable to find command:" + commandName);
+        }
+
+        const cmd = client.commands.get(commandName);
+        if (!cmd) {
+          return console.error("Unable to find command:" + commandName);
+        }
+      }
+
+      const matchingCustomIds = client.commands.flatMap((cmd) => {
+        let customIds = cmd.customIds ?? [];
+        if (
+          customIds &&
+          typeof customIds === "object" &&
+          !Array.isArray(customIds)
+        ) {
+          customIds = Object.values(customIds);
+        }
+        return customIds.includes(customId) ? customIds : [];
+      });
+
+      if (matchingCustomIds.length === 0) {
+        return console.error(
+          "Unable to find command:" +
+            commandName +
+            " with customId: " +
+            customId
+        );
+      }
+
+      return matchingCustomIds[0].customIdInteraction(
+        interaction,
+        client,
+        level
+      );
+    } catch (e) {
+      console.log("Interaction execution failed", e);
+      return interaction.reply({
+        content: "An error occurred while processing your interaction." + e,
+      });
+    }
+
     if (interaction.type === InteractionType.ApplicationCommand) {
       const cmd = client.commands.get(commandName);
 
