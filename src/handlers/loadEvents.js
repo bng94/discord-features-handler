@@ -41,8 +41,6 @@ module.exports = ({
         continue;
       }
 
-      client.removeAllListeners(eventName);
-
       const handler = (...args) => execute(...args, client);
 
       if (once) {
