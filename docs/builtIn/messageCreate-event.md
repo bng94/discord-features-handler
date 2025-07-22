@@ -13,19 +13,20 @@ module.exports = {
     if (message.author.bot) return;
 
     if (
-      typeof configPrefix === String &&
-      !message.content.startsWith(configPrefix)
-    )
+      (typeof configPrefix === "string" &&
+        !message.content.startsWith(configPrefix)) ||
+      (Array.isArray(configPrefix) &&
+        !configPrefix.some((prefix) => message.content.startsWith(prefix)))
+    ) {
+      // if no prefix found; you can create your own logic here for handling messages without a prefix
       return;
-    if (
-      Array.isArray(configPrefix) &&
-      !configPrefix.some((prefix) => message.content.startsWith(prefix))
-    )
-      return;
-
+    }
+    
     const prefix = Array.isArray(configPrefix)
       ? configPrefix.find((prefix) => message.content.startsWith(prefix))
       : configPrefix;
+
+    if (!prefix) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();

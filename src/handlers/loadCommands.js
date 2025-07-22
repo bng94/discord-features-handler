@@ -55,10 +55,16 @@ module.exports = ({
   const deleteSlashCommands = async () => {
     const rest = new REST().setToken(client.config.token);
     const { clientId, guildId } = client.config;
+    if (!clientId) {
+      console.error("[log]", "[Slash CMDs]", "Client ID is not defined.");
+      return;
+    }
+
     try {
-      for (const id of slashCommandIdsToDelete) {
+      slashCommandIdsToDelete.map(async (id) => {
         await rest
-          .delete(Routes.applicationCommand(clientId, id))
+          .delete(Routes.applicationCommand(clientId, guildId, id))
+
           .then(() =>
             console.log(
               "[log]",
@@ -66,8 +72,15 @@ module.exports = ({
               `Successfully deleted slash command with ID: ${id}`
             )
           )
-          .catch(console.error);
-      }
+          .catch((e) => {
+            console.error(
+              "[log]",
+              "[Slash CMDs]",
+              `Failed to delete slash command with ID: ${id}`,
+              e.message
+            );
+          });
+      });
     } catch (err) {
       console.error(
         "[log]",

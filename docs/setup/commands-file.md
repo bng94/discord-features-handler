@@ -70,8 +70,8 @@ This is the maximum arguments required to execute the command</span>
 </p>
 
 <p>
-  <strong>customIds</strong> <span class="varType">Object</span><br/>
-  An object containing interaction name properties that are an <code>Array&lt;string&gt;</code> containing the custom id names for button/autoComplete/userContext/modal interactions
+  <strong>customIds</strong> <span class="varType">Array&lt;String&gt;</span><br/>
+  An Array of strings containing strings of customIds used in current command file. This can be also a key:value pairs as an object of keys where the values are the string of customIds for easier reference
 </p>
 <p>
   <strong>usage</strong> <span class="varType">string</span><br/>

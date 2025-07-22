@@ -335,7 +335,7 @@ interface CommandFile {
    * @param client Client Object
    * @param level permission level of user
    *
-   * This function is used for custom id interactions like buttons, select menus, modals, etc.
+   * This function is used for custom id interactions like message components, modals, autocomplete interactions, and user context menu commands.
    */
   customIdInteraction?(
     interaction:
@@ -343,6 +343,47 @@ interface CommandFile {
       | ModalSubmitInteraction
       | UserContextMenuCommandInteraction
       | AutocompleteInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  componentInteraction?(
+    interaction: MessageComponentInteraction | ModalSubmitInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  autoCompleteInteraction?(
+    interaction: AutocompleteInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  modalInteraction?(
+    interaction: ModalSubmitInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  contextMenuInteraction?(
+    interaction: UserContextMenuCommandInteraction,
     client?: Client,
     level?: number
   ): Promise<Interaction>;
