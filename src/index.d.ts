@@ -346,6 +346,47 @@ interface CommandFile {
     client?: Client,
     level?: number
   ): Promise<Interaction>;
+
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  componentInteraction?(
+    interaction: MessageComponentInteraction | ModalSubmitInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  autoCompleteInteraction?(
+    interaction: AutocompleteInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  modalInteraction?(
+    interaction: ModalSubmitInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  contextMenuInteraction?(
+    interaction: UserContextMenuCommandInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
 }
 
 interface EventFile {

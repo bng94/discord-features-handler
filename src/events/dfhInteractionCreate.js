@@ -105,47 +105,5 @@ module.exports = {
         content: "An error occurred while processing your interaction." + e,
       });
     }
-
-    if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {
-      const cmdName = client.commands.find((cmd) =>
-        cmd.customIds?.autoComplete?.includes(customId)
-      )?.name;
-      if (!cmdName) return;
-
-      const cmd = client.commands.get(cmdName);
-      try {
-        return cmd.autoCompleteInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("auto complete interaction execution failed", e);
-      }
-    } else if (interaction.type === InteractionType.MessageComponent) {
-      const cmdName = client.commands.find((cmd) =>
-        cmd.customIds?.messageComponent?.includes(customId)
-      )?.name;
-      if (!cmdName) return;
-      const cmd = client.commands.get(cmdName);
-      try {
-        return cmd.componentInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("MessageComponent interaction execution failed", e);
-      }
-    } else if (interaction.type === InteractionType.ModalSubmit) {
-      const cmdName = client.commands.find((cmd) =>
-        cmd.customIds?.modal?.includes(customId)
-      )?.name;
-      if (!cmdName)
-        return console.error(
-          interaction.customId,
-          "no modal interaction found"
-        );
-
-      const cmd = client.commands.get(cmdName);
-
-      try {
-        return cmd.modalInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("ModalSubmit interaction execution failed", e);
-      }
-    }
   },
 };
