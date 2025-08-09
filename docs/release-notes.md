@@ -9,6 +9,25 @@ hide:
 
 # Release Notes
 
+## 3.0.0
+
+### Feature
+- Add new optional options to the DiscordFeaturesHandlerOptions
+  - slashCommandIdsToDelete: Array of strings for deleting specific slash command ids,
+  - onSlashCommandsLoading: Object of boolean for enabling delete of slash commands before loading new ones
+- CommandFile Properties update: Change `customIds` to Array of Strings of customIds or a Object of key values
+- Removed `componentInteraction`, `autoCompleteInteraction` `contextMenuInteraction` `modalInteraction` from XommandFile peroperties and replaced with a unviersal one called: `customIdInteraction` that handles interaction based off `customIds`
+- Add `customIdInteraction(interaction, client, level)` into CommandFile Properties to handle customIds interactions to ensure no button or other type of customIds are inactive if the bot application or collector run out on time.
+
+### Fix
+- Issue where prefix commands doens't work
+
+## 2.2.0
+### Fix
+- Updated event loader to prevent duplicate event listeners.
+
+# Release Notes
+
 ## 2.1.2 - Latest Version
 
 ### Fix

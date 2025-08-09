@@ -63,7 +63,11 @@ module.exports = async ({
             }
             await feature(client);
           } catch (e) {
-            console.error(`Failed to Load ${file}: ${e}`);
+            console.error(
+              `[Error Log]`,
+              `[Modules]`,
+              `Failed to Load ${file}: ${e}`
+            );
           }
         } else if (filesToExclude.includes(file)) {
           filesExcluded.push(file);
@@ -81,7 +85,8 @@ module.exports = async ({
             filesExcluded.join(", ")
           );
         }
-        console.log(`Modules Files Loaded`);
+
+        console.log("[log]", "[Modules]", `Modules Files Loaded`);
       }
     } catch (error) {
       console.error(

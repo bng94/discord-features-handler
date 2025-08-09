@@ -32,9 +32,14 @@ DiscordFeaturesHandler(client, {
     events: false,
     modules: false,
   },
+  slashCommandIdsToDelete = []
+  onSlashCommandsLoading = {
+    delete_global_slash_commands: false, 
+    delete_guild_slash_commands: false,
+  },
   disableUnhandledRejectionHandler = false,
   modulesPreloadTime = 500,
- filesToExcludeInHandlers = {
+  filesToExcludeInHandlers = {
     commands: [""],
     events: [""],
     modules: [""],
@@ -141,7 +146,6 @@ The DiscordFeaturesHandlerOptions object contains properties to configure Discor
 </table>
 
 
-
 <p>
   <strong>onLoad_list_files</strong> <span class="varType">object</span>
 <span class="optional-label"></span><br/>
@@ -178,6 +182,44 @@ The DiscordFeaturesHandlerOptions object contains properties to configure Discor
     </tr>
   </tbody>
 </table>
+
+<p> <strong>slashCommandIdsToDelete</strong> <span class="varType"><code>Array&lt;string&gt;</code></span>
+<span class="optional-label"></span><br/>
+An array of slash command IDs that should be deleted. Each string in the array represents the unique identifier of a registered slash command you want to remove from your application.
+</p>
+
+<p>
+  <strong>onSlashCommandsLoading</strong> <span class="varType">object</span>
+<span class="optional-label"></span><br/>
+  This object contains properties of true or false values of handling of loading slash commands
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Properties</th>
+      <th align="center">Type</th>
+      <th align="center">Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>delete_global_slash_commands</td>
+      <td align="center">boolean</td>
+      <td align="center">false</td>
+      <td>Enable delete global slash commands before loading new ones</td>
+    </tr>
+    <tr>
+      <td>delete_guild_slash_commands</td>
+      <td align="center">boolean</td>
+      <td align="center">false</td>
+      <td>Enable delete guild slash commands before loading new one</td>
+    </tr>
+
+  </tbody>
+</table>
+
 
 
 <p>

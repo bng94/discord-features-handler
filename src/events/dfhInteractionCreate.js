@@ -10,77 +10,100 @@ module.exports = {
       guildMember: interaction.member,
     });
 
-    if (interaction.type === InteractionType.ApplicationCommand) {
-      const cmd = client.commands.get(commandName);
+    try {
+      if (interaction.type === InteractionType.ApplicationCommand) {
+        const cmd = client.commands.get(commandName);
 
-      if (!cmd) {
-        return console.error("Unable to find slash command:" + cmd);
-      }
-      console.log(`[SLASH CMD]`, `[${interaction.user.tag}]`, `${commandName}`);
-      console.log("[SLASH CMD]", "[ID]", commandId);
-
-      try {
-        return cmd.interactionReply(interaction, client, level);
-      } catch (e) {
+        if (!cmd) {
+          console.error("Unable to find slash command:" + cmd);
+          return interaction.reply({
+            content: `Command not found: ${commandName}`,
+            ephemeral: true,
+          });
+        }
         console.log(
-          "ApplicationCommand interaction (slash command) execution failed",
-          e
+          `[SLASH CMD]`,
+          `[${interaction.user.tag}]`,
+          `${commandName}`
         );
+        console.log("[SLASH CMD]", "[ID]", commandId);
+
+        try {
+          return cmd.interactionReply(interaction, client, level);
+        } catch (e) {
+          console.log(
+            "ApplicationCommand interaction (slash command) execution failed",
+            e
+          );
+          return interaction.reply({
+            content: `An error occurred while processing your command: ${commandName}. Error:
+            ${e}`,
+            ephemeral: true,
+          });
+        }
       }
-    } else if (interaction.isUserContextMenuCommand()) {
-      const cmd = client.commands.get(commandName);
-      if (!cmd) {
-        return console.error("Unable to find context menu command:" + cmd);
+      //  if (interaction.isUserContextMenuCommand()) {
+      //   const cmd = client.commands.get(commandName);
+      //   if (!cmd) {
+      //     return console.error("Unable to find context menu command:" + cmd);
+      //   }
+      //   console.log(
+      //     `[CONTEXT MENU CMD]`,
+      //     `[${interaction.user.tag}]`,
+      //     `${commandName} ID: ${commandId}`,
+      //     commandId
+      //   );
+      //   cmd.contextMenuInteraction(interaction, client, level);
+      // }
+
+      const foundCmd = client.commands.find((cmd) => {
+        if (!cmd.customIds) return false;
+
+        if (Array.isArray(cmd.customIds)) {
+          return cmd.customIds.includes(customId);
+        }
+
+        if (typeof cmd.customIds === "object") {
+          return Object.values(cmd.customIds).includes(customId);
+        }
+
+        return false;
+      });
+
+      if (!foundCmd) {
+        console.error("Unable to find command with customId: " + customId);
+
+        return interaction.reply({
+          content: `Command not found for customId: ${customId}`,
+          ephemeral: true,
+        });
       }
+
+      if (
+        typeof foundCmd.customIdInteraction !== "function" ||
+        !foundCmd.customIdInteraction
+      ) {
+        console.error(
+          `Command "${foundCmd.name}" has not implemented customIdInteraction.`
+        );
+        return interaction.reply({
+          content: `Command "${foundCmd.name}" has not implemented customIdInteraction.`,
+          ephemeral: true,
+        });
+      }
+
       console.log(
-        `[CONTEXT MENU CMD]`,
+        `[CUSTOM ID CMD]`,
         `[${interaction.user.tag}]`,
-        `${commandName} ID: ${commandId}`,
-        commandId
+        `${foundCmd.name} CustomID: ${customId}`
       );
-      cmd.contextMenuInteraction(interaction, client, level);
-    } else if (
-      interaction.type === InteractionType.ApplicationCommandAutocomplete
-    ) {
-      const cmdName = client.commands.find((cmd) =>
-        cmd.customIds?.autoComplete?.includes(customId)
-      )?.name;
-      if (!cmdName) return;
 
-      const cmd = client.commands.get(cmdName);
-      try {
-        return cmd.autoCompleteInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("auto complete interaction execution failed", e);
-      }
-    } else if (interaction.type === InteractionType.MessageComponent) {
-      const cmdName = client.commands.find((cmd) =>
-        cmd.customIds?.messageComponent?.includes(customId)
-      )?.name;
-      if (!cmdName) return;
-      const cmd = client.commands.get(cmdName);
-      try {
-        return cmd.componentInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("MessageComponent interaction execution failed", e);
-      }
-    } else if (interaction.type === InteractionType.ModalSubmit) {
-      const cmdName = client.commands.find((cmd) =>
-        cmd.customIds?.modal?.includes(customId)
-      )?.name;
-      if (!cmdName)
-        return console.error(
-          interaction.customId,
-          "no modal interaction found"
-        );
-
-      const cmd = client.commands.get(cmdName);
-
-      try {
-        return cmd.modalInteraction(interaction, client, level);
-      } catch (e) {
-        console.log("ModalSubmit interaction execution failed", e);
-      }
+      return foundCmd.customIdInteraction(interaction, client, level);
+    } catch (e) {
+      console.log("Interaction execution failed", e);
+      return interaction.reply({
+        content: "An error occurred while processing your interaction." + e,
+      });
     }
   },
 };

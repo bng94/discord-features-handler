@@ -158,6 +158,31 @@ interface DiscordFeaturesHandlerOptions {
    */
   onLoad_list_files?: FileLoadedLogger;
   /**
+   * If you want to delete specific slash commands, you can provide an array of slash command ids to delete
+   * @example: ["123456789012345678"]
+   */
+  slashCommandIdsToDelete?: string[] | string;
+  /**
+   * If you want to change the behavior to deleting all slash commands when the bot starts up, you can provide an object to define which slash commands to delete
+   *
+   * @default {
+   * delete_global_slash_commands: false,
+   * delete_guild_slash_commands: false
+   * }
+   */
+  onSlashCommandsLoading?: {
+    /**
+     * Delete all global slash commands before loading new ones
+     * @default false
+     */
+    delete_global_slash_commands?: boolean;
+    /**
+     * Delete all guild slash commands before loading new ones
+     * @default false
+     */
+    delete_guild_slash_commands?: boolean;
+  };
+  /**
    * Disable discord-features-handler unhandledRejection handler
    */
   disableUnhandledRejectionHandler?: boolean;
@@ -254,27 +279,29 @@ interface CommandFile {
   usage?: string;
   /**
    * SlashCommandBuilder object for creating this command into a slash command
+   *
+   * @todo: Discord Recommands using slash commands over prefix commands, so this may be required in next version of discord-features-handler
    */
   data?: SlashCommandBuilder;
-
   /**
    * customIds for your interaction components
+   * @example
+   * ```ts
+   * customIds: {
+   *   modal: "myModalId",
+   *   model2: "myModalId2",
+   * }
+   * ```
+   *
+   * ```ts
+   *  customIds: ["myModalId", "myModalId2"]
+   * ```
    */
-  customIds?: {
-    /**
-     * customIds for modal
-     */
-    modal?: string[];
-    /**
-     * customIds for select menus and buttons
-     */
-    messageComponent?: string[];
-    /**
-     * customIds for auto complete interaction
-     */
-    autoComplete?: string[];
-  };
-
+  customIds?:
+    | string[]
+    | {
+        [key: string]: string;
+      };
   /**
    * Executing a prefix command call for this command
    * @param message Message Object
@@ -293,30 +320,48 @@ interface CommandFile {
    * @param interaction Interaction object
    * @param client Client Object
    * @param level permission level of user
+   *
+   * @todo
+   * This function is used for slash commands, context menu commands, and user commands, and is required to be implemented in next version of discord-features-handler, as discord recommends using slash commands over prefix commands; You can still return an empty interaction reply and not implmeent this function and data property.
    */
   interactionReply?(
     interaction: CommandInteraction,
     client?: Client,
     level?: number
   ): Promise<Interaction>;
-
   /**
-   * (select or button interaction), if you are using createMessageComponentCollector, you do not need to define this function
-   * Executing a message component interaction command call
+   * Executing a custom id interaction command call
    * @param interaction Interaction object
    * @param client Client Object
    * @param level permission level of user
+   *
+   * This function is used for custom id interactions like buttons, select menus, modals, etc.
    */
-  componentInteraction?(
-    interaction: MessageComponentInteraction,
+  customIdInteraction?(
+    interaction:
+      | MessageComponentInteraction
+      | ModalSubmitInteraction
+      | UserContextMenuCommandInteraction
+      | AutocompleteInteraction,
     client?: Client,
     level?: number
   ): Promise<Interaction>;
+
   /**
-   * Executing a auto complete interaction command call
-   * @param interaction Interaction object
-   * @param client Client Object
-   * @param level permission level of user
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
+   */
+  componentInteraction?(
+    interaction: MessageComponentInteraction | ModalSubmitInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+
+  /**
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
    */
   autoCompleteInteraction?(
     interaction: AutocompleteInteraction,
@@ -324,10 +369,9 @@ interface CommandFile {
     level?: number
   ): Promise<Interaction>;
   /**
-   * Executing a modal interaction command call
-   * @param interaction Interaction object
-   * @param client Client Object
-   * @param level permission level of user
+   *
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
    */
   modalInteraction?(
     interaction: ModalSubmitInteraction,
@@ -335,10 +379,8 @@ interface CommandFile {
     level?: number
   ): Promise<Interaction>;
   /**
-   * Executing a user context menu interaction command call
-   * @param interaction Interaction object
-   * @param client Client Object
-   * @param level permission level of user
+   * @readonly
+   * @deprecated this function is depecated used customIdInteraction instead
    */
   contextMenuInteraction?(
     interaction: UserContextMenuCommandInteraction,
