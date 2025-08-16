@@ -106,7 +106,7 @@ module.exports = ({
 
     const slashCommands = [];
     client.commands.forEach((cmd) => {
-      if ("data" in cmd && "interactionReply" in cmd) {
+      if ("data" in cmd && ("interactionReply" in cmd || "execute" in cmd)) {
         slashCommands.push(cmd.data.toJSON());
       }
     });

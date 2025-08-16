@@ -29,7 +29,16 @@ module.exports = {
         console.log("[SLASH CMD]", "[ID]", commandId);
 
         try {
-          return cmd.interactionReply(interaction, client, level);
+          if ("execute" in cmd && !"interactionReply" in cmd) {
+            return cmd.execute(interaction, client, level);
+          }
+          return cmd
+            .interactionReply(interaction, client, level)
+            .then((reply) => {
+              console.warn(
+                "Please use execute property for slash commands as next version of discord-features-handler will use, 'executePrefix' property for prefix commands and deprecate interactionReply."
+              );
+            });
         } catch (e) {
           console.log(
             "ApplicationCommand interaction (slash command) execution failed",
