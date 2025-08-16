@@ -98,27 +98,6 @@ module.exports = {
             message.reply("There was an error trying to execute that command!");
           });
       }
-      if (cmd.executePrefix) {
-        return cmd.executePrefix(message, args, client, level);
-      } else {
-        return cmd
-          .execute(message, args, client, level)
-          .then((reply) => {
-            console.warn(
-              "Please use executePrefix property for prefix commands as next version of discord-features-handler will use, 'execute' property for slash commands only."
-            );
-          })
-          .catch((e) => {
-            console.error(e, `Executing CMD: ${cmd.name}`);
-            console.error(
-              "[log]",
-              "[Prefix CMDs]",
-              `Failed to execute prefix command: ${command}, please update to executePrefix property instead`,
-              e.message
-            );
-            message.reply("There was an error trying to execute that command!");
-          });
-      }
     } catch (e) {
       console.error(e, `Executing CMD: ${cmd.name}`);
       message.reply("There was an error trying to execute that command!");
