@@ -9,18 +9,34 @@ hide:
 
 # Release Notes
 
-## 3.0.0 - Latest Version
 
-### Feature
-- Add new optional options to the DiscordFeaturesHandlerOptions
-  - slashCommandIdsToDelete: Array of strings for deleting specific slash command ids,
-  - onSlashCommandsLoading: Object of boolean for enabling delete of slash commands before loading new ones
-- CommandFile Properties update: Change `customIds` to Array of Strings of customIds or a Object of key values
-- Removed `componentInteraction`, `autoCompleteInteraction` `contextMenuInteraction` `modalInteraction` from XommandFile peroperties and replaced with a unviersal one called: `customIdInteraction` that handles interaction based off `customIds`
-- Add `customIdInteraction(interaction, client, level)` into CommandFile Properties to handle customIds interactions to ensure no button or other type of customIds are inactive if the bot application or collector run out on time.
+## 3.1.0 – Latest Version
 
-### Fix
-- Issue where prefix commands doens't work
+### Features
+- Introduced a new `executePrefix` property for handling prefix commands.
+- Enabled usage of `execute` property to run slash commands.
+- Added console warnings when prefix commands use `execute` instead of `executePrefix`, recommending migration to the new property.
+- Added console warnings when slash commands use `interactionReply` instead of `execute`, following discord.js guidelines.
+
+- 
+### Deprecation
+- `interactionReply` is now deprecated. It will continue to work in v3.x, but logs a console warning.  
+  Please migrate to `execute`, as `interactionReply` will be removed in v4.0.0.
+
+## 3.0.0
+
+### Features
+- Added new optional options to `DiscordFeaturesHandlerOptions`:
+    - `slashCommandIdsToDelete`: Array of strings for deleting specific slash command IDs.
+    - `onSlashCommandsLoading`: Object of booleans for enabling the deletion of slash commands before loading new ones.
+- Updated `CommandFile` properties:
+    - Changed `customIds` to accept either an array of strings (`customIds`) or an object of key–value pairs.
+    - Removed `componentInteraction`, `autoCompleteInteraction`, `contextMenuInteraction`, and `modalInteraction`, replacing them with a single universal property: `customIdInteraction`.  
+      This new property handles interactions based on `customIds`.
+    - Added `customIdInteraction(interaction, client, level)` to `CommandFile` properties to ensure that no button or other customId-based interaction becomes inactive if the bot application or collector times out.
+
+### Fixes
+- Fixed an issue where prefix commands were not working.
 
 ## 2.2.0
 
