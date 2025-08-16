@@ -9,7 +9,7 @@ hide:
 
 # Release Notes
 
-## 3.0.0
+## 3.0.0 - Latest Version
 
 ### Feature
 - Add new optional options to the DiscordFeaturesHandlerOptions
@@ -23,12 +23,11 @@ hide:
 - Issue where prefix commands doens't work
 
 ## 2.2.0
+
 ### Fix
 - Updated event loader to prevent duplicate event listeners.
 
-# Release Notes
-
-## 2.1.2 - Latest Version
+## 2.1.2 
 
 ### Fix
 - Removed type check for cmd.data which caused an error for commands missing data property.
