@@ -20,7 +20,10 @@ module.exports = {
 
     if (!prefix) return;
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const args = (args = message.content
+      .slice(prefix.length)
+      .trim()
+      .split(/\s+/));
     const command = args.shift().toLowerCase();
     const cmd =
       client.commands.get(command) ||
@@ -77,7 +80,27 @@ module.exports = {
     }
 
     try {
-      cmd.execute(message, args, client, level);
+      if (cmd.executePrefix) {
+        return cmd.executePrefix(message, args, client, level);
+      } else {
+        return cmd
+          .execute(message, args, client, level)
+          .then((reply) => {
+            console.warn(
+              "Please use executePrefix property for prefix commands as next version of discord-features-handler will use, 'execute' property for slash commands only."
+            );
+          })
+          .catch((e) => {
+            console.error(e, `Executing CMD: ${cmd.name}`);
+            console.error(
+              "[log]",
+              "[Prefix CMDs]",
+              `Failed to execute prefix command: ${command}, please update to executePrefix property instead`,
+              e.message
+            );
+            message.reply("There was an error trying to execute that command!");
+          });
+      }
     } catch (e) {
       console.error(e, `Executing CMD: ${cmd.name}`);
       message.reply("There was an error trying to execute that command!");

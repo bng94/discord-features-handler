@@ -286,15 +286,16 @@ interface CommandFile {
   /**
    * customIds for your interaction components
    * @example
+   *
+   * ```ts
+   *  customIds: ["myModalId", "myModalId2"]
+   * ```
+   *
    * ```ts
    * customIds: {
    *   modal: "myModalId",
    *   model2: "myModalId2",
    * }
-   * ```
-   *
-   * ```ts
-   *  customIds: ["myModalId", "myModalId2"]
    * ```
    */
   customIds?:
@@ -302,27 +303,44 @@ interface CommandFile {
     | {
         [key: string]: string;
       };
+
   /**
-   * Executing a prefix command call for this command
+   * @summary Executes a prefix command call for this command. As discord.js shifts towards using interactions over prefix, this function is required to be implemented for prefix commands in next version of discord-features-handler. -- This is still useful outside of slash commands, as you can set up permission-based levels to ensure the command is for admins or bot admins/devs by using the permission levels.
+   *
    * @param message Message Object
    * @param args arguments provided with command call
    * @param client Client Object
    * @param level permission level of user
    */
-  execute(
+  executePrefix?(
     message: Message,
     args?: string[],
     client?: Client,
     level?: number
   ): Promise<Message>;
   /**
+   * @important this will still work for executing prefix commands, as long as data and interactionReply property are enabled.
+   *
    * Executing a slash interaction command call
    * @param interaction Interaction object
    * @param client Client Object
    * @param level permission level of user
    *
-   * @todo
-   * This function is used for slash commands, context menu commands, and user commands, and is required to be implemented in next version of discord-features-handler, as discord recommends using slash commands over prefix commands; You can still return an empty interaction reply and not implmeent this function and data property.
+   * Since discord.js is moving towards using interactions over messages, this function is required to be implemented for slash commands in next version of discord-features-handler.
+   * @see {@link executePrefix} for prefix command execution
+   */
+  execute(
+    interaction: CommandInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * Executing a slash interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   *
+   * @deprecated Please use {@link execute} instead and for prefix commands, use {@link executePrefix}
    */
   interactionReply?(
     interaction: CommandInteraction,
