@@ -29,7 +29,7 @@ module.exports = {
         console.log("[SLASH CMD]", "[ID]", commandId);
 
         try {
-          if ("execute" in cmd && !"interactionReply" in cmd) {
+          if (cmd.execute && !cmd.interactionReply) {
             return cmd.execute(interaction, client, level);
           }
           return cmd
