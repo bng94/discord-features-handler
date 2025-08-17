@@ -7,25 +7,19 @@ const path = require("path");
  */
 const checkCommandErrors = (cmd) => {
   let error = "";
-  if (typeof cmd.permissions === "undefined") {
-    error += `\n- Permission level is Missing!`;
-  } else if (isNaN(cmd.permissions)) {
+  if (cmd.permissions !== undefined && typeof cmd.permissions !== "number") {
     error += `\n- Permission level must be a Number!`;
   }
-
-  if (typeof cmd.minArgs === "undefined") {
-    error += `\n- Minimum args is Missing!`;
-  } else if (
-    isNaN(cmd.minArgs) ||
-    (isNaN(cmd.minArgs) === false && cmd.minArgs < 0)
-  ) {
+  if (cmd.minArgs !== undefined && typeof cmd.minArgs !== "number") {
+    error += `\n- MinArgs must be a Number!`;
+  }
+  if (typeof cmd.minArgs === "number" && cmd.minArgs < 0) {
     error += `\n- MinArgs must be a Number equal to 0 or greater!`;
   }
 
-  if (cmd.maxArgs && isNaN(cmd.maxArgs)) {
-    if (isNaN(cmd.maxArgs)) {
-      error += `\n- maxArgs must be a number and greater then MinArgs`;
-    } else if (cmd.maxArgs !== -1 && cmd.maxArgs <= cmd.minArgs) {
+  if (typeof cmd.maxArgs === "number") {
+    const minArgs = cmd.minArgs || 0;
+    if (cmd.maxArgs !== 0 && cmd.maxArgs <= minArgs) {
       error += `\n- maxArgs must be a number greater then MinArgs`;
     }
   }
@@ -35,30 +29,65 @@ const checkCommandErrors = (cmd) => {
   }
 
   if (cmd.customIds) {
-    if (cmd.customIds.modal && !Array.isArray(cmd.customIds.modal)) {
-      error += `\n- customIds for modal must be a Array of String`;
-    }
     if (
-      cmd.customIds.messageComponent &&
-      !Array.isArray(cmd.customIds.messageComponent)
+      !Array.isArray(cmd.customIds) &&
+      (typeof cmd.customIds !== "object" || cmd.customIds === null)
     ) {
-      error += `\n- customIds for MessageComponent must be a Array of String`;
-    }
-    if (
-      cmd.customIds.autoComplete &&
-      !Array.isArray(cmd.customIds.autoComplete)
-    ) {
-      error += `\n- customIds for AutoComplete must be a Array of String`;
+      error += `\n- customIds must be an Array of String or an object of [k:string]: string`;
+    } else if (cmd.customIds.length < 1) {
+      error += `\n- customIds must contain at least one String`;
     }
   }
 
-  if (typeof cmd.usage === "undefined") {
-    error += `\n- Command Usage is Missing!`;
+  if (cmd.usage && typeof cmd.usage !== "string") {
+    error += `\n- Command Usage is  not a String!`;
   }
 
-  if (typeof cmd.description === "undefined") {
-    error += `\n- Description is Missing!`;
+  if (cmd.data && !(cmd.data instanceof SlashCommandBuilder)) {
+    error += `\n- Command Data is not a SlashCommandBuilder instance!`;
+  } else if (cmd.data && cmd.data instanceof SlashCommandBuilder) {
+    if (
+      (!cmd.executePrefix &&
+        (!cmd.interactionReply ||
+          typeof cmd.interactionReply !== "function")) ||
+      (cmd.executePrefix && (!cmd.execute || typeof cmd.execute !== "function"))
+    ) {
+      error += `\n- Command must have either an execute property function for slash commands!`;
+    }
   }
+
+  if (
+    !cmd.data &&
+    !(
+      (cmd.execute && typeof cmd.execute === "function") ||
+      (cmd.executePrefix && typeof cmd.executePrefix === "function")
+    )
+  ) {
+    error += `\n- Command must have either a executePrefix property function for prefix commands!`;
+  }
+
+  if (!cmd.name && !(cmd.data && cmd.data.name)) {
+    error += `\n- Command Name is Missing!`;
+  }
+  if (
+    cmd.name &&
+    typeof cmd.name !== "string" &&
+    !(cmd.data && cmd.data.name)
+  ) {
+    error += `\n- Command Name is not a String!`;
+  }
+
+  if (!cmd.description && !(cmd.data && cmd.data.description)) {
+    error += `\n- Command Description is Missing!`;
+  }
+  if (
+    cmd.description &&
+    typeof cmd.description !== "string" &&
+    !(cmd.data && cmd.data.description)
+  ) {
+    error += `\n- Command Description is not a String!`;
+  }
+
   return error;
 };
 
@@ -123,18 +152,34 @@ const configureClient = (client, config, directories) => {
         const placeHolder = `\nRequired:`;
         throw placeHolder + error;
       }
+
+      if (!command.minArgs) {
+        command.minArgs = 0;
+      }
+      if (!command.permissions) {
+        command.permissions = 0;
+      }
+      if (!command.aliases) {
+        command.aliases = [];
+      }
+      if (!command.usage) {
+        command.usage = "";
+      }
+
+      const commandName = command.name || command.data.name;
+
       /**
        * *in each cmd file,
        * *defines their category as folderName that contains the cmd file
        */
       command.category = folder.toProperCase();
-      client.commands.set(command.name, command);
+      client.commands.set(commandName, command);
 
       //requires a permission level set; best to have an permission level set to prevent unauthorized usage of a command.
 
       if (command.aliases) {
         command.aliases.forEach((alias) => {
-          client.aliases.set(alias, command.name);
+          client.aliases.set(alias, commandName);
         });
       }
 
