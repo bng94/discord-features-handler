@@ -87,7 +87,7 @@ module.exports = {
   /**
   * This is can be used for slash help command if you choose to and adding a "data" property
   */
-  async execute(interaction, client, level) {
+  async executePrefix(interaction, client, level) {
     await interaction.deferReply();
     const { options } = interaction;
     const name = options.getString("cmd_name");
