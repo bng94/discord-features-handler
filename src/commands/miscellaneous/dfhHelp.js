@@ -7,14 +7,20 @@ const {
   EmbedBuilder,
   ButtonStyle,
 } = require("discord.js");
-const filterTime = 60000;
+
+const customIds = [
+  "dfh_help_1",
+  "dfh_help_2",
+  "dfh_help_3",
+  "dfh_help_4",
+  "dfh_help_5",
+];
 
 module.exports = {
   name: "help",
   description: "List all of my commands or info about a specific command.",
   aliases: ["commands"],
-  permissions: 0,
-  minArgs: 0,
+  customIds,
   maxArgs: 1,
   usage: "<command name>",
   async executePrefix(message, args, client) {
@@ -38,35 +44,10 @@ module.exports = {
       const row = getButtonRows(data);
 
       //send initial message and await
-      message
-        .reply({
-          embeds: [embed],
-          components: [row],
-        })
-        .then((msg) => {
-          // after message was sent then listen...
-          // Filter, ensures that the user who initial the help cmd call is changing the embed by their request
-          const filter = (i) => i.user.id === message.author.id;
-          //  Create the message component for buttons to show on embeds
-          const collector = message.channel.createMessageComponentCollector({
-            filter,
-            time: filterTime,
-          });
-
-          //this awaits and collect responses from input of user and handle it.
-          collector.on("collect", async (i) => {
-            const newEmbed = getUpdateEmbed(data, i, client);
-
-            await i.update({ embeds: [newEmbed], components: [row] });
-          });
-
-          // handles after the collection event ended
-          // disable listening to btn inputs after filterTime expires
-          return collector.on("end", async (collected) => {
-            const lastRow = getButtonRows(data, true);
-            return await msg.edit({ components: [lastRow] });
-          });
-        });
+      message.reply({
+        embeds: [embed],
+        components: [row],
+      });
     } else {
       //display the command info requested from user's call
       const name = args[0].toLowerCase();
@@ -75,7 +56,9 @@ module.exports = {
     }
   },
   async execute(interaction, client, level) {
-    await interaction.deferReply();
+    await interaction.deferReply({
+      ephemeral: true,
+    });
     const { options } = interaction;
     const name = options.getString("cmd_name");
 
@@ -92,26 +75,6 @@ module.exports = {
         embeds: [embed],
         components: [row],
       });
-
-      //display the command info requested from user's call
-      // Filter, ensures that the user who initial the help cmd call is changing the embed by their request
-      const filter = (i) => i.user.id === interaction.user.id;
-      // Create the message component for buttons to show on embeds
-      const collector = interaction.channel.createMessageComponentCollector({
-        filter,
-        time: filterTime,
-      });
-      //this awaits and collect responses from input of user and handle it.
-      collector.on("collect", async (i) => {
-        const newEmbed = getUpdateEmbed(data, i, client);
-        await i.update({ embeds: [newEmbed], components: [row] });
-      });
-      // handles after the collection event ended
-      // disable listening to btn inputs after filterTime expires
-      return collector.on("end", async (collected) => {
-        const lastRow = getButtonRows(data, true);
-        return await interaction.editReply({ components: [lastRow] });
-      });
     } else {
       //display the command info requested from user's call
       const response = await getSingleCmd(commands, name, client);
@@ -119,6 +82,15 @@ module.exports = {
         .editReply(response)
         .catch((error) => console.log(error));
     }
+  },
+  async customIdInteraction(interaction, client, level) {
+    const commands = await client.commands.filter(
+      (cmd) => cmd.permissions <= level
+    );
+    const data = getSortedCommandArray(client, commands);
+    const newEmbed = getUpdateEmbed(data, interaction.customId, client);
+
+    await interaction.update({ embeds: [newEmbed] });
   },
 };
 /**
@@ -149,6 +121,10 @@ const getSortedCommandArray = (client, commands) => {
   sorted.map((command) => {
     let temp = {
       category: "",
+      customId:
+        dataArray.length < 5
+          ? customIds[dataArray.length]
+          : `dfh_help_${dataArray.length}`,
       commands: [],
     };
     if (!category || category != command.category) {
@@ -183,9 +159,7 @@ const getInitialEmbed = (data, client) => {
     name: `${client.user.username} Help Menu`,
     iconURL: `${client.user.avatarURL()}`,
   }).setDescription(`There are ${data.length} categories!\n${categories}
-Click the respective buttons to see the commands of the category.  You have ${
-    filterTime / 60000
-  } minutes until buttons are disabled.`);
+Click the respective buttons to see the commands of the category. `);
 
   return defaultEmbed;
 };
@@ -193,12 +167,12 @@ Click the respective buttons to see the commands of the category.  You have ${
 /**
  *
  * @param {Array<string>} data the data to display on the embed
- * @param {Number} i index of category to show
+ * @param {Number} customId index of category to show
  * @param {Client} client Discord client object
  * @returns EmbedBuilder to display
  */
-const getUpdateEmbed = (data, i, client) => {
-  const index = data.findIndex((d) => d.category === i.customId);
+const getUpdateEmbed = (data, customId, client) => {
+  const index = data.findIndex((d) => d.customId === customId);
   const cmds = data[index].commands
     .map((cmd) => {
       let cmdName = cmd.name
@@ -257,7 +231,7 @@ const getButtonRows = (data, disabled = false) => {
   ];
   const defaultColor = ButtonStyle.Primary;
 
-  const btnArray = data.map((res) => {
+  const btnArray = data.map((res, i) => {
     const catName = res.category;
 
     const index = colorForCategory.findIndex(
@@ -266,7 +240,7 @@ const getButtonRows = (data, disabled = false) => {
     const style = index !== -1 ? colorForCategory[index].color : defaultColor;
 
     return new ButtonBuilder()
-      .setCustomId(catName)
+      .setCustomId(res.customId)
       .setLabel(catName)
       .setStyle(style)
       .setDisabled(disabled);
@@ -293,55 +267,99 @@ const getSingleCmd = async (commands, name, client) => {
     ? client.config.prefix[0]
     : client.config.prefix;
   const command = await commands.find(
-    (cmd) => cmd.name === name || (cmd.aliases && cmd.aliases === name)
+    (cmd) =>
+      cmd.name === name ||
+      (Array.isArray(cmd.aliases) && cmd.aliases.includes(name))
   );
 
-  if (!command) {
+  const slashCommand = await commands.find(
+    (cmd) => cmd.data && cmd.data.name === name
+  );
+
+  if (slashCommand) {
+    const fieldObj = [];
+    fieldObj.push({
+      name: `Category:`,
+      value: `${command.category}`,
+      inline: true,
+    });
+
+    fieldObj.push({
+      name: `Usage:`,
+      value: `/${command.name}`,
+      inline: true,
+    });
+    if (command.executePrefix) {
+      fieldObj.push({
+        name: `Using prefix:`,
+        value: `${prefix}${command.name} ${command.usage}${
+          command.aliases
+            ? `,  ${prefix}${command.aliases.join(`, ${prefix}`)}`
+            : ""
+        }`,
+      });
+    }
+    try {
+      const embed = new EmbedBuilder()
+        .setAuthor({
+          name: `${client.user.tag}`,
+          iconURL: `${client.user.avatarURL()}`,
+        })
+        .setTitle(`${command.data.name.toProperCase()} Command`)
+        .setDescription(command.data.description)
+        .setTimestamp()
+        .setFields(fieldObj);
+
+      return { embeds: [embed] };
+    } catch (e) {
+      console.log(e);
+    }
+  } else if (command) {
+    const fieldObj = [];
+    const aliases = command.aliases ? command.aliases.join(", ") : null;
+    if (aliases) {
+      fieldObj.push({
+        name: `Aliases:`,
+        value: `${aliases}`,
+        inline: true,
+      });
+    }
+    fieldObj.push({
+      name: `Category:`,
+      value: `${command.category}`,
+      inline: true,
+    });
+
+    if (command.usage.length !== 0) {
+      fieldObj.push({
+        name: `Usage:`,
+        value: `${prefix}${command.name} ${command.usage}`,
+      });
+    }
+    fieldObj.push({
+      name: `Slash:`,
+      value: `${command.data ? `True` : `False`}`,
+      inline: true,
+    });
+    try {
+      const embed = new EmbedBuilder()
+        .setAuthor({
+          name: `${client.user.tag}`,
+          iconURL: `${client.user.avatarURL()}`,
+        })
+        .setTitle(`${command.name.toProperCase()} Command`)
+        .setDescription(command.description)
+        .setTimestamp()
+        .setFields(fieldObj);
+
+      return { embeds: [embed] };
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
     return {
       content: `The command, **${name}**
     + does not exist!`,
     };
-  }
-
-  const fieldObj = [];
-  const aliases = command.aliases ? command.aliases.join(", ") : null;
-  if (aliases) {
-    fieldObj.push({
-      name: `Aliases:`,
-      value: `${aliases}`,
-      inline: true,
-    });
-  }
-  fieldObj.push({
-    name: `Category:`,
-    value: `${command.category}`,
-    inline: true,
-  });
-
-  if (command.usage.length !== 0) {
-    fieldObj.push({
-      name: `Usage:`,
-      value: `${prefix}${command.name} ${command.usage}`,
-    });
-  }
-  fieldObj.push({
-    name: `Slash:`,
-    value: `${command.data ? `True` : `False`}`,
-    inline: true,
-  });
-  try {
-    const embed = new EmbedBuilder()
-      .setAuthor({
-        name: `${client.user.tag}`,
-        iconURL: `${client.user.avatarURL()}`,
-      })
-      .setTitle(`${command.name.toProperCase()} Command`)
-      .setDescription(command.description)
-      .setTimestamp()
-      .setFields(fieldObj);
-
-    return { embeds: [embed] };
-  } catch (e) {
-    console.log(e);
   }
 };
