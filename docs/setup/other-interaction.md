@@ -40,10 +40,10 @@ module.exports = {
               secondButton: 'secondBtnId',
             },
           usage: '', 
-          execute(message, args, client) { 
+          executePrefix(message, args, client) { 
             return message.channel.send({ content: 'Pong.'});
           },
-          async interactionReply(interaction, client, level){
+          async execute(interaction, client, level){
             await interaction.deferReply({
               ephemeral: true,
             });

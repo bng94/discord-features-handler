@@ -4,8 +4,8 @@ This event file essentially handles your command, check the permission level set
 
 This is the built-in MessageCreate event that you can disable in DiscordFeaturesHandlerOptions and then can use to tailor to your bot if desired.
 
-??? note "Using v3.1.0 or later and you decided to disable the built-in MessageCreate"
-    Please use executePrefix property instead of execute property for running prefix commands to avoid any conflicts in future.
+!!! note "Using v3.1.0 or later and you decided to disable the built-in MessageCreate"
+    Please use `executePrefix` property instead of `execute` property for running prefix commands to avoid any conflicts in future.
 
 ```javascript
 const { ChannelType, Events } = require("discord.js");

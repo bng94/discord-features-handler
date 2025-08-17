@@ -64,6 +64,7 @@ theme:
 plugins:
   - social
   - search
+  - tags
 
 extra:
   analytics:
@@ -88,12 +89,12 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - footnotes
+  - attr_list
+  - md_in_html
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
   - tables
-  - attr_list
-  - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg

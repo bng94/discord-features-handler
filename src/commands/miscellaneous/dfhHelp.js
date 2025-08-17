@@ -17,7 +17,7 @@ module.exports = {
   minArgs: 0,
   maxArgs: 1,
   usage: "<command name>",
-  async execute(message, args, client) {
+  async executePrefix(message, args, client) {
     // using the built-in functions and get the permission level of user
     const level = client.getPermissionsLevel({
       author: message.author,
@@ -74,7 +74,7 @@ module.exports = {
       return message.reply(response).catch((error) => console.log(error));
     }
   },
-  async interactionReply(interaction, client, level) {
+  async execute(interaction, client, level) {
     await interaction.deferReply();
     const { options } = interaction;
     const name = options.getString("cmd_name");

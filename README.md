@@ -200,7 +200,7 @@ The properties that are **required** to have when creating a command file
       <td>Show by writing an example of how to execute the command using the command argument(s) in the command call</td>
     </tr>
     <tr>
-      <td>execute(message, args, client, level)</td>
+      <td>executePrefix(message, args, client, level)</td>
       <td>func</td>
       <td>""</td>
       <td>This is a function that is invoked when the command is called to be executed. Parameters are `message` object, `arguments` array, `client` object, and user's permission level to run a command</td>
@@ -226,7 +226,7 @@ module.exports = {
     * @param {Client} client The discord client object
     * @param {number} level The permission level of the user who made the command call
     */
-	execute(message, args, client, level) { 
+	executePrefix(message, args, client, level) { 
 		return message.channel.send('Pong.');
 	},
 };
@@ -249,7 +249,7 @@ The properties that are required when creating a command file for slash commands
       <td>DiscordJS SlashCommandBuilder</td>
     </tr>
     <tr>
-      <td>interactionReply(interaction, client, level)</td>
+      <td>execute(interaction, client, level)</td>
       <td>func</td>
       <td> This is a function that is invoked when the slash command is called to be executed Parameters are `interaction`, `client` object, and `user's permission level`.</td>
     </tr>
@@ -282,7 +282,7 @@ module.exports = {
     * @param {Client} client The discord client object
     * @param {number} level The permission level of the user who made the command call
     */
-	execute(message, args, client, level) { 
+	executePrefix(message, args, client, level) { 
       return message.channel.send({ content: 'Pong.'});
     },
     /** 
@@ -290,7 +290,7 @@ module.exports = {
     * @param {Client} client The discord client object
     * @param {number} level The permission level of the user who made the command call
     */
-    async interactionReply(interaction, client, level) {
+    async execute(interaction, client, level) {
       await interaction.reply({
 	      content: 'Pong!'
       });
@@ -390,7 +390,7 @@ You can read more about these and other built-in functions in the [official Docu
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Notes
-This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file, using the property `interactionReply` instead of `execute` property for slash commands, and without creating your own handler for loading commands and events file. Also loading your modules files that contains features of your bot.
+This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file and without creating your own handler for loading commands and events file. Also loading your modules files that contains features of your bot.
 
 ## Support and New Features 
 This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!

@@ -2,8 +2,12 @@
 
 This event handles the creation execution of the slash commands, using the built-in slash command executing from the slash properties of a command file and also using the built-in `client.commands` Collection object. We will also display the slash command Id, incase you decide to delete a slash command.
 
+!!! note "Using v3.1.0 or later and you decided to disable the built-in IntercationCreate"
+    Please use `execute` property instead of `interactionReply` property for running slash commands and make sure for the prefix version of the command use `executePrefix` property if you choose to use a prefix version of the command.
+
+
 ```javascript
-const { InteractionType, Events } = require("discord.js");const { InteractionType, Events } = require("discord.js");
+const { InteractionType, Events } = require("discord.js");
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction, client) {
@@ -34,7 +38,7 @@ module.exports = {
         console.log("[SLASH CMD]", "[ID]", commandId);
 
         try {
-          return cmd.interactionReply(interaction, client, level);
+          return cmd.execute(interaction, client, level);
         } catch (e) {
           console.log(
             "ApplicationCommand interaction (slash command) execution failed",
@@ -47,19 +51,6 @@ module.exports = {
           });
         }
       }
-      //  if (interaction.isUserContextMenuCommand()) {
-      //   const cmd = client.commands.get(commandName);
-      //   if (!cmd) {
-      //     return console.error("Unable to find context menu command:" + cmd);
-      //   }
-      //   console.log(
-      //     `[CONTEXT MENU CMD]`,
-      //     `[${interaction.user.tag}]`,
-      //     `${commandName} ID: ${commandId}`,
-      //     commandId
-      //   );
-      //   cmd.contextMenuInteraction(interaction, client, level);
-      // }
 
       const foundCmd = client.commands.find((cmd) => {
         if (!cmd.customIds) return false;
@@ -75,7 +66,7 @@ module.exports = {
         return false;
       });
 
-      if (!foundCmd) {
+      if (!foundCmd || !foundCmd.name) {
         console.error("Unable to find command with customId: " + customId);
 
         return interaction.reply({
@@ -102,8 +93,17 @@ module.exports = {
         `[${interaction.user.tag}]`,
         `${foundCmd.name} CustomID: ${customId}`
       );
-
-      return foundCmd.customIdInteraction(interaction, client, level);
+      try {
+        return foundCmd.customIdInteraction(interaction, client, level);
+      } catch (e) {
+        console.error(
+          `Error executing customIdInteraction for command "${foundCmd.name}":`,
+          e
+        );
+        return interaction.reply({
+          content: `An error occurred while processing your interaction: ${foundCmd.name} and customId: ${customId}. Error: ${e}`,
+        });
+      }
     } catch (e) {
       console.log("Interaction execution failed", e);
       return interaction.reply({
@@ -113,7 +113,5 @@ module.exports = {
   },
 };
 
+
 ```
-
-
-

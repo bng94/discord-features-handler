@@ -6,7 +6,7 @@ module.exports = {
   permissions: 0,
   minArgs: 0,
   usage: "",
-  execute(message, args, client, level) {
-    return message.channel.send('Pong!')
+  executePrefix(message, args, client, level) {
+    return message.channel.send("Pong!");
   },
 };
