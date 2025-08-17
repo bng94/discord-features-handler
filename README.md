@@ -179,12 +179,12 @@ The properties that are required to have when creating a command file
 module.exports = {
 	name: 'ping',
 	description: 'Ping Pong Command!',
-        /** 
-        * @param {message} message The discord message object
-        * @param {Array<string>} args The arguments following the command call
-        * @param {Client} client The discord client object
-        * @param {number} level The permission level of the user who made the command call
-        */
+  /** 
+  * @param {message} message The discord message object
+  * @param {Array<string>} args The arguments following the command call
+  * @param {Client} client The discord client object
+  * @param {number} level The permission level of the user who made the command call
+  */
 	executePrefix(message, args, client, level) { 
 		return message.channel.send('Pong.');
 	},
@@ -228,27 +228,28 @@ module.exports = {
 	/**
 	* This is required and set as true. Otherwise would not recognize as a slash command
 	*/
-	data: new SlashBuilderCommand().setName(name)
+	data: new SlashBuilderCommand()
+      .setName(name)
 	    .setDescription(description),
-        /** 
-        * @param {message} message The discord message object
-        * @param {Array<string>} args The arguments following the command call
-        * @param {Client} client The discord client object
-        * @param {number} level The permission level of the user who made the command call
-        */
+  /** 
+  * @param {message} message The discord message object
+  * @param {Array<string>} args The arguments following the command call
+  * @param {Client} client The discord client object
+  * @param {number} level The permission level of the user who made the command call
+  */
 	executePrefix(message, args, client, level) { 
-           return message.channel.send({ content: 'Pong.'});
-        },
-        /** 
-        * @param {interaction} interaction The discord interaction object
-        * @param {Client} client The discord client object
-        * @param {number} level The permission level of the user who made the command call
-        */
-        async execute(interaction, client, level) {
-          await interaction.reply({
-            content: 'Pong!'
-          });
-        }
+      return message.channel.send({ content: 'Pong.'});
+  },
+  /** 
+  * @param {interaction} interaction The discord interaction object
+  * @param {Client} client The discord client object
+  * @param {number} level The permission level of the user who made the command call
+  */
+  async execute(interaction, client, level) {
+    await interaction.reply({
+      content: 'Pong!'
+    });
+  }
 };
 ```
 
