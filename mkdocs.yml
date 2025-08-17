@@ -13,19 +13,19 @@ nav:
       - TypeScript Support: getting-started/TypeScript Support.md
   - Setup:
       - DiscordFeaturesHandlerOptions: setup/DiscordFeaturesHandlerOptions.md
-      - config file: setup/config-file.md
-      - command files: setup/commands-file.md
-      - slash command files: setup/slash-commands-file.md
-      - other interactions: setup/other-interaction.md
-      - event files: setup/events-file.md
-      - modules file: setup/modules-files.md
+      - Config file: setup/config-file.md
+      - Slash command files: setup/slash-commands-file.md
+      - Prefix command files: setup/commands-file.md
+      - Other interactions: setup/other-interaction.md
+      - Event files: setup/events-file.md
+      - Modules file: setup/modules-files.md
   - Built-in Features:
-      - messageCreate event: builtIn/messageCreate-event.md
-      - interactionCreate event: builtIn/interactionCreate-event.md
-      - help command: builtIn/help-command.md
-      - reload command: builtIn/reload-command.md
-      - functions: builtIn/functions.md
-      - disabling built in: builtIn/disabling-built-in-features.md
+      - MessageCreate event: builtIn/messageCreate-event.md
+      - InteractionCreate event: builtIn/interactionCreate-event.md
+      - Help command: builtIn/help-command.md
+      - Reload command: builtIn/reload-command.md
+      - Functions: builtIn/functions.md
+      - Disabling built in: builtIn/disabling-built-in-features.md
   - Demo: demo.md
   - About: about.md
   - Release Notes: release-notes.md

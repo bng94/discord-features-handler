@@ -17,6 +17,18 @@ hide:
 - Enabled usage of `execute` property to run slash commands.
 - Added console warnings when prefix commands use `execute` instead of `executePrefix`, recommending migration to the new property.
 - Added console warnings when slash commands use `interactionReply` instead of `execute`, following discord.js guides and as Discord is encouraging developers to transition to using slash commands over traditional prefix commands for bots.
+- Following Command Properties are now optional:
+    - `name` - slash commands only
+    - `description` - slash commands only
+    - `aliases`
+    - `minArgs`
+    - `permissions`
+    - `usage`
+
+- Recommended name changes to Command Properties:
+    - For executing prefix commands: `execute` → `executePrefix`
+    - For executing slash commands: `interactionReply` → `execute`
+    - These changes are not mandatory until v4.0.0
 ### Deprecation
 - `interactionReply` is now deprecated. It will continue to work in v3.x, but logs a console warning.  
   Please migrate to `execute`, as `interactionReply` will be removed in v4.0.0.

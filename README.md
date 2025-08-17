@@ -140,7 +140,7 @@ Here are the some parameters of options Object. For a full list please check out
 
 
 ## Commands Properties
-The properties that are **required** to have when creating a command file
+The properties that are required to have when creating a command file
 <table>
   <thead>
     <tr>
@@ -164,42 +164,6 @@ The properties that are **required** to have when creating a command file
       <td>Description of your command</td>
     </tr>
     <tr>
-      <td>aliases</td>
-      <td>Array</td>
-      <td>[""]</td>
-      <td>Aliases of the command. You must set `[]`</td>
-    </tr>
-    <tr>
-      <td>guildOnly</td>
-      <td>boolean</td>
-      <td>false</td>
-      <td>If command is guild only (not a DM command)</td>
-    </tr>
-    <tr>
-      <td>permission</td>
-      <td>number</td>
-      <td>""</td>
-      <td>Permission level required to use command</td>
-    </tr>
-    <tr>
-      <td>minArgs</td>
-      <td>number</td>
-      <td>""</td>
-      <td>Minimum number of arguments required for command execution</td>
-    </tr>
-    <tr>
-      <td>maxArgs</td>
-      <td>number</td>
-      <td>""</td>
-      <td>Maximum number of arguments required for command execution</td>
-    </tr>
-    <tr>
-      <td>usage</td>
-      <td>string</td>
-      <td>""</td>
-      <td>Show by writing an example of how to execute the command using the command argument(s) in the command call</td>
-    </tr>
-    <tr>
       <td>executePrefix(message, args, client, level)</td>
       <td>func</td>
       <td>""</td>
@@ -215,17 +179,12 @@ The properties that are **required** to have when creating a command file
 module.exports = {
 	name: 'ping',
 	description: 'Ping Pong Command!',
-	aliases: ['p'],
-	guildOnly: true,
-	permissions: 0,
-	minArgs: 0, 
-	usage: '',
-    /** 
-    * @param {message} message The discord message object
-    * @param {Array<string>} args The arguments following the command call
-    * @param {Client} client The discord client object
-    * @param {number} level The permission level of the user who made the command call
-    */
+        /** 
+        * @param {message} message The discord message object
+        * @param {Array<string>} args The arguments following the command call
+        * @param {Client} client The discord client object
+        * @param {number} level The permission level of the user who made the command call
+        */
 	executePrefix(message, args, client, level) { 
 		return message.channel.send('Pong.');
 	},
@@ -266,35 +225,30 @@ const description = "Ping Pong Command";
 module.exports = {
 	name,
 	description,
-	aliases: ['p'],
-	guildOnly: true,
-	permissions: 0,
-	minArgs: 0, 
-	usage: '',
 	/**
 	* This is required and set as true. Otherwise would not recognize as a slash command
 	*/
 	data: new SlashBuilderCommand().setName(name)
 	    .setDescription(description),
-    /** 
-    * @param {message} message The discord message object
-    * @param {Array<string>} args The arguments following the command call
-    * @param {Client} client The discord client object
-    * @param {number} level The permission level of the user who made the command call
-    */
+        /** 
+        * @param {message} message The discord message object
+        * @param {Array<string>} args The arguments following the command call
+        * @param {Client} client The discord client object
+        * @param {number} level The permission level of the user who made the command call
+        */
 	executePrefix(message, args, client, level) { 
-      return message.channel.send({ content: 'Pong.'});
-    },
-    /** 
-    * @param {interaction} interaction The discord interaction object
-    * @param {Client} client The discord client object
-    * @param {number} level The permission level of the user who made the command call
-    */
-    async execute(interaction, client, level) {
-      await interaction.reply({
-	      content: 'Pong!'
-      });
-    }
+           return message.channel.send({ content: 'Pong.'});
+        },
+        /** 
+        * @param {interaction} interaction The discord interaction object
+        * @param {Client} client The discord client object
+        * @param {number} level The permission level of the user who made the command call
+        */
+        async execute(interaction, client, level) {
+          await interaction.reply({
+            content: 'Pong!'
+          });
+        }
 };
 ```
 

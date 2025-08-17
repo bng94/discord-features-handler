@@ -1,4 +1,4 @@
-# Setting up Commands
+# Setting up Prefix Commands
 
 Follow the folder structure and create sub folders inside your command folder. Name these sub-folders as a category name for your command files.  In order for commands to run when placed inside their respective sub-folders of the command folder, you need to set the properties for each command.
 
@@ -8,24 +8,12 @@ Here is a sample command example with the filename of "ping.js" and it's the com
 module.exports = {
 	name: 'ping',  //name of command when using <prefix>ping
 	description: 'Ping Pong Command!', // description of command
-	aliases: ['p'],  // aliases of command
-	guildOnly: true,  // guild command only?
-	/**
-	* @property {Number} permissions 
-	* Permission Level of the command: 
-	* 0 = Any User
-        * 5 = Server Owner
-        * 10 = Bot Owner
-        * The permission level can be set and changed by updating the config.js file
-	**/
-	permissions: 0,  
-	minArgs: 0,   // minimum arguments required to execute command
-	usage: '',  // example of how to use / call the command
-  /**
-   * Defines what the prefix command does, 
-   * 
-   * note as of v3.1.0, execute property has backward compatibility to run prefix commands until v4.0.0 
-   */
+    /**
+     * Defines what the prefix command does, 
+     * 
+     * note for v3.1.0 or later:
+     * execute property has backward compatibility to run prefix commands
+     */
 	executePrefix(message, args, client) {
 		return message.channel.send({ content: 'Pong.'});
 	},
@@ -44,7 +32,7 @@ module.exports = {
 </p>
 
 <p>
-  <strong>aliases</strong> <span class="varType">Array&lt;String&gt;</span><br/>
+  <strong>aliases</strong> <span class="varType">Array&lt;String&gt;</span> <span class="optional-label"></span><br/>
   This is the different abbreviation (aliases) of the command that you can use to call and execute the command
 </p>
 
@@ -55,12 +43,12 @@ module.exports = {
 </p>
 
 <p>
-  <strong>permissions</strong> <span class="varType">number</span><br/>
+  <strong>permissions</strong> <span class="varType">number</span> = 0  <span class="optional-label"></span><br/>
   This is the permission level value of who can execute the command. If set to 0, any user can run this command, 5 is the server owner and 10 is only the bot owner can run the command. For more details, please refer to the config file on the permission levels.
 </p>
 
 <p>
-  <strong>minArgs</strong> <span class="varType">number</span><br/>
+  <strong>minArgs</strong> <span class="varType">number</span> = 0  <span class="optional-label"></span><br/>
   This is the minimum arguments required to execute the command
 </p>
 
@@ -74,11 +62,11 @@ This is the maximum arguments required to execute the command</span>
 </p>
 
 <p>
-  <strong>customIds</strong> <span class="varType">Array&lt;String&gt;</span><br/>
+  <strong>customIds</strong> <span class="varType">Array&lt;String&gt;</span> <span class="optional-label"></span><br/>
   An Array of strings containing strings of customIds used in current command file. This can be also a key:value pairs as an object of keys where the values are the string of customIds for easier reference
 </p>
 <p>
-  <strong>usage</strong> <span class="varType">string</span><br/>
+  <strong>usage</strong> <span class="varType">string</span> <span class="optional-label"></span><br/>
   Show by writing an example of how to execute the command using the command argument(s) in the command call  Example: <code>!ping</code>
 </p>
 

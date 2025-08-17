@@ -1,6 +1,8 @@
 # Setting up Slash Commands
 
-You will need to follow properties to create a regular command and the following `data` and `execute` properties to create a slash command.
+If you have a prefix command execution, it can be created in the same command file. 
+
+All properties required for prefix commands are optional for slash commands.
 
 
 ```javascript
@@ -8,27 +10,25 @@ data: new SlashCommandBuilder(),
 async execute(interaction) {},
 ```
 
-Here is a sample slash command created from our previous ping command:
+Here is a sample slash command created from our prefix command, ping:
 
 ```javascript
 const { SlashCommandBuilder } = require("discord.js");
 
+const name = "ping";
+const description = "Ping Pong Command!";
+
 module.exports = {
-	name: 'ping',
-	description: 'Ping Pong Command!',
-	aliases: ['p'],
-	guildOnly: true,
-	permissions: 0,
-	minArgs: 0, 
-	usage: '',
+	name,
+	description,
 	data: new SlashCommandBuilder()
-	    .setName("ping")
-	    .setDescription("Ping Pong Command"),
+	    .setName(name)
+	    .setDescription(description),
 	executePrefix(message, args, client) {
 		return message.channel.send('Pong.');
 	},
 	async execute(interaction) {
-		await interaction.reply({
+		return await interaction.reply({
 			content: 'Pong!'
 		});
 	}
@@ -41,6 +41,11 @@ module.exports = {
 <p>
   <strong>data</strong><span class="varType"><a href="https://discord.js.org/docs/packages/builders/1.6.0/SlashCommandBuilder:Class">SlashCommandBuilder</a></span><br/>
   This is where you define the properties of the slash command using the SlashCommandBuilder Class. You can also follow the <a href="https://discordjs.guide/creating-your-bot/slash-commands.html#individual-command-files">official Discord.js guide</a>.
+</p>
+
+<p>
+  <strong>permissions</strong> <span class="varType">number</span> = 0  <span class="optional-label"></span><br/>
+	In slash commands, you can use this permission level to add an extra layer or feature based on the level, but it will not prevent execution since slash commands are manageable at the server/guild level.
 </p>
 
 <div markdown>
