@@ -50,13 +50,13 @@ hide:
 
 ### Features
 : - Added new optional options to `DiscordFeaturesHandlerOptions`:
-    - `slashCommandIdsToDelete`: Array of strings for deleting specific slash command IDs.
-    - `onSlashCommandsLoading`: Object of booleans for enabling the deletion of slash commands before loading new ones.
+    * `slashCommandIdsToDelete`: Array of strings for deleting specific slash command IDs.
+    * `onSlashCommandsLoading`: Object of booleans for enabling the deletion of slash commands before loading new ones.
 - Updated `CommandFile` properties:
-    - Changed `customIds` to accept either an array of strings (`customIds`) or an object of key–value pairs.
-    - Removed `componentInteraction`, `autoCompleteInteraction`, `contextMenuInteraction`, and `modalInteraction`, replacing them with a single universal property: `customIdInteraction`.  
+    * Changed `customIds` to accept either an array of strings (`customIds`) or an object of key–value pairs.
+    * Removed `componentInteraction`, `autoCompleteInteraction`, `contextMenuInteraction`, and `modalInteraction`, replacing them with a single universal property: `customIdInteraction`.  
       This new property handles interactions based on `customIds`.
-    - Added `customIdInteraction(interaction, client, level)` to `CommandFile` properties to ensure that no button or other customId-based interaction becomes inactive if the bot application or collector times out.
+    * Added `customIdInteraction(interaction, client, level)` to `CommandFile` properties to ensure that no button or other customId-based interaction becomes inactive if the bot application or collector times out.
 
 ### Fixes
 - Fixed an issue where prefix commands were not working.
