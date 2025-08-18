@@ -1,53 +1,93 @@
 name: Create and Publish Release
+
 on:
   push:
-    branches: [master]
+    branches:
+      - master
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [master]
+    branches:
+      - master
+
 permissions:
   contents: write
+
 jobs:
   create-release:
+    name: Create GitHub Release (pushes only)
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-
-      - name: Get package version
-        id: get_version
-        run: echo "PACKAGE_VERSION=$(node -p -e "require('./package.json').version")" >> $GITHUB_ENV
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.PACKAGE_VERSION }}
-          release_name: v${{ env.PACKAGE_VERSION }}
-          body: ${{ github.event.head_commit.message }}
-          draft: false
-          prerelease: false
-  publish:
-    runs-on: ubuntu-latest
-    needs: create-release
-    steps:
-      - name: Checkout repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          registry-url: https://registry.npmjs.org
 
-      - name: Publish package
-        run: npm ci && npm publish
+      - name: Get package version
+        id: get_version
+        run: |
+          echo "PACKAGE_VERSION=$(node -p -e \"require('./package.json').version\")" >> $GITHUB_ENV
+          echo "tag=v$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Fail if tag already exists
+        uses: actions/github-script@v7
+        id: tag_check
+        with:
+          script: |
+            const tag = `v${process.env.PACKAGE_VERSION}`;
+            try {
+              await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${tag}`
+              });
+              core.setFailed(`Tag ${tag} already exists`);
+            } catch (e) {
+              // 404 means tag does not exist yet -> OK
+              if (e.status !== 404) throw e;
+            }
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --tags
+          git tag "v${PACKAGE_VERSION}"
+          git push origin "v${PACKAGE_VERSION}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          name: v${{ env.PACKAGE_VERSION }}
+          body: |
+            ${{ github.event.head_commit.message || 'Automated release' }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: create-release
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install and publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: |
+          npm ci
+          npm publish --provenance
