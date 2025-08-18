@@ -13,7 +13,7 @@ hide:
 ## 3.1.1 – Latest Version
 
 ### Patch
-- Removed console warning for when slashCommandIdsToDelete is not used.
+: - Removed console warning for when slashCommandIdsToDelete is not used.
 
 
 ## 3.1.0 
