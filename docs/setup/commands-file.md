@@ -63,7 +63,7 @@ This is the maximum arguments required to execute the command</span>
 
 <p>
   <strong>customIds</strong> <span class="varType">Array&lt;String&gt;</span> <span class="optional-label"></span><br/>
-  An Array of strings containing strings of customIds used in current command file. This can be also a key:value pairs as an object of keys where the values are the string of customIds for easier reference
+  An Array of strings containing strings of customIds used in current command file. 
 </p>
 <p>
   <strong>usage</strong> <span class="varType">string</span> <span class="optional-label"></span><br/>

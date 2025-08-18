@@ -242,10 +242,14 @@ interface Permissions {
 interface CommandFile {
   /**
    * Name of the command
+   *
+   * @optional for slash commands
    */
   name: string;
   /**
    * Description of the command
+   *
+   * @optional for slash commands
    */
   description: string;
   /**
@@ -254,29 +258,46 @@ interface CommandFile {
   category?: string;
   /**
    * Array of strings for command aliases
+   *
+   * @default []
    */
   aliases?: string[];
   /**
    * Is this command for guild only to use. DM command is not allowed
+   *
+   * @default false
    */
   guildOnly?: boolean;
   /**
    * Permission level to use the command
+   *
+   * @default 0
    */
   permissions: number;
   /**
    * Minimum Arguments allowed for the command
+   *
+   * @default 0
    */
   minArgs: number;
   /**
    * Maximum Arguments allowed for the command
    *
+   *
    */
   maxArgs?: number;
   /**
    * Describe how to call this command and its argument
+   *
+   * @default ""
    */
   usage?: string;
+  /**
+   * Whether this command is a global slash command
+   *
+   * @default false
+   */
+  global?: boolean;
   /**
    * SlashCommandBuilder object for creating this command into a slash command
    *
@@ -290,20 +311,8 @@ interface CommandFile {
    * ```ts
    *  customIds: ["myModalId", "myModalId2"]
    * ```
-   *
-   * ```ts
-   * customIds: {
-   *   modal: "myModalId",
-   *   model2: "myModalId2",
-   * }
-   * ```
    */
-  customIds?:
-    | string[]
-    | {
-        [key: string]: string;
-      };
-
+  customIds?: string[];
   /**
    * @summary Executes a prefix command call for this command. As discord.js shifts towards using interactions over prefix, this function is required to be implemented for prefix commands in next version of discord-features-handler. -- This is still useful outside of slash commands, as you can set up permission-based levels to ensure the command is for admins or bot admins/devs by using the permission levels.
    *

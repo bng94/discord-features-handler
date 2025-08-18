@@ -13,30 +13,35 @@ hide:
 ## 3.1.0 – Latest Version
 
 ### Features
-- Introduced a new `executePrefix` property for handling prefix commands.
+: - Introduced a new `executePrefix` property for handling prefix commands.
 - Enabled usage of `execute` property to run slash commands.
-- Added console warnings when prefix commands use `execute` instead of `executePrefix`, recommending migration to the new property.
-- Added console warnings when slash commands use `interactionReply` instead of `execute`, following discord.js guides and as Discord is encouraging developers to transition to using slash commands over traditional prefix commands for bots.
-- Following Command Properties are now optional:
-    - `name` - slash commands only
-    - `description` - slash commands only
-    - `aliases`
-    - `minArgs`
-    - `permissions`
-    - `usage`
-
+    * As Discord Recommends slash commands, discord-feature-handler will start migrating to follow discord.js guide to make it easier to create slash commands.
+- Following Prefix Command Properties are now optional:
+    * `aliases`
+    * `minArgs`
+    * `permissions`
+    * `usage`
+- Following Slash Command Properties are now optional:
+    * `name` - slash commands only
+    * `description` - slash commands only
+- New Slash Command Property:
+    *  `global`: boolean; default is false
+        + Allows creation of global slash command for the specific command file
+- `customIds` Property is now changed to be Array of Strings and no longer accepts Objects
 - Recommended name changes to Command Properties:
-    - For executing prefix commands: `execute` → `executePrefix`
-    - For executing slash commands: `interactionReply` → `execute`
     - These changes are not mandatory until v4.0.0
+    - For executing prefix commands: `execute` → `executePrefix`
+        - Added console warnings when prefix commands use `execute` instead of `executePrefix`.
+    - For executing slash commands: `interactionReply` → `execute`
+        - Added console warnings when slash commands use `interactionReply` instead of `execute`.
 ### Deprecation
-- `interactionReply` is now deprecated. It will continue to work in v3.x, but logs a console warning.  
+: - `interactionReply` is now deprecated. It will continue to work in v3.x, but logs a console warning.  
   Please migrate to `execute`, as `interactionReply` will be removed in v4.0.0.
 
 ## 3.0.0
 
 ### Features
-- Added new optional options to `DiscordFeaturesHandlerOptions`:
+: - Added new optional options to `DiscordFeaturesHandlerOptions`:
     - `slashCommandIdsToDelete`: Array of strings for deleting specific slash command IDs.
     - `onSlashCommandsLoading`: Object of booleans for enabling the deletion of slash commands before loading new ones.
 - Updated `CommandFile` properties:

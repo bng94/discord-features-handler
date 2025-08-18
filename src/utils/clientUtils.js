@@ -17,10 +17,14 @@ const checkCommandErrors = (cmd) => {
     error += `\n- MinArgs must be a Number equal to 0 or greater!`;
   }
 
+  if (cmd.maxArgs !== undefined && typeof cmd.maxArgs !== "number") {
+    error += `\n- MaxArgs must be a Number!`;
+  }
+
   if (typeof cmd.maxArgs === "number") {
     const minArgs = cmd.minArgs || 0;
     if (typeof cmd.maxArgs === "number" && cmd.maxArgs < minArgs) {
-      error += `\n- maxArgs must be a number greater then MinArgs`;
+      error += `\n- MaxArgs must be a number greater then MinArgs`;
     }
   }
 
@@ -29,13 +33,12 @@ const checkCommandErrors = (cmd) => {
   }
 
   if (cmd.customIds) {
-    if (
-      !Array.isArray(cmd.customIds) &&
-      (typeof cmd.customIds !== "object" || cmd.customIds === null)
-    ) {
-      error += `\n- customIds must be an Array of String or an object of [k:string]: string`;
+    if (!Array.isArray(cmd.customIds)) {
+      error += `\n- customIds must be an Array of String`;
     } else if (cmd.customIds.length < 1) {
       error += `\n- customIds must contain at least one String`;
+    } else if (!cmd.customIds.every((id) => typeof id === "string")) {
+      error += `\n- Every customId must be a String`;
     }
   }
 

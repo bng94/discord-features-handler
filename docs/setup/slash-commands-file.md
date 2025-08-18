@@ -48,6 +48,11 @@ module.exports = {
 	In slash commands, you can use this permission level to add an extra layer or feature based on the level, but it will not prevent execution since slash commands are manageable at the server/guild level.
 </p>
 
+<p markdown>
+  <strong>global</strong> <span class="varType">boolean</span> = false  <span class="optional-label"></span><br/>
+	Default is always false. This is used to define if you want the slash command to be a global slash command. For guild based slash commands you will need to go to your `.env` file to set environment variable `DEVELOPMENT_GUILD_ID`, then you will have guild based slash commands for that specific guild id.  
+</p>
+
 <div markdown>
   <strong>execute(interaction, client, level)</strong>
   <span class="varType">Promise&lt;Interaction&gt;</span><br/>

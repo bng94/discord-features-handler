@@ -59,10 +59,6 @@ module.exports = {
           return cmd.customIds.includes(customId);
         }
 
-        if (typeof cmd.customIds === "object") {
-          return Object.values(cmd.customIds).includes(customId);
-        }
-
         return false;
       });
 

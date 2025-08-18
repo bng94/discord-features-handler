@@ -105,9 +105,15 @@ module.exports = ({
     const { clientId, guildId, toDeleteSlashCommand } = client.config;
 
     const slashCommands = [];
+    const globalSlashCommands = [];
+
     client.commands.forEach((cmd) => {
       if ("data" in cmd && ("interactionReply" in cmd || "execute" in cmd)) {
-        slashCommands.push(cmd.data.toJSON());
+        if ("global" in cmd && cmd.global === true) {
+          globalSlashCommands.push(cmd.data.toJSON());
+        } else {
+          slashCommands.push(cmd.data.toJSON());
+        }
       }
     });
 
@@ -117,7 +123,7 @@ module.exports = ({
     }
 
     try {
-      if (guildId) {
+      if (guildId && slashCommands.length > 0) {
         if (onSlashCommandsLoading.delete_guild_slash_commands === true) {
           console.log(
             "[log]",
@@ -154,7 +160,8 @@ module.exports = ({
           "[Slash CMDs]",
           `Successfully Loaded a total of ${data.length} slash commands.`
         );
-      } else {
+      }
+      if (globalSlashCommands.length > 0 || !guildId) {
         if (
           onSlashCommandsLoading.delete_global_slash_commands === true ||
           toDeleteSlashCommand
@@ -188,10 +195,10 @@ module.exports = ({
         console.log(
           "[log]",
           "[Slash CMDs]",
-          `Loading ${slashCommands.length} global slash commands...`
+          `Loading ${globalSlashCommands.length} global slash commands...`
         );
-        const data = await rest.put(Routes.applicationGuildCommands(clientId), {
-          body: slashCommands,
+        const data = await rest.put(Routes.applicationCommands(clientId), {
+          body: globalSlashCommands,
         });
 
         console.log(

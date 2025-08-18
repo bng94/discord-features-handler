@@ -25,20 +25,8 @@ module.exports = {
           .setDescription("Ping Pong Command"),
         /**
          * customIds for your interaction components
-         * 
-         * or this can be a Array<string>
-         * customIds: ["btnComponentId","backBtnId"]
          */
-          customIds: {
-              /**
-               * customId for a button component
-               */
-              buttonComponent: 'btnComponentId',
-              /**
-               * customId for second button
-               */
-              secondButton: 'secondBtnId',
-            },
+          customIds: ["btnComponentId","backBtnId"],
           usage: '', 
           executePrefix(message, args, client) { 
             return message.channel.send({ content: 'Pong.'});
