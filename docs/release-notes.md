@@ -231,9 +231,9 @@ You will need to define the customIds property and use those ids name for the re
 
 - Compatible with Heroku and other hosting services for Node.js code
 - Ability to turn off console.log for stating what file is loaded on runtime
-  - `loadCommandsLoggerOff` - type boolean
-  - `loadEventsLoggerOff` - type boolean
-  - `loadModulesLoggerOff` - type boolean
+  * `loadCommandsLoggerOff` - type boolean
+  * `loadEventsLoggerOff` - type boolean
+  * `loadModulesLoggerOff` - type boolean
 - Deprecated: `disableAllDefaults`, `disableDefaultHelpCmd`, `disableDefaultReloadCmd`, and `disableDefaultMessageCreate`
   - Use `disableBuiltIn` object instead
 
