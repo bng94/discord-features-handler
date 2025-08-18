@@ -3,11 +3,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    types: [opened, reopened]
-    branches:
-      - master
-
 jobs:
   create-release:
     runs-on: ubuntu-latest
