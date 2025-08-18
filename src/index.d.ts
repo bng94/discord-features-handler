@@ -159,9 +159,21 @@ interface DiscordFeaturesHandlerOptions {
   onLoad_list_files?: FileLoadedLogger;
   /**
    * If you want to delete specific slash commands, you can provide an array of slash command ids to delete
-   * @example: ["123456789012345678"]
+   * @example: {
+   *   global: ["123456789012345678"],
+   *   guild: ["876543210987654321"]
+   * }
    */
-  slashCommandIdsToDelete?: string[] | string;
+  slashCommandIdsToDelete?: {
+    /**
+     * Array of global slash command IDs to delete
+     */
+    global?: string[];
+    /**
+     * Array of guild slash command IDs to delete
+     */
+    guild?: string[];
+  };
   /**
    * If you want to change the behavior to deleting all slash commands when the bot starts up, you can provide an object to define which slash commands to delete
    *

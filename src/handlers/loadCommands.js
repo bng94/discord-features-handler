@@ -8,7 +8,10 @@ module.exports = ({
   filesToExclude = [""],
   mainDirectory,
   logger,
-  slashCommandIdsToDelete = [],
+  slashCommandIdsToDelete = {
+    global: [],
+    guild: [],
+  },
   onSlashCommandsLoading = {
     delete_global_slash_commands: false,
     delete_guild_slash_commands: false,
@@ -61,26 +64,49 @@ module.exports = ({
     }
 
     try {
-      slashCommandIdsToDelete.map(async (id) => {
-        await rest
-          .delete(Routes.applicationCommand(clientId, guildId, id))
+      if (slashCommandIdsToDelete.global.length > 0) {
+        slashCommandIdsToDelete.global.map(async (id) => {
+          await rest
+            .delete(Routes.applicationCommand(clientId, id))
 
-          .then(() =>
-            console.log(
-              "[log]",
-              "[Slash CMDs]",
-              `Successfully deleted slash command with ID: ${id}`
+            .then(() =>
+              console.log(
+                "[log]",
+                "[Slash CMDs]",
+                `Successfully deleted slash command with ID: ${id}`
+              )
             )
-          )
-          .catch((e) => {
-            console.error(
-              "[log]",
-              "[Slash CMDs]",
-              `Failed to delete slash command with ID: ${id}`,
-              e.message
-            );
-          });
-      });
+            .catch((e) => {
+              console.error(
+                "[log]",
+                "[Slash CMDs]",
+                `Failed to delete slash command with ID: ${id}`,
+                e.message
+              );
+            });
+        });
+      }
+      if (slashCommandIdsToDelete.guild.length > 0) {
+        slashCommandIdsToDelete.guild.map(async (id) => {
+          await rest
+            .delete(Routes.applicationGuildCommand(clientId, guildId, id))
+            .then(() =>
+              console.log(
+                "[log]",
+                "[Slash CMDs]",
+                `Successfully deleted slash command with ID: ${id}`
+              )
+            )
+            .catch((e) => {
+              console.error(
+                "[log]",
+                "[Slash CMDs]",
+                `Failed to delete slash command with ID: ${id}`,
+                e.message
+              );
+            });
+        });
+      }
     } catch (err) {
       console.error(
         "[log]",
@@ -91,7 +117,10 @@ module.exports = ({
     }
   };
   (async () => {
-    if (slashCommandIdsToDelete.length > 0) {
+    if (
+      slashCommandIdsToDelete.global.length > 0 ||
+      slashCommandIdsToDelete.guild.length > 0
+    ) {
       await deleteSlashCommands();
     }
   })();

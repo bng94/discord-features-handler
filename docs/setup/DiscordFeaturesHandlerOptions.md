@@ -32,7 +32,10 @@ DiscordFeaturesHandler(client, {
     events: false,
     modules: false,
   },
-  slashCommandIdsToDelete = []
+  slashCommandIdsToDelete = {
+    global: [],
+    guild: [],
+  }
   onSlashCommandsLoading = {
     delete_global_slash_commands: false, 
     delete_guild_slash_commands: false,
@@ -183,10 +186,36 @@ The DiscordFeaturesHandlerOptions object contains properties to configure Discor
   </tbody>
 </table>
 
-<p> <strong>slashCommandIdsToDelete</strong> <span class="varType"><code>Array&lt;string&gt;</code></span>
+<p> <strong>slashCommandIdsToDelete</strong> <span class="varType"><code>object</code></span>
 <span class="optional-label"></span><br/>
-An array of slash command IDs that should be deleted. Each string in the array represents the unique identifier of a registered slash command you want to remove from your application.
+An object that contains two property that is an array of slash command IDs that should be deleted for global and guild based slash commands. Each string in the array represents the unique identifier of a registered slash command you want to remove from your application.
 </p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Properties</th>
+      <th align="center">Type</th>
+      <th align="center">Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>global</td>
+      <td align="center">Array&lt;string&gt;</td>
+      <td align="center">[]</td>
+      <td>Array of strings of global slash commands ids to be deleted</td>
+    </tr>
+    <tr>
+      <td>guild</td>
+      <td align="center">Array&lt;string&gt;</td>
+      <td align="center">[]</td>
+      <td>Array of strings of guild slash commands ids to be deleted</td>
+    </tr>
+
+  </tbody>
+</table>
 
 <p>
   <strong>onSlashCommandsLoading</strong> <span class="varType">object</span>

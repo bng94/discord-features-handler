@@ -28,6 +28,8 @@ hide:
     *  `global`: boolean; default is false
         + Allows creation of global slash command for the specific command file
 - `customIds` Property is now changed to be Array of Strings and no longer accepts Objects
+- Updated `slashCommandIdsToDelete` property to be an object containing two property: `global` and `guild`
+  * Each of these property are an Array<String> containing the slash commands ids to be deleted
 - Recommended name changes to Command Properties:
     - These changes are not mandatory until v4.0.0
     - For executing prefix commands: `execute` → `executePrefix`
