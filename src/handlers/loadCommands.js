@@ -118,8 +118,10 @@ module.exports = ({
   };
   (async () => {
     if (
-      slashCommandIdsToDelete.global.length > 0 ||
-      slashCommandIdsToDelete.guild.length > 0
+      (slashCommandIdsToDelete.global &&
+        slashCommandIdsToDelete.global.length > 0) ||
+      (slashCommandIdsToDelete.guild &&
+        slashCommandIdsToDelete.guild.length > 0)
     ) {
       await deleteSlashCommands();
     }
