@@ -145,23 +145,23 @@ const DiscordFeaturesHandler = async (
   }
 
   if (
-    !Array.isArray(slashCommandIdsToDelete.global) ||
-    !slashCommandIdsToDelete.global.every((id) => typeof id === "string")
+    slashCommandIdsToDelete.global &&
+    (!Array.isArray(slashCommandIdsToDelete.global) ||
+      !slashCommandIdsToDelete.global.every((id) => typeof id === "string"))
   ) {
-    console.warn(
+    throw new TypeError(
       "slashCommandIdsToDelete.global should be an array of strings representing global slash command IDs"
     );
-    slashCommandIdsToDelete.global = [];
   }
 
   if (
-    !Array.isArray(slashCommandIdsToDelete.guild) ||
-    !slashCommandIdsToDelete.guild.every((id) => typeof id === "string")
+    slashCommandIdsToDelete.guild &&
+    (!Array.isArray(slashCommandIdsToDelete.guild) ||
+      !slashCommandIdsToDelete.guild.every((id) => typeof id === "string"))
   ) {
-    console.warn(
+    throw new TypeError(
       "slashCommandIdsToDelete.guild should be an array of strings representing guild slash command IDs"
     );
-    slashCommandIdsToDelete.guild = [];
   }
 
   if (typeof process.env.DISCORD_TOKEN === "undefined") {

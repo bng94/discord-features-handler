@@ -10,7 +10,13 @@ hide:
 # Release Notes
 
 
-## 3.1.0 – Latest Version
+## 3.1.1 – Latest Version
+
+### Patch
+- Removed console warning for when slashCommandIdsToDelete is not used.
+
+
+## 3.1.0 
 
 ### Features
 : - Introduced a new `executePrefix` property for handling prefix commands.
