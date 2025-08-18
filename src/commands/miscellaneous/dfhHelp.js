@@ -88,9 +88,25 @@ module.exports = {
       (cmd) => cmd.permissions <= level
     );
     const data = getSortedCommandArray(client, commands);
-    const newEmbed = getUpdateEmbed(data, interaction.customId, client);
+    const customId = interaction.customId;
+    try {
+      if (customIds.includes(customId)) {
+        const newEmbed = getUpdateEmbed(data, customId, client);
 
-    await interaction.update({ embeds: [newEmbed] });
+        await interaction.update({ embeds: [newEmbed] });
+      } else {
+        console.log("Invalid category: " + customId, data);
+        await interaction.reply({ content: "Invalid category: " + customId });
+      }
+    } catch (error) {
+      console.error("Error handling customIdInteraction:", error);
+      await interaction
+        .reply({
+          content: "An error occurred while processing your request.",
+          ephemeral: true,
+        })
+        .catch(() => {});
+    }
   },
 };
 /**

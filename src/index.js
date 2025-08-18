@@ -173,8 +173,9 @@ const DiscordFeaturesHandler = async (
 
   functions();
 
-  console.log(`Thank you for installing DiscordFeaturesHandler!`);
-  console.log(`Loading your files now...`);
+  console.log(
+    `Thank you for installing DiscordFeaturesHandler\nLoading your files...`
+  );
 
   const configFile = config.endsWith("./defaultConfig.js")
     ? require(config)
