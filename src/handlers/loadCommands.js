@@ -8,7 +8,10 @@ module.exports = ({
   filesToExclude = [""],
   mainDirectory,
   logger,
-  slashCommandIdsToDelete = [],
+  slashCommandIdsToDelete = {
+    global: [],
+    guild: [],
+  },
   onSlashCommandsLoading = {
     delete_global_slash_commands: false,
     delete_guild_slash_commands: false,
@@ -55,18 +58,54 @@ module.exports = ({
   const deleteSlashCommands = async () => {
     const rest = new REST().setToken(client.config.token);
     const { clientId, guildId } = client.config;
+    if (!clientId) {
+      console.error("[log]", "[Slash CMDs]", "Client ID is not defined.");
+      return;
+    }
+
     try {
-      for (const id of slashCommandIdsToDelete) {
-        await rest
-          .delete(Routes.applicationCommand(clientId, id))
-          .then(() =>
-            console.log(
-              "[log]",
-              "[Slash CMDs]",
-              `Successfully deleted slash command with ID: ${id}`
+      if (slashCommandIdsToDelete.global.length > 0) {
+        slashCommandIdsToDelete.global.map(async (id) => {
+          await rest
+            .delete(Routes.applicationCommand(clientId, id))
+
+            .then(() =>
+              console.log(
+                "[log]",
+                "[Slash CMDs]",
+                `Successfully deleted slash command with ID: ${id}`
+              )
             )
-          )
-          .catch(console.error);
+            .catch((e) => {
+              console.error(
+                "[log]",
+                "[Slash CMDs]",
+                `Failed to delete slash command with ID: ${id}`,
+                e.message
+              );
+            });
+        });
+      }
+      if (slashCommandIdsToDelete.guild.length > 0) {
+        slashCommandIdsToDelete.guild.map(async (id) => {
+          await rest
+            .delete(Routes.applicationGuildCommand(clientId, guildId, id))
+            .then(() =>
+              console.log(
+                "[log]",
+                "[Slash CMDs]",
+                `Successfully deleted slash command with ID: ${id}`
+              )
+            )
+            .catch((e) => {
+              console.error(
+                "[log]",
+                "[Slash CMDs]",
+                `Failed to delete slash command with ID: ${id}`,
+                e.message
+              );
+            });
+        });
       }
     } catch (err) {
       console.error(
@@ -78,7 +117,10 @@ module.exports = ({
     }
   };
   (async () => {
-    if (slashCommandIdsToDelete.length > 0) {
+    if (
+      slashCommandIdsToDelete.global.length > 0 ||
+      slashCommandIdsToDelete.guild.length > 0
+    ) {
       await deleteSlashCommands();
     }
   })();
@@ -92,9 +134,15 @@ module.exports = ({
     const { clientId, guildId, toDeleteSlashCommand } = client.config;
 
     const slashCommands = [];
+    const globalSlashCommands = [];
+
     client.commands.forEach((cmd) => {
-      if ("data" in cmd && "interactionReply" in cmd) {
-        slashCommands.push(cmd.data.toJSON());
+      if ("data" in cmd && ("interactionReply" in cmd || "execute" in cmd)) {
+        if ("global" in cmd && cmd.global === true) {
+          globalSlashCommands.push(cmd.data.toJSON());
+        } else {
+          slashCommands.push(cmd.data.toJSON());
+        }
       }
     });
 
@@ -104,7 +152,7 @@ module.exports = ({
     }
 
     try {
-      if (guildId) {
+      if (guildId && slashCommands.length > 0) {
         if (onSlashCommandsLoading.delete_guild_slash_commands === true) {
           console.log(
             "[log]",
@@ -141,7 +189,8 @@ module.exports = ({
           "[Slash CMDs]",
           `Successfully Loaded a total of ${data.length} slash commands.`
         );
-      } else {
+      }
+      if (globalSlashCommands.length > 0 || !guildId) {
         if (
           onSlashCommandsLoading.delete_global_slash_commands === true ||
           toDeleteSlashCommand
@@ -175,10 +224,10 @@ module.exports = ({
         console.log(
           "[log]",
           "[Slash CMDs]",
-          `Loading ${slashCommands.length} global slash commands...`
+          `Loading ${globalSlashCommands.length} global slash commands...`
         );
-        const data = await rest.put(Routes.applicationGuildCommands(clientId), {
-          body: slashCommands,
+        const data = await rest.put(Routes.applicationCommands(clientId), {
+          body: globalSlashCommands,
         });
 
         console.log(

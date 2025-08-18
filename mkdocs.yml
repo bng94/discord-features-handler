@@ -2,30 +2,30 @@ site_name: discord-features-handler
 site_author: Brandon Ng
 site_description: >-
   discord-features-handler npm package official documentation website
-copyright: Copyright &copy; 2022 - 2024 discord-features-handler
+copyright: Copyright &copy; 2022 - 2025 discord-features-handler
 nav:
   - Discord-Features-Handler: index.md
-  - Getting started: 
-    - Installation: getting-started/installation.md
-    - Environment Variables: getting-started/environment-variables.md
-    - Folder Structure: getting-started/folder-structure.md
-    - Bot Script File: getting-started/Bot Script file.md
-    - TypeScript Support: getting-started/TypeScript Support.md
-  - Setup: 
-    - DiscordFeaturesHandlerOptions: setup/DiscordFeaturesHandlerOptions.md
-    - config file: setup/config-file.md
-    - command files: setup/commands-file.md
-    - slash command files: setup/slash-commands-file.md
-    - other interactions: setup/other-interaction.md
-    - event files: setup/events-file.md
-    - modules file: setup/modules-files.md
+  - Getting started:
+      - Installation: getting-started/installation.md
+      - Environment Variables: getting-started/environment-variables.md
+      - Folder Structure: getting-started/folder-structure.md
+      - Bot Script File: getting-started/Bot Script file.md
+      - TypeScript Support: getting-started/TypeScript Support.md
+  - Setup:
+      - DiscordFeaturesHandlerOptions: setup/DiscordFeaturesHandlerOptions.md
+      - Config file: setup/config-file.md
+      - Slash command files: setup/slash-commands-file.md
+      - Prefix command files: setup/commands-file.md
+      - Other interactions: setup/other-interaction.md
+      - Event files: setup/events-file.md
+      - Modules file: setup/modules-files.md
   - Built-in Features:
-    - messageCreate event: builtIn/messageCreate-event.md
-    - interactionCreate event: builtIn/interactionCreate-event.md
-    - help command: builtIn/help-command.md
-    - reload command: builtIn/reload-command.md
-    - functions: builtIn/functions.md
-    - disabling built in: builtIn/disabling-built-in-features.md
+      - MessageCreate event: builtIn/messageCreate-event.md
+      - InteractionCreate event: builtIn/interactionCreate-event.md
+      - Help command: builtIn/help-command.md
+      - Reload command: builtIn/reload-command.md
+      - Functions: builtIn/functions.md
+      - Disabling built in: builtIn/disabling-built-in-features.md
   - Demo: demo.md
   - About: about.md
   - Release Notes: release-notes.md
@@ -53,19 +53,18 @@ theme:
         icon: material/weather-sunny
         name: Switch to dark mode
       primary: teal
-      accent: purple 
-    - scheme: slate 
+      accent: purple
+    - scheme: slate
       toggle:
         icon: material/moon-waning-crescent
-        name: Switch to light mode    
+        name: Switch to light mode
       primary: teal
       accent: lime
 
 plugins:
   - social
   - search
-
-
+  - tags
 
 extra:
   analytics:
@@ -90,12 +89,13 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - footnotes
+  - attr_list
+  - def_list
+  - md_in_html
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
   - tables
-  - attr_list
-  - md_in_html
-  -  pymdownx.emoji:
+  - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg

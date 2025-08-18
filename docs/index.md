@@ -17,7 +17,7 @@ DiscordFeaturesHandler is a handler for Discord.js commands, slash commands, and
 
 <hr/>
 
-**discord-features-handler** allows you to follow the Discord.js guide with a few changes, such as using a JavaScript file instead of a JSON file for the `config` file, using the `interactionReply` function instead of `execute` for slash commands, and without creating your own handler for loading commands and events file. This package also supports TypeScript natively, so you can create your bot in JavaScript or TypeScript, based on your preferences.
+**discord-features-handler** allows you to follow the Discord.js guide with a few changes, such as using a JavaScript file instead of a JSON file for the `config` file without creating your own handler for loading commands and events file. This package also supports TypeScript natively, so you can create your bot in JavaScript or TypeScript, based on your preferences.
 
  Some key Features are: 
 

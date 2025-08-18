@@ -159,9 +159,21 @@ interface DiscordFeaturesHandlerOptions {
   onLoad_list_files?: FileLoadedLogger;
   /**
    * If you want to delete specific slash commands, you can provide an array of slash command ids to delete
-   * @example: ["123456789012345678"]
+   * @example: {
+   *   global: ["123456789012345678"],
+   *   guild: ["876543210987654321"]
+   * }
    */
-  slashCommandIdsToDelete?: string[] | string;
+  slashCommandIdsToDelete?: {
+    /**
+     * Array of global slash command IDs to delete
+     */
+    global?: string[];
+    /**
+     * Array of guild slash command IDs to delete
+     */
+    guild?: string[];
+  };
   /**
    * If you want to change the behavior to deleting all slash commands when the bot starts up, you can provide an object to define which slash commands to delete
    *
@@ -242,10 +254,14 @@ interface Permissions {
 interface CommandFile {
   /**
    * Name of the command
+   *
+   * @optional for slash commands
    */
   name: string;
   /**
    * Description of the command
+   *
+   * @optional for slash commands
    */
   description: string;
   /**
@@ -254,29 +270,46 @@ interface CommandFile {
   category?: string;
   /**
    * Array of strings for command aliases
+   *
+   * @default []
    */
   aliases?: string[];
   /**
    * Is this command for guild only to use. DM command is not allowed
+   *
+   * @default false
    */
   guildOnly?: boolean;
   /**
    * Permission level to use the command
+   *
+   * @default 0
    */
   permissions: number;
   /**
    * Minimum Arguments allowed for the command
+   *
+   * @default 0
    */
   minArgs: number;
   /**
    * Maximum Arguments allowed for the command
    *
+   *
    */
   maxArgs?: number;
   /**
    * Describe how to call this command and its argument
+   *
+   * @default ""
    */
   usage?: string;
+  /**
+   * Whether this command is a global slash command
+   *
+   * @default false
+   */
+  global?: boolean;
   /**
    * SlashCommandBuilder object for creating this command into a slash command
    *
@@ -286,43 +319,49 @@ interface CommandFile {
   /**
    * customIds for your interaction components
    * @example
-   * ```ts
-   * customIds: {
-   *   modal: "myModalId",
-   *   model2: "myModalId2",
-   * }
-   * ```
    *
    * ```ts
    *  customIds: ["myModalId", "myModalId2"]
    * ```
    */
-  customIds?:
-    | string[]
-    | {
-        [key: string]: string;
-      };
+  customIds?: string[];
   /**
-   * Executing a prefix command call for this command
+   * @summary Executes a prefix command call for this command. As discord.js shifts towards using interactions over prefix, this function is required to be implemented for prefix commands in next version of discord-features-handler. -- This is still useful outside of slash commands, as you can set up permission-based levels to ensure the command is for admins or bot admins/devs by using the permission levels.
+   *
    * @param message Message Object
    * @param args arguments provided with command call
    * @param client Client Object
    * @param level permission level of user
    */
-  execute(
+  executePrefix?(
     message: Message,
     args?: string[],
     client?: Client,
     level?: number
   ): Promise<Message>;
   /**
+   * @important this will still work for executing prefix commands, as long as data and interactionReply property are enabled.
+   *
    * Executing a slash interaction command call
    * @param interaction Interaction object
    * @param client Client Object
    * @param level permission level of user
    *
-   * @todo
-   * This function is used for slash commands, context menu commands, and user commands, and is required to be implemented in next version of discord-features-handler, as discord recommends using slash commands over prefix commands; You can still return an empty interaction reply and not implmeent this function and data property.
+   * Since discord.js is moving towards using interactions over messages, this function is required to be implemented for slash commands in next version of discord-features-handler.
+   * @see {@link executePrefix} for prefix command execution
+   */
+  execute(
+    interaction: CommandInteraction,
+    client?: Client,
+    level?: number
+  ): Promise<Interaction>;
+  /**
+   * Executing a slash interaction command call
+   * @param interaction Interaction object
+   * @param client Client Object
+   * @param level permission level of user
+   *
+   * @deprecated Please use {@link execute} instead and for prefix commands, use {@link executePrefix}
    */
   interactionReply?(
     interaction: CommandInteraction,
@@ -335,7 +374,7 @@ interface CommandFile {
    * @param client Client Object
    * @param level permission level of user
    *
-   * This function is used for custom id interactions like buttons, select menus, modals, etc.
+   * This function is used for custom id interactions like message components, modals, autocomplete interactions, and user context menu commands.
    */
   customIdInteraction?(
     interaction:

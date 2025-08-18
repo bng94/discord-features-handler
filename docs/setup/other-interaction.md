@@ -25,25 +25,13 @@ module.exports = {
           .setDescription("Ping Pong Command"),
         /**
          * customIds for your interaction components
-         * 
-         * or this can be a Array<string>
-         * customIds: ["btnComponentId","backBtnId"]
          */
-          customIds: {
-              /**
-               * customId for a button component
-               */
-              buttonComponent: 'btnComponentId',
-              /**
-               * customId for second button
-               */
-              secondButton: 'secondBtnId',
-            },
+          customIds: ["btnComponentId","backBtnId"],
           usage: '', 
-          execute(message, args, client) { 
+          executePrefix(message, args, client) { 
             return message.channel.send({ content: 'Pong.'});
           },
-          async interactionReply(interaction, client, level){
+          async execute(interaction, client, level){
             await interaction.deferReply({
               ephemeral: true,
             });

@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - master
 
 jobs:
   create-release:
@@ -14,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "16"
 
       - name: Get package version
         id: get_version
@@ -31,3 +35,20 @@ jobs:
           body: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
+  publish:
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Checkout repository
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish package
+        run: npm ci && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

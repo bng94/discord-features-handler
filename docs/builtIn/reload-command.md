@@ -20,7 +20,7 @@ module.exports = {
   minArgs: 1,
   maxArgs: 1,
   usage: "<command name>",
-  async execute(message, args, client) {
+  async executePrefix(message, args, client) {
     const commandName = args[0];
     let command;
 
@@ -70,5 +70,3 @@ module.exports = {
   },
 };
 ```
-
-Check back later for update!

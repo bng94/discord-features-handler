@@ -59,7 +59,10 @@ const DiscordFeaturesHandler = async (
       events: false,
       modules: false,
     },
-    slashCommandIdsToDelete = [],
+    slashCommandIdsToDelete = {
+      global: [],
+      guild: [],
+    },
     onSlashCommandsLoading = {
       delete_global_slash_commands: false,
       delete_guild_slash_commands: false,
@@ -142,13 +145,23 @@ const DiscordFeaturesHandler = async (
   }
 
   if (
-    !Array.isArray(slashCommandIdsToDelete) ||
-    !slashCommandIdsToDelete.every((id) => typeof id === "string")
+    !Array.isArray(slashCommandIdsToDelete.global) ||
+    !slashCommandIdsToDelete.global.every((id) => typeof id === "string")
   ) {
     console.warn(
-      "slashCommandIdsToDelete should be an array of strings representing slash command IDs"
+      "slashCommandIdsToDelete.global should be an array of strings representing global slash command IDs"
     );
-    slashCommandIdsToDelete = [];
+    slashCommandIdsToDelete.global = [];
+  }
+
+  if (
+    !Array.isArray(slashCommandIdsToDelete.guild) ||
+    !slashCommandIdsToDelete.guild.every((id) => typeof id === "string")
+  ) {
+    console.warn(
+      "slashCommandIdsToDelete.guild should be an array of strings representing guild slash command IDs"
+    );
+    slashCommandIdsToDelete.guild = [];
   }
 
   if (typeof process.env.DISCORD_TOKEN === "undefined") {
@@ -173,8 +186,9 @@ const DiscordFeaturesHandler = async (
 
   functions();
 
-  console.log(`Thank you for installing DiscordFeaturesHandler!`);
-  console.log(`Loading your files now...`);
+  console.log(
+    `Thank you for installing DiscordFeaturesHandler\nLoading your files...`
+  );
 
   const configFile = config.endsWith("./defaultConfig.js")
     ? require(config)

@@ -9,10 +9,41 @@ hide:
 
 # Release Notes
 
-## 3.0.0 - Latest Version
+
+## 3.1.0 – Latest Version
 
 ### Features
-- Added new optional options to `DiscordFeaturesHandlerOptions`:
+: - Introduced a new `executePrefix` property for handling prefix commands.
+- Enabled usage of `execute` property to run slash commands.
+    * As Discord Recommends slash commands, discord-feature-handler will start migrating to follow discord.js guide to make it easier to create slash commands.
+- Following Prefix Command Properties are now optional:
+    * `aliases`
+    * `minArgs`
+    * `permissions`
+    * `usage`
+- Following Slash Command Properties are now optional:
+    * `name` - slash commands only
+    * `description` - slash commands only
+- New Slash Command Property:
+    *  `global`: boolean; default is false
+        + Allows creation of global slash command for the specific command file
+- `customIds` Property is now changed to be Array of Strings and no longer accepts Objects
+- Updated `slashCommandIdsToDelete` property to be an object containing two property: `global` and `guild`
+  * Each of these property are an Array<String> containing the slash commands ids to be deleted
+- Recommended name changes to Command Properties:
+    - These changes are not mandatory until v4.0.0
+    - For executing prefix commands: `execute` → `executePrefix`
+        - Added console warnings when prefix commands use `execute` instead of `executePrefix`.
+    - For executing slash commands: `interactionReply` → `execute`
+        - Added console warnings when slash commands use `interactionReply` instead of `execute`.
+### Deprecation
+: - `interactionReply` is now deprecated. It will continue to work in v3.x, but logs a console warning.  
+  Please migrate to `execute`, as `interactionReply` will be removed in v4.0.0.
+
+## 3.0.0
+
+### Features
+: - Added new optional options to `DiscordFeaturesHandlerOptions`:
     - `slashCommandIdsToDelete`: Array of strings for deleting specific slash command IDs.
     - `onSlashCommandsLoading`: Object of booleans for enabling the deletion of slash commands before loading new ones.
 - Updated `CommandFile` properties:
@@ -21,8 +52,8 @@ hide:
       This new property handles interactions based on `customIds`.
     - Added `customIdInteraction(interaction, client, level)` to `CommandFile` properties to ensure that no button or other customId-based interaction becomes inactive if the bot application or collector times out.
 
-### Fix
-- Fixed issue where prefix commands doesn't work
+### Fixes
+- Fixed an issue where prefix commands were not working.
 
 ## 2.2.0
 

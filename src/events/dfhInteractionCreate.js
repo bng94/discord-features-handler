@@ -29,7 +29,16 @@ module.exports = {
         console.log("[SLASH CMD]", "[ID]", commandId);
 
         try {
-          return cmd.interactionReply(interaction, client, level);
+          if (cmd.execute && !cmd.interactionReply) {
+            return cmd.execute(interaction, client, level);
+          }
+          return cmd
+            .interactionReply(interaction, client, level)
+            .then((reply) => {
+              console.warn(
+                "Please use execute property for slash commands as next version of discord-features-handler will use, 'executePrefix' property for prefix commands and deprecate interactionReply."
+              );
+            });
         } catch (e) {
           console.log(
             "ApplicationCommand interaction (slash command) execution failed",
@@ -42,19 +51,6 @@ module.exports = {
           });
         }
       }
-      //  if (interaction.isUserContextMenuCommand()) {
-      //   const cmd = client.commands.get(commandName);
-      //   if (!cmd) {
-      //     return console.error("Unable to find context menu command:" + cmd);
-      //   }
-      //   console.log(
-      //     `[CONTEXT MENU CMD]`,
-      //     `[${interaction.user.tag}]`,
-      //     `${commandName} ID: ${commandId}`,
-      //     commandId
-      //   );
-      //   cmd.contextMenuInteraction(interaction, client, level);
-      // }
 
       const foundCmd = client.commands.find((cmd) => {
         if (!cmd.customIds) return false;
@@ -63,14 +59,10 @@ module.exports = {
           return cmd.customIds.includes(customId);
         }
 
-        if (typeof cmd.customIds === "object") {
-          return Object.values(cmd.customIds).includes(customId);
-        }
-
         return false;
       });
 
-      if (!foundCmd) {
+      if (!foundCmd || !foundCmd.name) {
         console.error("Unable to find command with customId: " + customId);
 
         return interaction.reply({
@@ -97,8 +89,17 @@ module.exports = {
         `[${interaction.user.tag}]`,
         `${foundCmd.name} CustomID: ${customId}`
       );
-
-      return foundCmd.customIdInteraction(interaction, client, level);
+      try {
+        return foundCmd.customIdInteraction(interaction, client, level);
+      } catch (e) {
+        console.error(
+          `Error executing customIdInteraction for command "${foundCmd.name}":`,
+          e
+        );
+        return interaction.reply({
+          content: `An error occurred while processing your interaction: ${foundCmd.name} and customId: ${customId}. Error: ${e}`,
+        });
+      }
     } catch (e) {
       console.log("Interaction execution failed", e);
       return interaction.reply({

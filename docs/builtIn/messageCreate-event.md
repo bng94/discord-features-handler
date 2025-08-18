@@ -4,6 +4,9 @@ This event file essentially handles your command, check the permission level set
 
 This is the built-in MessageCreate event that you can disable in DiscordFeaturesHandlerOptions and then can use to tailor to your bot if desired.
 
+!!! note "Using v3.1.0 or later and you decided to disable the built-in MessageCreate"
+    Please use `executePrefix` property instead of `execute` property for running prefix commands to avoid any conflicts in future.
+
 ```javascript
 const { ChannelType, Events } = require("discord.js");
 module.exports = {
@@ -13,21 +16,22 @@ module.exports = {
     if (message.author.bot) return;
 
     if (
-      typeof configPrefix === String &&
-      !message.content.startsWith(configPrefix)
-    )
+      (typeof configPrefix === "string" &&
+        !message.content.startsWith(configPrefix)) ||
+      (Array.isArray(configPrefix) &&
+        !configPrefix.some((prefix) => message.content.startsWith(prefix)))
+    ) {
+      // if no prefix found; you can create your own logic here for handling messages without a prefix
       return;
-    if (
-      Array.isArray(configPrefix) &&
-      !configPrefix.some((prefix) => message.content.startsWith(prefix))
-    )
-      return;
-
+    }
+    
     const prefix = Array.isArray(configPrefix)
       ? configPrefix.find((prefix) => message.content.startsWith(prefix))
       : configPrefix;
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    if (!prefix) return;
+
+    const args = message.content.slice(prefix.length).trim().split(/\s+/);
     const command = args.shift().toLowerCase();
     const cmd =
       client.commands.get(command) ||
@@ -83,7 +87,7 @@ module.exports = {
     }
 
     try {
-      cmd.execute(message, args, client, level);
+      return cmd.executePrefix(message, args, client, level);
     } catch (e) {
       console.error(e, `Executing CMD: ${cmd.name}`);
       message.reply("There was an error trying to execute that command!");

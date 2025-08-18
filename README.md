@@ -140,7 +140,7 @@ Here are the some parameters of options Object. For a full list please check out
 
 
 ## Commands Properties
-The properties that are **required** to have when creating a command file
+The properties that are required to have when creating a command file
 <table>
   <thead>
     <tr>
@@ -164,43 +164,7 @@ The properties that are **required** to have when creating a command file
       <td>Description of your command</td>
     </tr>
     <tr>
-      <td>aliases</td>
-      <td>Array</td>
-      <td>[""]</td>
-      <td>Aliases of the command. You must set `[]`</td>
-    </tr>
-    <tr>
-      <td>guildOnly</td>
-      <td>boolean</td>
-      <td>false</td>
-      <td>If command is guild only (not a DM command)</td>
-    </tr>
-    <tr>
-      <td>permission</td>
-      <td>number</td>
-      <td>""</td>
-      <td>Permission level required to use command</td>
-    </tr>
-    <tr>
-      <td>minArgs</td>
-      <td>number</td>
-      <td>""</td>
-      <td>Minimum number of arguments required for command execution</td>
-    </tr>
-    <tr>
-      <td>maxArgs</td>
-      <td>number</td>
-      <td>""</td>
-      <td>Maximum number of arguments required for command execution</td>
-    </tr>
-    <tr>
-      <td>usage</td>
-      <td>string</td>
-      <td>""</td>
-      <td>Show by writing an example of how to execute the command using the command argument(s) in the command call</td>
-    </tr>
-    <tr>
-      <td>execute(message, args, client, level)</td>
+      <td>executePrefix(message, args, client, level)</td>
       <td>func</td>
       <td>""</td>
       <td>This is a function that is invoked when the command is called to be executed. Parameters are `message` object, `arguments` array, `client` object, and user's permission level to run a command</td>
@@ -215,18 +179,13 @@ The properties that are **required** to have when creating a command file
 module.exports = {
 	name: 'ping',
 	description: 'Ping Pong Command!',
-	aliases: ['p'],
-	guildOnly: true,
-	permissions: 0,
-	minArgs: 0, 
-	usage: '',
-    /** 
-    * @param {message} message The discord message object
-    * @param {Array<string>} args The arguments following the command call
-    * @param {Client} client The discord client object
-    * @param {number} level The permission level of the user who made the command call
-    */
-	execute(message, args, client, level) { 
+  /** 
+  * @param {message} message The discord message object
+  * @param {Array<string>} args The arguments following the command call
+  * @param {Client} client The discord client object
+  * @param {number} level The permission level of the user who made the command call
+  */
+	executePrefix(message, args, client, level) { 
 		return message.channel.send('Pong.');
 	},
 };
@@ -249,7 +208,7 @@ The properties that are required when creating a command file for slash commands
       <td>DiscordJS SlashCommandBuilder</td>
     </tr>
     <tr>
-      <td>interactionReply(interaction, client, level)</td>
+      <td>execute(interaction, client, level)</td>
       <td>func</td>
       <td> This is a function that is invoked when the slash command is called to be executed Parameters are `interaction`, `client` object, and `user's permission level`.</td>
     </tr>
@@ -266,35 +225,31 @@ const description = "Ping Pong Command";
 module.exports = {
 	name,
 	description,
-	aliases: ['p'],
-	guildOnly: true,
-	permissions: 0,
-	minArgs: 0, 
-	usage: '',
 	/**
 	* This is required and set as true. Otherwise would not recognize as a slash command
 	*/
-	data: new SlashBuilderCommand().setName(name)
+	data: new SlashBuilderCommand()
+      .setName(name)
 	    .setDescription(description),
-    /** 
-    * @param {message} message The discord message object
-    * @param {Array<string>} args The arguments following the command call
-    * @param {Client} client The discord client object
-    * @param {number} level The permission level of the user who made the command call
-    */
-	execute(message, args, client, level) { 
+  /** 
+  * @param {message} message The discord message object
+  * @param {Array<string>} args The arguments following the command call
+  * @param {Client} client The discord client object
+  * @param {number} level The permission level of the user who made the command call
+  */
+	executePrefix(message, args, client, level) { 
       return message.channel.send({ content: 'Pong.'});
-    },
-    /** 
-    * @param {interaction} interaction The discord interaction object
-    * @param {Client} client The discord client object
-    * @param {number} level The permission level of the user who made the command call
-    */
-    async interactionReply(interaction, client, level) {
-      await interaction.reply({
-	      content: 'Pong!'
-      });
-    }
+  },
+  /** 
+  * @param {interaction} interaction The discord interaction object
+  * @param {Client} client The discord client object
+  * @param {number} level The permission level of the user who made the command call
+  */
+  async execute(interaction, client, level) {
+    await interaction.reply({
+      content: 'Pong!'
+    });
+  }
 };
 ```
 
@@ -390,7 +345,7 @@ You can read more about these and other built-in functions in the [official Docu
 If you found and bug and issues please [report the issue](https://github.com/bng94/discord-features-handler/issues) and provide steps to reproducible bugs/issues.
 
 ## Notes
-This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file, using the property `interactionReply` instead of `execute` property for slash commands, and without creating your own handler for loading commands and events file. Also loading your modules files that contains features of your bot.
+This handler also allows you to follow the Discord.js guide with a few changes, such as we are using a JavaScript file instead of a JSON file for the `config` file and without creating your own handler for loading commands and events file. Also loading your modules files that contains features of your bot.
 
 ## Support and New Features 
 This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them or even contribute to this package! Please first discuss the add-on or change you wish to make, in the repository. If you like this package, and want to see more add-on, please don't forget to give a star to the repository and provide some feedbacks!
