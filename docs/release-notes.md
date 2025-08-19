@@ -9,16 +9,28 @@ hide:
 
 # Release Notes
 
+## 3.1.2 – Latest Version
+
+### Documentation
+
+: - Fix help command typo
+
+### Fix
+
+: - Fix issue where global slash commands arent registered for guild slash commands
+
 
 ## 3.1.1 – Latest Version
 
 ### Patch
+
 : - Removed console warning for when slashCommandIdsToDelete is not used.
 
 
 ## 3.1.0 
 
 ### Features
+
 : - Introduced a new `executePrefix` property for handling prefix commands.
 - Enabled usage of `execute` property to run slash commands.
     * As Discord Recommends slash commands, discord-feature-handler will start migrating to follow discord.js guide to make it easier to create slash commands.
