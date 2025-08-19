@@ -15,6 +15,10 @@ hide:
 
 : - Fix help command typo
 
+### Fix
+
+: - Fix issue where global slash commands arent registered for guild slash commands
+
 
 ## 3.1.1 – Latest Version
 
