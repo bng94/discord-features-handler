@@ -140,10 +140,9 @@ module.exports = ({
 
     client.commands.forEach((cmd) => {
       if ("data" in cmd && ("interactionReply" in cmd || "execute" in cmd)) {
+        slashCommands.push(cmd.data.toJSON());
         if ("global" in cmd && cmd.global === true) {
           globalSlashCommands.push(cmd.data.toJSON());
-        } else {
-          slashCommands.push(cmd.data.toJSON());
         }
       }
     });

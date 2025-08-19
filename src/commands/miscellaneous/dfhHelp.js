@@ -296,21 +296,21 @@ const getSingleCmd = async (commands, name, client) => {
     const fieldObj = [];
     fieldObj.push({
       name: `Category:`,
-      value: `${command.category}`,
+      value: `${slashCommand.category}`,
       inline: true,
     });
 
     fieldObj.push({
       name: `Usage:`,
-      value: `/${command.name}`,
+      value: `/${slashCommand.name}`,
       inline: true,
     });
-    if (command.executePrefix) {
+    if (slashCommand.executePrefix) {
       fieldObj.push({
         name: `Using prefix:`,
-        value: `${prefix}${command.name} ${command.usage}${
-          command.aliases
-            ? `,  ${prefix}${command.aliases.join(`, ${prefix}`)}`
+        value: `${prefix}${slashCommand.name} ${slashCommand.usage}${
+          slashCommand.aliases
+            ? `,  ${prefix}${slashCommand.aliases.join(`, ${prefix}`)}`
             : ""
         }`,
       });
@@ -321,8 +321,8 @@ const getSingleCmd = async (commands, name, client) => {
           name: `${client.user.tag}`,
           iconURL: `${client.user.avatarURL()}`,
         })
-        .setTitle(`${command.data.name.toProperCase()} Command`)
-        .setDescription(command.data.description)
+        .setTitle(`${slashCommand.data.name.toProperCase()} Command`)
+        .setDescription(slashCommand.data.description)
         .setTimestamp()
         .setFields(fieldObj);
 
