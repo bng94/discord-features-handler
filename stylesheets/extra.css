@@ -1,0 +1,62 @@
+.varType {
+  color: rgb(88 101 242);
+}
+
+.property-object {
+  font-family: monospace;
+  white-space: pre;
+}
+.type {
+  color: rgb(88 101 242);
+}
+.varType::before {
+  content: ": ";
+}
+
+.hasLabel {
+  margin-top: 0;
+}
+
+.required-label {
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0;
+  font-size: 0.6rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  color: red;
+  background-color: yellow;
+}
+
+.required-label::before {
+  content: "required";
+}
+
+.optional-label {
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0;
+  font-size: 0.6rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  color: #06b6d4;
+  background-color: rgba(6, 182, 212, 0.2);
+}
+
+.optional-label::before {
+  content: "optional";
+}
+.deprecated-label {
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0;
+  font-size: 0.6rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  color: #eb2525;
+  background-color: #f7ec55;
+}
+
+.deprecated-label::before {
+  content: "deprecated";
+}
