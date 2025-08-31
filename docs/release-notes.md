@@ -9,27 +9,37 @@ hide:
 
 # Release Notes
 
-## 3.1.2 – Latest Version
+## 3.2.0 – Latest Version
 
-### Documentation
+: - Improved handling of interactionCreate events for better stability.
+  - Improved log messages for rate limit when loading slash commands
+     
+: ### Fix
+
+:  - Fixed backward compatibility issue for slash commands that only use the execute function.
+
+
+## 3.1.2 
+
+: ### Documentation
 
 : - Fix help command typo
 
-### Fix
+: ### Fix
 
 : - Fix issue where global slash commands arent registered for guild slash commands
 
 
 ## 3.1.1 – Latest Version
 
-### Patch
+: ### Patch
 
 : - Removed console warning for when slashCommandIdsToDelete is not used.
 
 
 ## 3.1.0 
 
-### Features
+: ### Features
 
 : - Introduced a new `executePrefix` property for handling prefix commands.
 - Enabled usage of `execute` property to run slash commands.
@@ -54,13 +64,13 @@ hide:
         - Added console warnings when prefix commands use `execute` instead of `executePrefix`.
     - For executing slash commands: `interactionReply` → `execute`
         - Added console warnings when slash commands use `interactionReply` instead of `execute`.
-### Deprecation
+: ### Deprecation
 : - `interactionReply` is now deprecated. It will continue to work in v3.x, but logs a console warning.  
   Please migrate to `execute`, as `interactionReply` will be removed in v4.0.0.
 
 ## 3.0.0
 
-### Features
+: ### Features
 : - Added new optional options to `DiscordFeaturesHandlerOptions`:
     * `slashCommandIdsToDelete`: Array of strings for deleting specific slash command IDs.
     * `onSlashCommandsLoading`: Object of booleans for enabling the deletion of slash commands before loading new ones.
@@ -70,51 +80,51 @@ hide:
       This new property handles interactions based on `customIds`.
     * Added `customIdInteraction(interaction, client, level)` to `CommandFile` properties to ensure that no button or other customId-based interaction becomes inactive if the bot application or collector times out.
 
-### Fixes
+: ### Fixes
 - Fixed an issue where prefix commands were not working.
 
 ## 2.2.0
 
-### Fix
+: ### Fix
 - Updated event loader to prevent duplicate event listeners.
 
 ## 2.1.2 
 
-### Fix
+: ### Fix
 - Removed type check for cmd.data which caused an error for commands missing data property.
 
-### Chore
+: ### Chore
 - Updated build scripts for npm publish 
   
 
 
 ## 2.1.1 
 
-### Docs
+: ### Docs
 - Add TypeScript Support page
 - Update config page and removed  `modRole` and `adminRole` property 
 
-### Refactor
+: ### Refactor
 - Removed `modRole` and `adminRole` from config file (These property has been replaced with roles object property).
 - Add more errors check for command files.
 - Refactored minArgs and maxArgs check.
 - Reformated README.md and updated package.json file
 - remove requirement of cmd aliases and updated types file
 
-### Chore
+: ### Chore
 - Updated build scripts for deployment 
   
 
 
 ## 2.1.0
 
-### Docs
+: ### Docs
 
 - Switched documentation from GitBook to GitHub Pages using MkDocs
 - Included demo bot documentation into the new GitHub Pages documentation
 - Refreshed the UI for a new look and feel of the discord-features-handler documentation
 
-### Features
+: ### Features
 
 - Added `roles` as an object property into config file, `modRole` and `adminRole` are one two properties replacing `modRole` and `adminRole` property of config file
 - Added `customIds` as an object property into command files, contains the following keys: `messageComponent`, `modal`, and `autoComplete`. The values are an array of strings containing the customIds for the respective interaction.
@@ -127,20 +137,20 @@ You will need to define the customIds property and use those ids name for the re
 
 ## 2.0.2
 
-### Patch:
+: ### Patch:
 
 - Fixed issue with missing JSDoc for config and env typos
 - Fixed issue where compiled TypeScript code had problems loading module files
 
 ## 2.0.1
 
-### Patch:
+: ### Patch:
 
 - Fixed issue where JSDoc was not showing in JavaScript code
 
 ## 2.0.0
 
-### Feature:
+: ### Feature:
 
 - Upgraded to discord.js v14.9
 - Revamped DiscordFeaturesHandlerOptions setup
@@ -160,13 +170,13 @@ You will need to define the customIds property and use those ids name for the re
 - Updated JSDoc documentation for easier readability by developers
 - Supports TypeScript natively
 
-### Documentation:
+: ### Documentation:
 
 - Improved JSDoc and index.d.ts file for better readability and easier access in the developer IDE
 
 ## 1.1.2
 
-### Feature/Fix:
+: ### Feature/Fix:
 
 - Updated interaction handler for isButton, isAutoComplete, isContextMenu, isModalSubmit with code that works for the respective interaction instead of a blank if statement. Implemented try/catch for these interactions to prevent bot crashes
   - Command properties for the interactionCreate event of interaction.isContextMenu or interaction.isUserContextMenu (discord.js v13):
@@ -182,19 +192,19 @@ You will need to define the customIds property and use those ids name for the re
 
 ## 1.1.1
 
-### Documentation:
+: ### Documentation:
 
 - Updated README file about the dev branch and folder structure, support, and notes sections
 - Added code examples in the README file to help developers understand the structure better
 
-### Fix:
+: ### Fix:
 
 - Reload command can now read the category folders when unloading and loading a command
 - Improved console log messages when loading a slash command
 
 ## 1.1.0
 
-### Feature:
+: ### Feature:
 
 - Disable the built-in unhandledRejection handler
   - The option parameter is `disableUnhandledRejectionHandler`, to disable unhandled promise rejection to prevent bot crashes. Default value is **false**.
@@ -207,7 +217,7 @@ You will need to define the customIds property and use those ids name for the re
 - Added Array.prototype.random()
   - Allows getting a random element from an array, e.g., ['a','b','c','d','e'].random() returns any element at random
 
-### Documentation:
+: ### Documentation:
 
 - More inline documentation using JSDoc
   - Provides parameter descriptions and correct spelling when hovering or typing
@@ -215,13 +225,13 @@ You will need to define the customIds property and use those ids name for the re
 
 ## 1.0.3
 
-### Bug Fix:
+: ### Bug Fix:
 
 - Fixed reload command, which was missing concatenation between the filename and .js when unloading the command
 
 ## 1.0.2
 
-### Documentation:
+: ### Documentation:
 
 - Updated README and JSDoc3 documentation
   - Longer README.md file for npmjs website, providing a quick start guide instead of full documentation
@@ -229,17 +239,17 @@ You will need to define the customIds property and use those ids name for the re
 
 ## 1.0.1
 
-### Patch Fix:
+: ### Patch Fix:
 
 - DiscordFeaturesHandler can now be correctly imported without typing out import after installation
 
-### Bug Fix:
+: ### Bug Fix:
 
 - `disableProperties` was not implemented correctly
 
 ## 1.0.0
 
-### Feature:
+: ### Feature:
 
 - Compatible with Heroku and other hosting services for Node.js code
 - Ability to turn off console.log for stating what file is loaded on runtime
@@ -249,25 +259,25 @@ You will need to define the customIds property and use those ids name for the re
 - Deprecated: `disableAllDefaults`, `disableDefaultHelpCmd`, `disableDefaultReloadCmd`, and `disableDefaultMessageCreate`
   - Use `disableBuiltIn` object instead
 
-### Documentation:
+: ### Documentation:
 
 - Complete documentation and definition of "official" release
 
 ## 0.13.11
 
-### Fix:
+: ### Fix:
 
 - Fixed path to load commands file for Heroku/server-based hosting
 
 ## 0.13.10
 
-### Fix:
+: ### Fix:
 
 - Find path of configuration file when using Heroku server
 
 ## 0.13.9
 
-### New Object:
+: ### New Object:
 
 - Added `disableBuiltIn` object to DiscordFeaturesHandler options for disabling built-in features
 - Deprecation warnings for `disableAllDefaults
@@ -275,27 +285,27 @@ You will need to define the customIds property and use those ids name for the re
 
 ## 0.13.7
 
-### Patch Fix:
+: ### Patch Fix:
 
 - Syntax error fix to re-enable ability to disable reload and messageCreate events
 
 ## 0.13.6
 
-### Update:
+: ### Update:
 
 - Updated command, events, modules handler from for loops to map and use of Promises
   - Handles module files load time better with async/await for basic files, such as loading MongoDB data into a channel on run
 
 ## 0.13.1
 
-### Change:
+: ### Change:
 
 - Changed property `filesToExcludeInHandlers` from an Array<String> to an object
 - Property `filesToExcludeInHandlers` now contains object properties of `commands`, `events`, and `modules`, all optional Array<String>
 
 ## 0.13.0
 
-### Removal:
+: ### Removal:
 
 - Removed requirement of defining folder property names, using default names instead:
   - Default Command Folder name as "commands"
@@ -305,26 +315,26 @@ You will need to define the customIds property and use those ids name for the re
 
 ## 0.12.0
 
-### Update:
+: ### Update:
 
 - Updated README.md file and link to documentation for npmjs.com Readme page
 
 ## 0.11.1
 
-### Update:
+: ### Update:
 
 - Updated README.md file
 
 ## 0.11.0
 
-### Rename:
+: ### Rename:
 
 - Revisited properties name and clarified naming conventions
   - `mainDir` => `mainDirectory`
 
 ## 0.10.0
 
-### First Version:
+: ### First Version:
 
 - Launch of Discord Features Handler
 

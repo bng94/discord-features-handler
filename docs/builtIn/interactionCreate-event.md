@@ -8,10 +8,44 @@ This event handles the creation execution of the slash commands, using the built
 
 ```javascript
 const { InteractionType, Events } = require("discord.js");
+
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction, client) {
     const { commandName, commandId, customId } = interaction;
+
+    const isMyCommand =
+      interaction.type === InteractionType.ApplicationCommand
+        ? client.commands.has(commandName)
+        : false;
+
+    const isMyCustomId = customId
+      ? client.commands.some(
+          (cmd) => cmd.customIds && cmd.customIds.includes(customId)
+        )
+      : false;
+
+    if (
+      interaction.type === InteractionType.ApplicationCommand &&
+      !isMyCommand
+    ) {
+      console.log(
+        "[Interaction]",
+        "[SKIP]",
+        `Slash command '${commandName}' not found in this bot's commands`
+      );
+      return;
+    }
+
+    if (customId && !isMyCustomId) {
+      console.log(
+        "[Interaction]",
+        "[SKIP]",
+        `Custom ID '${customId}' not found in this bot's commands `
+      );
+      return;
+    }
+
     const level = client.getPermissionsLevel({
       author: interaction.user,
       channel: interaction.channel,
@@ -25,11 +59,12 @@ module.exports = {
 
         if (!cmd) {
           console.error("Unable to find slash command:" + cmd);
-          return interaction.reply({
+          return await interactionErrorReply(interaction, {
             content: `Command not found: ${commandName}`,
             ephemeral: true,
           });
         }
+
         console.log(
           `[SLASH CMD]`,
           `[${interaction.user.tag}]`,
@@ -38,15 +73,15 @@ module.exports = {
         console.log("[SLASH CMD]", "[ID]", commandId);
 
         try {
-          return cmd.execute(interaction, client, level);
+          return await cmd.execute(interaction, client, level);
         } catch (e) {
-          console.log(
+          console.error(
+            `[SLASH CMD]`,
             "ApplicationCommand interaction (slash command) execution failed",
             e
           );
-          return interaction.reply({
-            content: `An error occurred while processing your command: ${commandName}. Error:
-            ${e}`,
+          return await interactionErrorReply(interaction, {
+            content: `An error occurred while processing your command: ${commandName}. Error: ${e}`,
             ephemeral: true,
           });
         }
@@ -64,8 +99,7 @@ module.exports = {
 
       if (!foundCmd || !foundCmd.name) {
         console.error("Unable to find command with customId: " + customId);
-
-        return interaction.reply({
+        return await interactionErrorReply(interaction, {
           content: `Command not found for customId: ${customId}`,
           ephemeral: true,
         });
@@ -76,9 +110,10 @@ module.exports = {
         !foundCmd.customIdInteraction
       ) {
         console.error(
+          `[CUSTOM ID CMD]`,
           `Command "${foundCmd.name}" has not implemented customIdInteraction.`
         );
-        return interaction.reply({
+        return await interactionErrorReply(interaction, {
           content: `Command "${foundCmd.name}" has not implemented customIdInteraction.`,
           ephemeral: true,
         });
@@ -89,25 +124,37 @@ module.exports = {
         `[${interaction.user.tag}]`,
         `${foundCmd.name} CustomID: ${customId}`
       );
+
       try {
-        return foundCmd.customIdInteraction(interaction, client, level);
+        return await foundCmd.customIdInteraction(interaction, client, level);
       } catch (e) {
         console.error(
+          `[CUSTOM ID CMD]`,
           `Error executing customIdInteraction for command "${foundCmd.name}":`,
           e
         );
-        return interaction.reply({
+        return await interactionErrorReply(interaction, {
           content: `An error occurred while processing your interaction: ${foundCmd.name} and customId: ${customId}. Error: ${e}`,
+          ephemeral: true,
         });
       }
     } catch (e) {
-      console.log("Interaction execution failed", e);
-      return interaction.reply({
-        content: "An error occurred while processing your interaction." + e,
+      console.log("[INTERACTION]", "Interaction execution failed", e);
+      return await interactionErrorReply(interaction, {
+        content: "An error occurred while processing your interaction: " + e,
+        ephemeral: true,
       });
     }
   },
 };
 
+async function interactionErrorReply(interaction, options) {
+  try {
+    await interaction.reply(options);
+  } catch (error) {
+    console.error("[DFH] Failed to reply to interaction:", error.message);
+    // Don't throw - just log and continue
+  }
+}
 
 ```
