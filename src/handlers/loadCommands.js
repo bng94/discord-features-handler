@@ -56,7 +56,10 @@ module.exports = ({
   };
 
   const deleteSlashCommands = async () => {
-    const rest = new REST().setToken(client.config.token);
+    const rest = new REST({
+      timeout: 30000,
+      retries: 3,
+    }).setToken(client.config.token);
     const { clientId, guildId } = client.config;
     if (!clientId) {
       console.error("[log]", "[Slash CMDs]", "Client ID is not defined.");
@@ -132,7 +135,10 @@ module.exports = ({
   });
 
   Promise.all(loadingCommands).then(async () => {
-    const rest = new REST().setToken(client.config.token);
+    const rest = new REST({
+      timeout: 30000,
+      retries: 3,
+    }).setToken(client.config.token);
     const { clientId, guildId, toDeleteSlashCommand } = client.config;
 
     const slashCommands = [];
@@ -176,21 +182,95 @@ module.exports = ({
             .catch(console.error);
         }
 
+        // Check if commands actually need updating
         console.log(
           "[log]",
           "[Slash CMDs]",
-          `Loading ${slashCommands.length} guild slash commands...`
-        );
-        const data = await rest.put(
-          Routes.applicationGuildCommands(clientId, guildId),
-          { body: slashCommands }
+          "Checking if commands need updating..."
         );
 
-        console.log(
-          "[log]",
-          "[Slash CMDs]",
-          `Successfully Loaded a total of ${data.length} slash commands.`
-        );
+        try {
+          const existingCommands = await rest.get(
+            Routes.applicationGuildCommands(clientId, guildId)
+          );
+
+          // Filter to only THIS bot's commands
+          const myExistingCommands = existingCommands.filter(
+            (cmd) => cmd.application_id === clientId
+          );
+
+          // Create comparison objects
+          const existingCommandData = myExistingCommands
+            .map((cmd) => ({
+              name: cmd.name,
+              description: cmd.description,
+              options: cmd.options || [],
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+          const newCommandData = slashCommands
+            .map((cmd) => ({
+              name: cmd.name,
+              description: cmd.description,
+              options: cmd.options || [],
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+          // Deep comparison
+          const commandsChanged =
+            JSON.stringify(existingCommandData) !==
+            JSON.stringify(newCommandData);
+
+          if (commandsChanged) {
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              `Commands changed - Loading ${slashCommands.length} guild slash commands...`
+            );
+            console.log(
+              "[DEBUG] Existing:",
+              existingCommandData.map((c) => c.name)
+            );
+            console.log(
+              "[DEBUG] New:",
+              newCommandData.map((c) => c.name)
+            );
+
+            const data = await rest.put(
+              Routes.applicationGuildCommands(clientId, guildId),
+              { body: slashCommands }
+            );
+
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              `Successfully Loaded a total of ${data.length} slash commands.`
+            );
+          } else {
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              "Commands unchanged - skipping registration to preserve daily limit"
+            );
+          }
+        } catch (error) {
+          if (error.code === 30034) {
+            console.error(
+              "[ERROR] Hit daily command creation limit (200/day) - wait 24 hours"
+            );
+          } else if (error.name === "AbortError") {
+            console.error(
+              "[ERROR] Command registration timed out after 30 seconds"
+            );
+          } else {
+            console.error(
+              "[Error log]",
+              "[Slash CMDs]",
+              "Failed to load guild slash commands:",
+              error
+            );
+          }
+        }
       }
       if (globalSlashCommands.length > 0 || !guildId) {
         if (
@@ -209,7 +289,7 @@ module.exports = ({
                 )
               : rest.put(Routes.applicationCommands(clientId), { body: [] });
 
-          deleteAction
+          await deleteAction
             .then(() =>
               console.log(
                 "[log]",
@@ -223,20 +303,90 @@ module.exports = ({
             )
             .catch(console.error);
         }
-        console.log(
-          "[log]",
-          "[Slash CMDs]",
-          `Loading ${globalSlashCommands.length} global slash commands...`
-        );
-        const data = await rest.put(Routes.applicationCommands(clientId), {
-          body: globalSlashCommands,
-        });
 
+        // Check if global commands actually need updating
         console.log(
           "[log]",
           "[Slash CMDs]",
-          `Successfully Loaded a total of ${data.length} Global slash commands.`
+          "Checking if global commands need updating..."
         );
+
+        try {
+          const existingGlobalCommands = await rest.get(
+            Routes.applicationCommands(clientId)
+          );
+
+          // Create comparison objects for global commands
+          const existingGlobalData = existingGlobalCommands
+            .map((cmd) => ({
+              name: cmd.name,
+              description: cmd.description,
+              options: cmd.options || [],
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+          const newGlobalData = globalSlashCommands
+            .map((cmd) => ({
+              name: cmd.name,
+              description: cmd.description,
+              options: cmd.options || [],
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+          // Deep comparison for global commands
+          const globalCommandsChanged =
+            JSON.stringify(existingGlobalData) !==
+            JSON.stringify(newGlobalData);
+
+          if (globalCommandsChanged) {
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              `Global commands changed - Loading ${globalSlashCommands.length} global slash commands...`
+            );
+            console.log(
+              "[DEBUG] Existing global:",
+              existingGlobalData.map((c) => c.name)
+            );
+            console.log(
+              "[DEBUG] New global:",
+              newGlobalData.map((c) => c.name)
+            );
+
+            const data = await rest.put(Routes.applicationCommands(clientId), {
+              body: globalSlashCommands,
+            });
+
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              `Successfully Loaded a total of ${data.length} Global slash commands.`
+            );
+          } else {
+            console.log(
+              "[log]",
+              "[Slash CMDs]",
+              "Global commands unchanged - skipping registration to preserve daily limit"
+            );
+          }
+        } catch (error) {
+          if (error.code === 30034) {
+            console.error(
+              "[ERROR] Hit daily command creation limit (200/day) - wait 24 hours"
+            );
+          } else if (error.name === "AbortError") {
+            console.error(
+              "[ERROR] Global command registration timed out after 30 seconds"
+            );
+          } else {
+            console.error(
+              "[Error log]",
+              "[Slash CMDs]",
+              "Failed to load global slash commands:",
+              error
+            );
+          }
+        }
       }
     } catch (error) {
       console.error("[Error log]", "[Slash CMDs]", `error`);
