@@ -51,6 +51,7 @@ const checkCommandErrors = (cmd) => {
   } else if (cmd.data && cmd.data instanceof SlashCommandBuilder) {
     if (
       (!cmd.executePrefix &&
+        (!cmd.execute || typeof cmd.execute !== "function") &&
         (!cmd.interactionReply ||
           typeof cmd.interactionReply !== "function")) ||
       (cmd.executePrefix && (!cmd.execute || typeof cmd.execute !== "function"))
