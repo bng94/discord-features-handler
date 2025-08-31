@@ -4,6 +4,39 @@ module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction, client) {
     const { commandName, commandId, customId } = interaction;
+
+    const isMyCommand =
+      interaction.type === InteractionType.ApplicationCommand
+        ? client.commands.has(commandName)
+        : false;
+
+    const isMyCustomId = customId
+      ? client.commands.some(
+          (cmd) => cmd.customIds && cmd.customIds.includes(customId)
+        )
+      : false;
+
+    if (
+      interaction.type === InteractionType.ApplicationCommand &&
+      !isMyCommand
+    ) {
+      console.log(
+        "[Interaction]",
+        "[SKIP]",
+        `Slash command '${commandName}' not found in this bot's commands`
+      );
+      return;
+    }
+
+    if (customId && !isMyCustomId) {
+      console.log(
+        "[Interaction]",
+        "[SKIP]",
+        `Custom ID '${customId}' not found in this bot's commands `
+      );
+      return;
+    }
+
     const level = client.getPermissionsLevel({
       author: interaction.user,
       channel: interaction.channel,
@@ -42,7 +75,8 @@ module.exports = {
               );
             });
         } catch (e) {
-          console.log(
+          console.error(
+            `[SLASH CMD]`,
             "ApplicationCommand interaction (slash command) execution failed",
             e
           );
@@ -76,6 +110,7 @@ module.exports = {
         !foundCmd.customIdInteraction
       ) {
         console.error(
+          `[CUSTOM ID CMD]`,
           `Command "${foundCmd.name}" has not implemented customIdInteraction.`
         );
         return await interactionErrorReply(interaction, {
@@ -94,6 +129,7 @@ module.exports = {
         return await foundCmd.customIdInteraction(interaction, client, level);
       } catch (e) {
         console.error(
+          `[CUSTOM ID CMD]`,
           `Error executing customIdInteraction for command "${foundCmd.name}":`,
           e
         );
@@ -103,7 +139,7 @@ module.exports = {
         });
       }
     } catch (e) {
-      console.log("Interaction execution failed", e);
+      console.log("[INTERACTION]", "Interaction execution failed", e);
       return await interactionErrorReply(interaction, {
         content: "An error occurred while processing your interaction: " + e,
         ephemeral: true,
@@ -112,47 +148,11 @@ module.exports = {
   },
 };
 
-/**
- * Safely handles interaction replies with comprehensive error handling
- * Designed specifically to prevent "Unknown interaction" errors
- */
 async function interactionErrorReply(interaction, options) {
   try {
-    // Final validation check before attempting to reply
-    if (!interaction.isRepliable()) {
-      console.log(
-        "[DFH] Cannot reply to interaction - already handled or expired"
-      );
-      return;
-    }
-
-    // Handle different interaction states
-    if (!interaction.replied && !interaction.deferred) {
-      await interaction.reply(options);
-      console.log("[DFH] Successfully replied to interaction");
-    } else if (interaction.deferred) {
-      await interaction.editReply(options);
-      console.log("[DFH] Successfully edited deferred interaction");
-    } else if (interaction.replied) {
-      // Already replied, try followUp
-      await interaction.followUp(options);
-      console.log("[DFH] Successfully sent follow-up to interaction");
-    }
+    await interaction.reply(options);
   } catch (error) {
-    if (error.code === 10062) {
-      console.log(
-        "[DFH] Unknown interaction error - interaction already handled by another bot instance"
-      );
-    } else if (error.code === 40060) {
-      console.log("[DFH] Interaction has already been acknowledged");
-    } else if (error.code === 10008) {
-      console.log("[DFH] Unknown message - interaction may have expired");
-    } else {
-      console.error(
-        "[DFH] Failed to send interaction response:",
-        error.code || "Unknown",
-        error.message
-      );
-    }
+    console.error("[DFH] Failed to reply to interaction:", error.message);
+    // Don't throw - just log and continue
   }
 }
