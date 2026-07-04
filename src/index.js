@@ -263,7 +263,7 @@ const DiscordFeaturesHandler = async (
   }
 
   const loginWithRetry = async (client, maxRetries = 3) => {
-    for (const attempt = 1; attempt <= maxRetries; attempt++) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         await client.login(client.config.token);
         return;
