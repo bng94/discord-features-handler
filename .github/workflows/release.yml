@@ -1,22 +1,23 @@
 name: Release and Deploy
 on:
-  push:
-    branches:
-      - master
   pull_request:
+    types:
+      - closed
     branches:
       - master
 permissions:
   contents: write
 jobs:
   create-release:
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,7 +31,7 @@ jobs:
         with:
           tag_name: v${{ env.PACKAGE_VERSION }}
           name: v${{ env.PACKAGE_VERSION }}
-          body: ${{ github.event.head_commit.message }}
+          body: ${{ github.event.pull_request.title }}
           draft: false
           prerelease: false
         env:
@@ -42,6 +43,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -57,6 +60,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
