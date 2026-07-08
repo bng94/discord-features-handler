@@ -10,7 +10,7 @@ permissions:
   contents: write
 jobs:
   create-release:
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}

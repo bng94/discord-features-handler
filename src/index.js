@@ -262,12 +262,37 @@ const DiscordFeaturesHandler = async (
     client.levelCache[thisLevel.name.toString()] = thisLevel.level;
   }
 
-  client.login(client.config.token).catch((e) => {
-    console.warn(e);
-    throw new Error(
-      `Please check if your discord bot token is valid! The token should be defined in config.token`
-    );
-  });
+  const loginWithRetry = async (client, maxRetries = 3) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        await client.login(client.config.token);
+        return;
+      } catch (error) {
+        console.warn(`Login attempt ${attempt} failed:`, error.message);
+
+        if (error.code === "TOKEN_INVALID" || error.message.includes("401")) {
+          throw new Error(
+            "Invalid token provided. Please check your discord bot token in config.token"
+          );
+        }
+
+        if (attempt === maxRetries) {
+          throw new Error(
+            `Failed to login after ${maxRetries} attempts. Last error: ${error.message}`
+          );
+        }
+
+        const baseDelay = 1000;
+        const jitter = Math.random() * 500;
+        const delay = baseDelay * Math.pow(2, attempt - 1) + jitter;
+
+        console.log(`Retrying in ${Math.round(delay)}ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  };
+
+  await loginWithRetry(client);
   await client.wait(modulesPreloadTime);
 
   loadModules({
