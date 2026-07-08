@@ -9,7 +9,12 @@ hide:
 
 # Release Notes
 
-## 3.2.0 – Latest Version
+## 3.2.1 – Latest Version
+
+: - Fix issue with failing to retry login.
+     
+
+## 3.2.0 
 
 : - Improved handling of interactionCreate events for better stability.
   - Improved log messages for rate limit when loading slash commands
